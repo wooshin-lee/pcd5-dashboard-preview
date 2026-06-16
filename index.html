@@ -640,6 +640,7 @@
         materials: [
           {
             number: 6,
+            author: "wooshin-lee",
             prTitle: "관세업무 구매확인서 데이터 구현",
             artifactTitle: "구매확인서 CDP 자동화",
             kind: "html-automation",
@@ -669,6 +670,7 @@
           },
           {
             number: 5,
+            author: "gabchajang-jpg",
             prTitle: "ERP 작업실적 CSV 추출 GUI",
             artifactTitle: "구매확인서 엑셀 편집기",
             kind: "python-gui",
@@ -698,6 +700,7 @@
           },
           {
             number: 8,
+            author: "lcylcy364-netizen",
             prTitle: "[codex] 공장정보 대시보드 필터·상세조회·통합 검증",
             artifactTitle: "공장정보 대시보드 필터·상세조회·통합 검증",
             kind: "electron-dashboard",
@@ -786,7 +789,7 @@
           <article class="card" data-index="${index}" tabindex="0" role="button" aria-label="${escapeHtml(material.artifactTitle)} 열기">
             <div class="card-head">
               <div>
-                <p class="card-kicker">PR #${material.number} · ${escapeHtml(material.prTitle)}</p>
+                <p class="card-kicker">PR #${material.number}${material.author ? ` · ${escapeHtml(material.author)}` : ""} · ${escapeHtml(material.prTitle)}</p>
                 <h2 class="card-title">${escapeHtml(material.artifactTitle)}</h2>
                 <p class="card-subtitle">${escapeHtml(material.primaryFile)}</p>
               </div>
@@ -952,7 +955,7 @@
           <section class="modal-panel">
             <div class="modal-head">
               <div>
-                <p class="modal-kicker">PR #${material.number} · ${escapeHtml(material.prTitle)}</p>
+                <p class="modal-kicker">PR #${material.number}${material.author ? ` · ${escapeHtml(material.author)}` : ""} · ${escapeHtml(material.prTitle)}</p>
                 <h2 class="modal-title">${escapeHtml(material.artifactTitle)}</h2>
                 <p class="modal-subtitle">${escapeHtml(material.primaryFile)}</p>
               </div>

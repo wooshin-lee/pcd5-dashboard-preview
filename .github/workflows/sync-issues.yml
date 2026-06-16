@@ -64,6 +64,7 @@ jobs:
             const kind = detectKind(paths);
             const base = {
               number: pr.number,
+              author: pr.user.login,
               prTitle: pr.title,
               kind,
               status: '머지 완료',

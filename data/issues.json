@@ -8,6 +8,7 @@
   "materials": [
     {
       "number": 6,
+      "author": "wooshin-lee",
       "prTitle": "관세업무 구매확인서 데이터 구현",
       "artifactTitle": "구매확인서 CDP 자동화",
       "kind": "html-automation",
@@ -43,6 +44,7 @@
     },
     {
       "number": 5,
+      "author": "gabchajang-jpg",
       "prTitle": "ERP 작업실적 CSV 추출 GUI",
       "artifactTitle": "구매확인서 엑셀 편집기",
       "kind": "python-gui",
@@ -78,6 +80,7 @@
     },
     {
       "number": 8,
+      "author": "lcylcy364-netizen",
       "prTitle": "[codex] 공장정보 대시보드 필터·상세조회·통합 검증",
       "artifactTitle": "공장정보 대시보드 필터·상세조회·통합 검증",
       "kind": "electron-dashboard",
