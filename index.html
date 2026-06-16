@@ -8,14 +8,13 @@
       :root {
         color-scheme: light;
         --bg: #eef3f8;
-        --surface: rgba(255, 255, 255, 0.92);
+        --surface: rgba(255, 255, 255, 0.94);
         --surface-strong: #ffffff;
         --border: #d7e0ec;
         --border-soft: #e8eef5;
-        --text: #10253a;
+        --text: #0f253a;
         --muted: #5d6f84;
         --accent: #1f6feb;
-        --accent-soft: #eaf2ff;
         --success: #1f8a5b;
         --warning: #b87900;
         --danger: #bb3e3e;
@@ -31,10 +30,10 @@
         width: 100%;
         height: 100%;
         margin: 0;
+        overflow: hidden;
       }
 
       body {
-        min-height: 100vh;
         font-family: "Segoe UI", "Noto Sans KR", system-ui, sans-serif;
         color: var(--text);
         background:
@@ -43,25 +42,39 @@
           linear-gradient(180deg, #f8fbfe 0%, var(--bg) 100%);
       }
 
+      button {
+        font: inherit;
+      }
+
       .app {
         width: 100vw;
-        min-height: 100vh;
-        padding: 16px;
+        height: 100vh;
+        padding: 12px;
+      }
+
+      .shell {
+        width: 100%;
+        height: 100%;
         display: grid;
         grid-template-rows: auto 1fr;
-        gap: 14px;
+        gap: 12px;
       }
 
       .hero {
-        padding: 16px 18px;
+        padding: 12px 16px;
         border: 1px solid var(--border);
-        border-radius: 14px;
+        border-radius: 16px;
         background: var(--surface);
         box-shadow: var(--shadow);
         backdrop-filter: blur(12px);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
       }
 
       .issue-label {
+        margin: 0;
         color: var(--accent);
         font-size: 12px;
         font-weight: 800;
@@ -69,26 +82,63 @@
         text-transform: uppercase;
       }
 
+      .hero-title {
+        margin: 6px 0 0;
+        font-size: 18px;
+        font-weight: 800;
+        line-height: 1.2;
+      }
+
+      .hero-sub {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.4;
+      }
+
+      .hero-chip {
+        padding: 9px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
       .grid {
         min-height: 0;
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         grid-template-rows: repeat(2, minmax(0, 1fr));
-        gap: 14px;
+        gap: 12px;
       }
 
       .panel {
         min-width: 0;
         min-height: 0;
-        padding: 18px;
+        padding: 16px;
         border: 1px solid var(--border);
-        border-radius: 14px;
+        border-radius: 16px;
         background: var(--surface);
         box-shadow: var(--shadow);
         backdrop-filter: blur(12px);
         display: grid;
         grid-template-rows: auto 1fr auto;
-        gap: 14px;
+        gap: 12px;
+        cursor: pointer;
+        transition: transform 0.12s ease, box-shadow 0.12s ease;
+      }
+
+      .panel:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 20px 50px rgba(16, 37, 58, 0.16);
+      }
+
+      .panel:focus-visible,
+      .back-btn:focus-visible {
+        outline: 3px solid rgba(31, 111, 235, 0.26);
+        outline-offset: 2px;
       }
 
       .panel-head {
@@ -100,13 +150,14 @@
 
       .panel-title {
         margin: 0;
-        font-size: 22px;
-        line-height: 1.2;
+        font-size: clamp(15px, 1.25vw, 20px);
+        line-height: 1.22;
       }
 
       .panel-subtitle {
         margin: 6px 0 0;
         color: var(--muted);
+        font-size: 13px;
         line-height: 1.45;
       }
 
@@ -124,17 +175,17 @@
       .content {
         min-height: 0;
         display: grid;
-        gap: 12px;
+        gap: 10px;
       }
 
       .summary-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
+        gap: 10px;
       }
 
       .summary {
-        padding: 14px;
+        padding: 12px;
         border: 1px solid var(--border-soft);
         border-radius: 12px;
         background: var(--surface-strong);
@@ -147,40 +198,28 @@
       }
 
       .summary-value {
-        font-size: 30px;
+        font-size: clamp(18px, 1.8vw, 30px);
         font-weight: 800;
-        line-height: 1;
-      }
-
-      .summary-foot {
-        margin-top: 6px;
-        color: var(--muted);
-        font-size: 12px;
-      }
-
-      .items {
-        display: grid;
-        gap: 10px;
+        line-height: 1.05;
       }
 
       .item {
         display: grid;
-        grid-template-columns: 84px minmax(0, 1fr) auto;
-        gap: 12px;
+        grid-template-columns: 72px minmax(0, 1fr) auto;
+        gap: 10px;
         align-items: center;
-        padding: 12px 14px;
+        padding: 11px 12px;
         border-radius: 12px;
         border: 1px solid var(--border-soft);
         background: var(--surface-strong);
+        min-height: 54px;
       }
 
       .item-id {
         font-weight: 800;
-        color: var(--text);
       }
 
       .item-title {
-        color: var(--text);
         line-height: 1.35;
       }
 
@@ -193,26 +232,27 @@
       .card-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 12px;
+        gap: 10px;
       }
 
       .mini-card {
-        padding: 14px;
+        padding: 12px;
         border-radius: 12px;
         border: 1px solid var(--border-soft);
         background: var(--surface-strong);
       }
 
       .mini-card h3 {
-        margin: 0 0 10px;
-        font-size: 14px;
+        margin: 0 0 8px;
+        font-size: 13px;
       }
 
       .mini-card ul {
         margin: 0;
         padding-left: 18px;
         color: var(--muted);
-        line-height: 1.5;
+        font-size: 12px;
+        line-height: 1.45;
       }
 
       .status-row {
@@ -248,6 +288,79 @@
         background: rgba(187, 62, 62, 0.06);
       }
 
+      .modal {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        display: none;
+        background: rgba(238, 243, 248, 0.92);
+        backdrop-filter: blur(10px);
+      }
+
+      .modal.open {
+        display: block;
+      }
+
+      .modal-shell {
+        width: 100vw;
+        height: 100vh;
+        padding: 12px;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        gap: 12px;
+      }
+
+      .back-btn {
+        width: 44px;
+        height: 44px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: #fff;
+        color: var(--text);
+        font-size: 24px;
+        line-height: 1;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow);
+      }
+
+      .modal-content {
+        min-height: 0;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .modal-panel {
+        min-width: 0;
+        min-height: 0;
+        padding: 16px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(12px);
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        gap: 12px;
+        overflow: hidden;
+      }
+
+      .modal-panel .panel-title {
+        font-size: clamp(18px, 1.6vw, 24px);
+      }
+
+      .modal-panel .summary-value {
+        font-size: clamp(24px, 2.4vw, 40px);
+      }
+
+      .modal-panel .mini-card ul {
+        font-size: 13px;
+      }
+
       .loading {
         color: var(--muted);
         font-size: 14px;
@@ -255,20 +368,33 @@
 
       @media (max-width: 1180px) {
         .grid,
+        .modal-content,
         .summary-grid,
         .card-grid {
           grid-template-columns: 1fr;
         }
 
         .app {
-          min-height: 100vh;
           height: auto;
+          min-height: 100vh;
+          overflow: auto;
+        }
+
+        html,
+        body {
+          overflow: auto;
         }
       }
 
       @media (max-width: 760px) {
-        .app {
-          padding: 12px;
+        .app,
+        .modal-shell {
+          padding: 10px;
+        }
+
+        .hero {
+          flex-direction: column;
+          align-items: stretch;
         }
 
         .item {
@@ -279,14 +405,28 @@
   </head>
   <body>
     <main class="app">
-      <header class="hero">
-        <div id="heroLabel" class="issue-label">ISSUE #7 · 우신공업 부서별 업무 대시보드</div>
-      </header>
+      <div class="shell">
+        <header class="hero">
+          <div>
+            <p id="heroLabel" class="issue-label">ISSUE #7 · 우신공업 부서별 업무 대시보드</p>
+            <p class="hero-title">머지된 구현 화면을 한눈에 보는 대시보드</p>
+            <p class="hero-sub">패널을 클릭하면 해당 내용이 전체화면 팝업으로 열립니다.</p>
+          </div>
+          <div class="hero-chip">2x2 레이아웃</div>
+        </header>
 
-      <section class="grid" id="dashboard">
-        <div class="loading">이슈 데이터를 불러오는 중입니다.</div>
-      </section>
+        <section class="grid" id="dashboard" aria-label="대시보드 패널">
+          <div class="loading">이슈 데이터를 불러오는 중입니다.</div>
+        </section>
+      </div>
     </main>
+
+    <div id="modal" class="modal" aria-hidden="true">
+      <div class="modal-shell">
+        <button id="backBtn" class="back-btn" type="button" aria-label="대시보드로 돌아가기">←</button>
+        <div id="modalContent" class="modal-content"></div>
+      </div>
+    </div>
 
     <script>
       const DEFAULT_DATA = {
@@ -352,14 +492,17 @@
             ],
             notes: [
               "요약 BOM을 빠르게 조회하는 화면",
-              "구성 항목을 한 눈에 보는 레이아웃",
+              "구성 항목을 한눈에 보는 레이아웃",
               "머지 후 확인할 결과 중심으로 정리"
             ]
           }
         ]
       };
 
-      function renderCard(issue) {
+      let dashboardData = DEFAULT_DATA;
+      let activePanelIndex = null;
+
+      function panelMarkup(issue, index, mode) {
         const summary = issue.summary
           .map(
             (item) => `
@@ -371,12 +514,13 @@
           .join("");
 
         const notes = issue.notes.map((note) => `<li>${note}</li>`).join("");
+        const titlePrefix = mode === "modal" ? "#" : "#";
 
         return `
-          <article class="panel">
+          <article class="${mode === "modal" ? "modal-panel" : "panel"}" data-index="${index}" tabindex="0" role="button" aria-label="${issue.number}번 이슈 패널 열기">
             <div class="panel-head">
               <div>
-                <h2 class="panel-title">#${issue.number} · ${issue.title}</h2>
+                <h2 class="panel-title">${titlePrefix}${issue.number} · ${issue.title}</h2>
                 <p class="panel-subtitle">머지된 구현 화면을 운영 관점에서 바로 읽을 수 있게 정리한 요약 카드입니다.</p>
               </div>
               <div class="pill">${issue.badge}</div>
@@ -384,12 +528,10 @@
 
             <div class="content">
               <div class="summary-grid">${summary}</div>
-              <div class="items">
-                <div class="item">
-                  <div class="item-id">구현</div>
-                  <div class="item-title">${issue.title}</div>
-                  <div class="item-state">${issue.status}</div>
-                </div>
+              <div class="item">
+                <div class="item-id">구현</div>
+                <div class="item-title">${issue.title}</div>
+                <div class="item-state">${issue.status}</div>
               </div>
             </div>
 
@@ -420,16 +562,66 @@
         }
       }
 
-      async function bootstrap() {
-        const data = await loadData();
-        document.getElementById("heroLabel").textContent =
-          `ISSUE #${data.hero.number} · ${data.hero.title}`;
-        document.getElementById("dashboard").innerHTML = data.issues
-          .map(renderCard)
+      function renderDashboard() {
+        const heroLabel = document.getElementById("heroLabel");
+        heroLabel.textContent = `ISSUE #${dashboardData.hero.number} · ${dashboardData.hero.title}`;
+        document.getElementById("dashboard").innerHTML = dashboardData.issues
+          .map((issue, index) => panelMarkup(issue, index, "dashboard"))
           .join("");
+        bindPanelEvents(document.getElementById("dashboard"));
       }
 
-      bootstrap();
+      function renderModal(index) {
+        const issue = dashboardData.issues[index];
+        if (!issue) return;
+        const modal = document.getElementById("modal");
+        const modalContent = document.getElementById("modalContent");
+        modalContent.innerHTML = panelMarkup(issue, index, "modal");
+        modal.classList.add("open");
+        modal.setAttribute("aria-hidden", "false");
+        activePanelIndex = index;
+        bindPanelEvents(modalContent);
+      }
+
+      function closeModal() {
+        const modal = document.getElementById("modal");
+        modal.classList.remove("open");
+        modal.setAttribute("aria-hidden", "true");
+        document.getElementById("modalContent").innerHTML = "";
+        activePanelIndex = null;
+      }
+
+      function bindPanelEvents(root) {
+        root.querySelectorAll("[data-index]").forEach((panel) => {
+          const index = Number(panel.dataset.index);
+          panel.addEventListener("click", (event) => {
+            if (event.target.closest(".back-btn")) return;
+            renderModal(index);
+          });
+          panel.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              renderModal(index);
+            }
+          });
+        });
+      }
+
+      document.getElementById("backBtn").addEventListener("click", closeModal);
+      document.getElementById("modal").addEventListener("click", (event) => {
+        if (event.target.id === "modal") closeModal();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && activePanelIndex !== null) {
+          closeModal();
+        }
+      });
+
+      (async function bootstrap() {
+        dashboardData = await loadData();
+        renderDashboard();
+      })();
     </script>
   </body>
 </html>
