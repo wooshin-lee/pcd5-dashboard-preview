@@ -8,18 +8,18 @@
       :root {
         color-scheme: light;
         --bg: #eef3f8;
-        --surface: rgba(255, 255, 255, 0.9);
+        --surface: rgba(255, 255, 255, 0.92);
         --surface-strong: #ffffff;
-        --border: #d4deea;
+        --border: #d7e0ec;
         --border-soft: #e8eef5;
-        --text: #12263a;
-        --muted: #5e6f82;
+        --text: #10253a;
+        --muted: #5d6f84;
         --accent: #1f6feb;
-        --accent-soft: #e8f1ff;
+        --accent-soft: #eaf2ff;
         --success: #1f8a5b;
-        --warning: #c47a00;
-        --danger: #c73636;
-        --shadow: 0 18px 48px rgba(18, 38, 58, 0.12);
+        --warning: #b87900;
+        --danger: #bb3e3e;
+        --shadow: 0 18px 44px rgba(16, 37, 58, 0.12);
       }
 
       * {
@@ -35,95 +35,38 @@
 
       body {
         min-height: 100vh;
-        color: var(--text);
         font-family: "Segoe UI", "Noto Sans KR", system-ui, sans-serif;
+        color: var(--text);
         background:
-          radial-gradient(circle at top left, rgba(31, 111, 235, 0.12), transparent 30%),
-          radial-gradient(circle at bottom right, rgba(31, 138, 91, 0.08), transparent 32%),
+          radial-gradient(circle at top left, rgba(31, 111, 235, 0.11), transparent 28%),
+          radial-gradient(circle at bottom right, rgba(31, 138, 91, 0.08), transparent 30%),
           linear-gradient(180deg, #f8fbfe 0%, var(--bg) 100%);
       }
 
       .app {
         width: 100vw;
-        height: 100vh;
+        min-height: 100vh;
+        padding: 16px;
         display: grid;
         grid-template-rows: auto 1fr;
         gap: 14px;
-        padding: 16px;
       }
 
-      .topbar {
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
-        align-items: center;
+      .hero {
         padding: 16px 18px;
         border: 1px solid var(--border);
         border-radius: 14px;
         background: var(--surface);
-        backdrop-filter: blur(12px);
         box-shadow: var(--shadow);
+        backdrop-filter: blur(12px);
       }
 
-      .eyebrow {
-        margin: 0 0 8px;
+      .issue-label {
         color: var(--accent);
         font-size: 12px;
         font-weight: 800;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-      }
-
-      h1,
-      h2,
-      h3,
-      p {
-        margin: 0;
-      }
-
-      h1 {
-        font-size: 30px;
-        line-height: 1.15;
-      }
-
-      .lede {
-        margin-top: 8px;
-        color: var(--muted);
-        line-height: 1.5;
-        max-width: 76ch;
-      }
-
-      .top-stats {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-        gap: 10px;
-      }
-
-      .stat {
-        min-width: 128px;
-        padding: 12px 14px;
-        border-radius: 12px;
-        border: 1px solid var(--border);
-        background: var(--surface-strong);
-      }
-
-      .stat-label {
-        color: var(--muted);
-        font-size: 12px;
-        margin-bottom: 6px;
-      }
-
-      .stat-value {
-        font-size: 22px;
-        font-weight: 800;
-        line-height: 1.1;
-      }
-
-      .stat-sub {
-        margin-top: 4px;
-        color: var(--muted);
-        font-size: 12px;
       }
 
       .grid {
@@ -137,33 +80,33 @@
       .panel {
         min-width: 0;
         min-height: 0;
-        display: grid;
-        grid-template-rows: auto 1fr;
-        gap: 14px;
         padding: 18px;
         border: 1px solid var(--border);
         border-radius: 14px;
         background: var(--surface);
         box-shadow: var(--shadow);
         backdrop-filter: blur(12px);
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        gap: 14px;
       }
 
       .panel-head {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
         gap: 12px;
+        align-items: flex-start;
       }
 
       .panel-title {
-        font-size: 18px;
+        margin: 0;
+        font-size: 22px;
         line-height: 1.2;
       }
 
-      .panel-note {
-        margin-top: 6px;
+      .panel-subtitle {
+        margin: 6px 0 0;
         color: var(--muted);
-        font-size: 13px;
         line-height: 1.45;
       }
 
@@ -178,7 +121,7 @@
         white-space: nowrap;
       }
 
-      .panel-body {
+      .content {
         min-height: 0;
         display: grid;
         gap: 12px;
@@ -186,219 +129,149 @@
 
       .summary-grid {
         display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
       }
 
-      .metric {
+      .summary {
         padding: 14px;
-        border-radius: 12px;
         border: 1px solid var(--border-soft);
+        border-radius: 12px;
         background: var(--surface-strong);
       }
 
-      .metric-label {
+      .summary-label {
         color: var(--muted);
         font-size: 12px;
         margin-bottom: 8px;
       }
 
-      .metric-value {
-        font-size: 26px;
+      .summary-value {
+        font-size: 30px;
         font-weight: 800;
         line-height: 1;
       }
 
-      .metric-foot {
+      .summary-foot {
         margin-top: 6px;
         color: var(--muted);
         font-size: 12px;
       }
 
-      .list {
+      .items {
         display: grid;
         gap: 10px;
       }
 
-      .row {
+      .item {
         display: grid;
-        grid-template-columns: 96px minmax(0, 1fr) auto;
+        grid-template-columns: 84px minmax(0, 1fr) auto;
         gap: 12px;
         align-items: center;
         padding: 12px 14px;
-        border: 1px solid var(--border-soft);
         border-radius: 12px;
+        border: 1px solid var(--border-soft);
         background: var(--surface-strong);
       }
 
-      .row-label {
-        font-weight: 700;
+      .item-id {
+        font-weight: 800;
+        color: var(--text);
       }
 
-      .row-desc {
-        color: var(--muted);
-        font-size: 13px;
+      .item-title {
+        color: var(--text);
         line-height: 1.35;
       }
 
-      .row-value {
-        font-size: 13px;
-        font-weight: 800;
-        color: var(--accent);
-      }
-
-      .board {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
-      }
-
-      .card {
-        padding: 14px;
-        border-radius: 12px;
-        border: 1px solid var(--border-soft);
-        background: var(--surface-strong);
-      }
-
-      .card .title {
-        display: flex;
-        justify-content: space-between;
-        gap: 10px;
-        align-items: center;
-        margin-bottom: 10px;
-      }
-
-      .dept {
-        display: grid;
-        gap: 8px;
-      }
-
-      .dept-line {
-        display: grid;
-        grid-template-columns: 84px 1fr 54px;
-        gap: 10px;
-        align-items: center;
-        font-size: 13px;
-      }
-
-      .bar {
-        height: 10px;
-        border-radius: 999px;
-        background: #e7eef7;
-        overflow: hidden;
-      }
-
-      .bar > span {
-        display: block;
-        height: 100%;
-        border-radius: inherit;
-        background: linear-gradient(90deg, #1f6feb, #58a6ff);
-      }
-
-      .timeline {
-        display: grid;
-        gap: 12px;
-      }
-
-      .timeline-item {
-        display: grid;
-        grid-template-columns: 96px 1fr;
-        gap: 12px;
-        align-items: start;
-      }
-
-      .time {
-        color: var(--muted);
+      .item-state {
         font-size: 12px;
-        font-weight: 700;
-        padding-top: 2px;
+        font-weight: 800;
+        color: var(--success);
       }
 
-      .timeline-box {
-        padding: 12px 14px;
-        border: 1px solid var(--border-soft);
-        border-radius: 12px;
-        background: var(--surface-strong);
-      }
-
-      .timeline-box strong {
-        display: block;
-        margin-bottom: 4px;
-      }
-
-      .timeline-box p {
-        color: var(--muted);
-        font-size: 13px;
-        line-height: 1.4;
-      }
-
-      .split {
+      .card-grid {
         display: grid;
-        grid-template-columns: 1.1fr 0.9fr;
+        grid-template-columns: 1fr 1fr;
         gap: 12px;
-        min-height: 0;
       }
 
-      .stack {
-        display: grid;
-        gap: 12px;
-        min-height: 0;
-      }
-
-      .mini {
+      .mini-card {
         padding: 14px;
         border-radius: 12px;
         border: 1px solid var(--border-soft);
         background: var(--surface-strong);
       }
 
-      .mini h3 {
+      .mini-card h3 {
+        margin: 0 0 10px;
         font-size: 14px;
-        margin-bottom: 10px;
       }
 
-      .mini ul {
+      .mini-card ul {
         margin: 0;
         padding-left: 18px;
         color: var(--muted);
         line-height: 1.5;
       }
 
-      @media (max-width: 1200px) {
+      .status-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .status {
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: #fff;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .status.done {
+        color: var(--success);
+        border-color: rgba(31, 138, 91, 0.2);
+        background: rgba(31, 138, 91, 0.06);
+      }
+
+      .status.review {
+        color: var(--warning);
+        border-color: rgba(184, 121, 0, 0.2);
+        background: rgba(184, 121, 0, 0.06);
+      }
+
+      .status.wait {
+        color: var(--danger);
+        border-color: rgba(187, 62, 62, 0.2);
+        background: rgba(187, 62, 62, 0.06);
+      }
+
+      .loading {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 1180px) {
         .grid,
         .summary-grid,
-        .board,
-        .split {
+        .card-grid {
           grid-template-columns: 1fr;
         }
 
         .app {
-          height: auto;
           min-height: 100vh;
-        }
-
-        .panel {
-          min-height: 360px;
+          height: auto;
         }
       }
 
-      @media (max-width: 780px) {
+      @media (max-width: 760px) {
         .app {
           padding: 12px;
         }
 
-        .topbar {
-          flex-direction: column;
-          align-items: stretch;
-        }
-
-        .top-stats {
-          justify-content: flex-start;
-        }
-
-        .row,
-        .timeline-item,
-        .dept-line {
+        .item {
           grid-template-columns: 1fr;
         }
       }
@@ -406,266 +279,157 @@
   </head>
   <body>
     <main class="app">
-      <section class="topbar">
-        <div>
-          <p class="eyebrow">Issue #7 · 우신공업 부서별 업무 대시보드</p>
-          <h1>PR 머지 결과를 한 화면에서 보는 운영 대시보드</h1>
-          <p class="lede">
-            머지된 이슈와 부서별 진행 현황을 동시에 확인할 수 있는 전체화면 미리보기입니다.
-            지금은 샘플 데이터로 구성되어 있고, 실제 데이터 연동 전 레이아웃 검토에 쓰기 좋게
-            2x2 구성을 고정했습니다.
-          </p>
-        </div>
-        <div class="top-stats">
-          <div class="stat">
-            <div class="stat-label">오늘 머지</div>
-            <div class="stat-value">12</div>
-            <div class="stat-sub">승인 후 반영</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">진행 중</div>
-            <div class="stat-value">8</div>
-            <div class="stat-sub">부서별 작업</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">대기</div>
-            <div class="stat-value">5</div>
-            <div class="stat-sub">검토 필요</div>
-          </div>
-        </div>
-      </section>
+      <header class="hero">
+        <div id="heroLabel" class="issue-label">ISSUE #7 · 우신공업 부서별 업무 대시보드</div>
+      </header>
 
-      <section class="grid">
-        <article class="panel">
-          <div class="panel-head">
-            <div>
-              <h2 class="panel-title">전체 머지 요약</h2>
-              <p class="panel-note">PR이 머지된 뒤 부서별 반영 결과를 요약해서 보여주는 구역입니다.</p>
-            </div>
-            <div class="pill">실시간 집계</div>
-          </div>
-          <div class="panel-body">
-            <div class="summary-grid">
-              <div class="metric">
-                <div class="metric-label">영업</div>
-                <div class="metric-value">4</div>
-                <div class="metric-foot">대시보드 반영 완료</div>
-              </div>
-              <div class="metric">
-                <div class="metric-label">개발</div>
-                <div class="metric-value">3</div>
-                <div class="metric-foot">검증 대기 1건</div>
-              </div>
-              <div class="metric">
-                <div class="metric-label">관리</div>
-                <div class="metric-value">2</div>
-                <div class="metric-foot">결재 연결 완료</div>
-              </div>
-              <div class="metric">
-                <div class="metric-label">생산</div>
-                <div class="metric-value">3</div>
-                <div class="metric-foot">현장 반영 준비</div>
-              </div>
-            </div>
-
-            <div class="list">
-              <div class="row">
-                <div class="row-label">#128</div>
-                <div class="row-desc">견적 승인 후 자동 알림 추가, 머지됨</div>
-                <div class="row-value">완료</div>
-              </div>
-              <div class="row">
-                <div class="row-label">#131</div>
-                <div class="row-desc">부서별 담당자 배정 로직 개선, 머지됨</div>
-                <div class="row-value">완료</div>
-              </div>
-              <div class="row">
-                <div class="row-label">#136</div>
-                <div class="row-desc">생산 실적 요약 카드 업데이트, 검토 중</div>
-                <div class="row-value">검토</div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="panel">
-          <div class="panel-head">
-            <div>
-              <h2 class="panel-title">부서별 진행 현황</h2>
-              <p class="panel-note">가로 2분할, 세로 2분할 중 두 번째 화면에 배치될 부서별 리스트입니다.</p>
-            </div>
-            <div class="pill">2x2 레이아웃</div>
-          </div>
-          <div class="panel-body">
-            <div class="board">
-              <div class="card">
-                <div class="title">
-                  <strong>영업팀</strong>
-                  <span class="row-value">진행</span>
-                </div>
-                <div class="dept">
-                  <div class="dept-line">
-                    <span>견적</span>
-                    <div class="bar"><span style="width: 86%"></span></div>
-                    <span>86%</span>
-                  </div>
-                  <div class="dept-line">
-                    <span>수주</span>
-                    <div class="bar"><span style="width: 72%"></span></div>
-                    <span>72%</span>
-                  </div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="title">
-                  <strong>개발팀</strong>
-                  <span class="row-value">검증</span>
-                </div>
-                <div class="dept">
-                  <div class="dept-line">
-                    <span>백엔드</span>
-                    <div class="bar"><span style="width: 64%"></span></div>
-                    <span>64%</span>
-                  </div>
-                  <div class="dept-line">
-                    <span>프론트</span>
-                    <div class="bar"><span style="width: 58%"></span></div>
-                    <span>58%</span>
-                  </div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="title">
-                  <strong>관리팀</strong>
-                  <span class="row-value">완료</span>
-                </div>
-                <div class="dept">
-                  <div class="dept-line">
-                    <span>결재</span>
-                    <div class="bar"><span style="width: 94%"></span></div>
-                    <span>94%</span>
-                  </div>
-                  <div class="dept-line">
-                    <span>정산</span>
-                    <div class="bar"><span style="width: 79%"></span></div>
-                    <span>79%</span>
-                  </div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="title">
-                  <strong>생산팀</strong>
-                  <span class="row-value">대기</span>
-                </div>
-                <div class="dept">
-                  <div class="dept-line">
-                    <span>현장</span>
-                    <div class="bar"><span style="width: 52%"></span></div>
-                    <span>52%</span>
-                  </div>
-                  <div class="dept-line">
-                    <span>자재</span>
-                    <div class="bar"><span style="width: 47%"></span></div>
-                    <span>47%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="panel">
-          <div class="panel-head">
-            <div>
-              <h2 class="panel-title">최근 머지 타임라인</h2>
-              <p class="panel-note">머지된 PR들이 시간순으로 보이도록 배치한 화면입니다.</p>
-            </div>
-            <div class="pill">최근 24시간</div>
-          </div>
-          <div class="panel-body">
-            <div class="timeline">
-              <div class="timeline-item">
-                <div class="time">09:20</div>
-                <div class="timeline-box">
-                  <strong>개발팀 - 작업 배포</strong>
-                  <p>브랜치 정리와 배포 메모가 함께 반영되었습니다.</p>
-                </div>
-              </div>
-              <div class="timeline-item">
-                <div class="time">10:05</div>
-                <div class="timeline-box">
-                  <strong>영업팀 - 견적 상태</strong>
-                  <p>승인 완료 항목이 부서별 보드에 자동 반영되었습니다.</p>
-                </div>
-              </div>
-              <div class="timeline-item">
-                <div class="time">11:40</div>
-                <div class="timeline-box">
-                  <strong>관리팀 - 결재 연계</strong>
-                  <p>결재 경로와 담당자 정보가 정리되어 머지되었습니다.</p>
-                </div>
-              </div>
-              <div class="timeline-item">
-                <div class="time">13:15</div>
-                <div class="timeline-box">
-                  <strong>생산팀 - 현장 반영</strong>
-                  <p>실적 요약 수치를 최신화하는 항목이 승인 대기 상태입니다.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="panel">
-          <div class="panel-head">
-            <div>
-              <h2 class="panel-title">운영 메모</h2>
-              <p class="panel-note">실제 데이터 연동 시 어떤 정보가 들어갈지 미리 정리하는 영역입니다.</p>
-            </div>
-            <div class="pill">배치 참고</div>
-          </div>
-          <div class="panel-body">
-            <div class="split">
-              <div class="stack">
-                <div class="mini">
-                  <h3>표시 우선순위</h3>
-                  <ul>
-                    <li>머지 완료 이슈를 먼저 노출</li>
-                    <li>부서별 진행률과 상태를 한 번에 확인</li>
-                    <li>검토 필요 항목은 색으로 분리</li>
-                  </ul>
-                </div>
-                <div class="mini">
-                  <h3>화면 구성 의도</h3>
-                  <ul>
-                    <li>전체화면 2x2 고정 레이아웃</li>
-                    <li>각 패널은 독립적으로 읽히는 구조</li>
-                    <li>현장용 모니터에서도 빠르게 스캔 가능</li>
-                  </ul>
-                </div>
-              </div>
-              <div class="stack">
-                <div class="mini">
-                  <h3>다음 연결 지점</h3>
-                  <ul>
-                    <li>GitHub Issue / PR API</li>
-                    <li>부서별 집계 데이터 소스</li>
-                    <li>새로고침 주기와 필터 조건</li>
-                  </ul>
-                </div>
-                <div class="mini">
-                  <h3>상태 표기</h3>
-                  <ul>
-                    <li><span style="color: var(--success); font-weight: 700;">완료</span> - 반영 종료</li>
-                    <li><span style="color: var(--warning); font-weight: 700;">검토</span> - 담당자 확인 필요</li>
-                    <li><span style="color: var(--danger); font-weight: 700;">대기</span> - 아직 머지 전</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
+      <section class="grid" id="dashboard">
+        <div class="loading">이슈 데이터를 불러오는 중입니다.</div>
       </section>
     </main>
+
+    <script>
+      const DEFAULT_DATA = {
+        hero: { number: 7, title: "우신공업 부서별 업무 대시보드" },
+        issues: [
+          {
+            number: 4,
+            title: "공장정보 대시보드 필터·상세조회·통합 검증",
+            badge: "검증",
+            status: "완료",
+            summary: [
+              { label: "화면", value: "필터 + 상세" },
+              { label: "핵심", value: "통합 검증" },
+              { label: "연결", value: "조회 흐름" }
+            ],
+            notes: [
+              "필터 조건으로 구현된 화면을 요약",
+              "상세 조회와 검증 흐름을 한 패널에서 확인",
+              "머지 후 점검 포인트를 정리"
+            ]
+          },
+          {
+            number: 3,
+            title: "공장정보 대시보드 핵심 지표와 차트 영역 구현",
+            badge: "지표",
+            status: "완료",
+            summary: [
+              { label: "화면", value: "KPI + 차트" },
+              { label: "핵심", value: "지표 영역" },
+              { label: "연결", value: "시각화" }
+            ],
+            notes: [
+              "핵심 지표와 차트 영역이 구현된 화면",
+              "운영자가 빠르게 읽는 요약 영역",
+              "대시보드의 중심 정보만 선별해 표시"
+            ]
+          },
+          {
+            number: 2,
+            title: "관세업무 구매확인서 데이터 구현",
+            badge: "데이터",
+            status: "검토",
+            summary: [
+              { label: "화면", value: "구매확인서" },
+              { label: "핵심", value: "데이터 구성" },
+              { label: "연결", value: "업무 흐름" }
+            ],
+            notes: [
+              "구매확인서 데이터가 반영되는 화면",
+              "업무 데이터 구조를 확인하는 구역",
+              "입력과 조회를 함께 보도록 구성"
+            ]
+          },
+          {
+            number: 1,
+            title: "공장정보 대시보드 요약BOM 조회",
+            badge: "조회",
+            status: "대기",
+            summary: [
+              { label: "화면", value: "BOM 요약" },
+              { label: "핵심", value: "조회 구조" },
+              { label: "연결", value: "요약 표시" }
+            ],
+            notes: [
+              "요약 BOM을 빠르게 조회하는 화면",
+              "구성 항목을 한 눈에 보는 레이아웃",
+              "머지 후 확인할 결과 중심으로 정리"
+            ]
+          }
+        ]
+      };
+
+      function renderCard(issue) {
+        const summary = issue.summary
+          .map(
+            (item) => `
+              <div class="summary">
+                <div class="summary-label">${item.label}</div>
+                <div class="summary-value">${item.value}</div>
+              </div>`
+          )
+          .join("");
+
+        const notes = issue.notes.map((note) => `<li>${note}</li>`).join("");
+
+        return `
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="panel-title">#${issue.number} · ${issue.title}</h2>
+                <p class="panel-subtitle">머지된 구현 화면을 운영 관점에서 바로 읽을 수 있게 정리한 요약 카드입니다.</p>
+              </div>
+              <div class="pill">${issue.badge}</div>
+            </div>
+
+            <div class="content">
+              <div class="summary-grid">${summary}</div>
+              <div class="items">
+                <div class="item">
+                  <div class="item-id">구현</div>
+                  <div class="item-title">${issue.title}</div>
+                  <div class="item-state">${issue.status}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-grid">
+              <div class="mini-card">
+                <h3>화면 요약</h3>
+                <ul>${notes}</ul>
+              </div>
+              <div class="mini-card">
+                <h3>상태 표기</h3>
+                <div class="status-row">
+                  <span class="status done">완료</span>
+                  <span class="status review">검토</span>
+                  <span class="status wait">대기</span>
+                </div>
+              </div>
+            </div>
+          </article>`;
+      }
+
+      async function loadData() {
+        try {
+          const response = await fetch("./data/issues.json", { cache: "no-store" });
+          if (!response.ok) throw new Error("Failed to load issues.json");
+          return await response.json();
+        } catch (error) {
+          return DEFAULT_DATA;
+        }
+      }
+
+      async function bootstrap() {
+        const data = await loadData();
+        document.getElementById("heroLabel").textContent =
+          `ISSUE #${data.hero.number} · ${data.hero.title}`;
+        document.getElementById("dashboard").innerHTML = data.issues
+          .map(renderCard)
+          .join("");
+      }
+
+      bootstrap();
+    </script>
   </body>
 </html>
