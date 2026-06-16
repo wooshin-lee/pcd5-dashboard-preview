@@ -1,24 +1,49 @@
 {
   "hero": {
     "number": 7,
-    "title": "우신공업 부서별 업무 대시보드"
+    "title": "우신공업 부서별 업무 대시보드",
+    "mergedCount": 3,
+    "linkedCount": 2
   },
   "issues": [
     {
-      "number": 4,
-      "title": "공장정보 대시보드 필터·상세조회·통합 검증",
-      "badge": "검증",
-      "status": "완료",
+      "number": 1,
+      "title": "공장정보 대시보드 요약BOM 조회",
+      "badge": "조회",
+      "status": "대기",
       "summary": [
-        { "label": "화면", "value": "필터 + 상세" },
-        { "label": "핵심", "value": "통합 검증" },
-        { "label": "연결", "value": "조회 흐름" }
+        { "label": "화면", "value": "BOM 요약" },
+        { "label": "핵심", "value": "조회 구조" },
+        { "label": "연결", "value": "요약 표시" }
       ],
       "notes": [
-        "필터 조건으로 구현된 화면을 요약",
-        "상세 조회와 검증 흐름을 한 패널에서 확인",
-        "머지 후 점검 포인트를 정리"
-      ]
+        "요약 BOM을 빠르게 조회하는 화면",
+        "구성 항목을 한눈에 보는 레이아웃",
+        "머지 후 확인할 결과 중심으로 정리"
+      ],
+      "mergedPr": null
+    },
+    {
+      "number": 2,
+      "title": "관세업무 구매확인서 데이터 구현",
+      "badge": "데이터",
+      "status": "머지 완료",
+      "summary": [
+        { "label": "화면", "value": "구매확인서" },
+        { "label": "핵심", "value": "데이터 구성" },
+        { "label": "연결", "value": "업무 흐름" }
+      ],
+      "notes": [
+        "구매확인서 데이터가 반영되는 화면",
+        "업무 데이터 구조를 확인하는 구역",
+        "입력과 조회를 함께 보도록 구성"
+      ],
+      "mergedPr": {
+        "number": 6,
+        "title": "관세업무 구매확인서 데이터 구현",
+        "url": "https://github.com/doduhyeong-cpu/PCD-5/pull/6",
+        "mergedAt": "2026-06-16T08:07:09Z"
+      }
     },
     {
       "number": 3,
@@ -34,39 +59,30 @@
         "핵심 지표와 차트 영역이 구현된 화면",
         "운영자가 빠르게 읽는 요약 영역",
         "대시보드의 중심 정보만 선별해 표시"
-      ]
+      ],
+      "mergedPr": null
     },
     {
-      "number": 2,
-      "title": "관세업무 구매확인서 데이터 구현",
-      "badge": "데이터",
-      "status": "검토",
+      "number": 4,
+      "title": "공장정보 대시보드 필터·상세조회·통합 검증",
+      "badge": "검증",
+      "status": "머지 완료",
       "summary": [
-        { "label": "화면", "value": "구매확인서" },
-        { "label": "핵심", "value": "데이터 구성" },
-        { "label": "연결", "value": "업무 흐름" }
+        { "label": "화면", "value": "필터 + 상세" },
+        { "label": "핵심", "value": "통합 검증" },
+        { "label": "연결", "value": "조회 흐름" }
       ],
       "notes": [
-        "구매확인서 데이터가 반영되는 화면",
-        "업무 데이터 구조를 확인하는 구역",
-        "입력과 조회를 함께 보도록 구성"
-      ]
-    },
-    {
-      "number": 1,
-      "title": "공장정보 대시보드 요약BOM 조회",
-      "badge": "조회",
-      "status": "대기",
-      "summary": [
-        { "label": "화면", "value": "BOM 요약" },
-        { "label": "핵심", "value": "조회 구조" },
-        { "label": "연결", "value": "요약 표시" }
+        "필터 조건으로 구현된 화면을 요약",
+        "상세 조회와 검증 흐름을 한 패널에서 확인",
+        "머지 후 점검 포인트를 정리"
       ],
-      "notes": [
-        "요약 BOM을 빠르게 조회하는 화면",
-        "구성 항목을 한눈에 보는 레이아웃",
-        "머지 후 확인할 결과 중심으로 정리"
-      ]
+      "mergedPr": {
+        "number": 8,
+        "title": "[codex] 공장정보 대시보드 필터·상세조회·통합 검증",
+        "url": "https://github.com/doduhyeong-cpu/PCD-5/pull/8",
+        "mergedAt": "2026-06-16T08:10:57Z"
+      }
     }
   ]
 }

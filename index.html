@@ -235,6 +235,44 @@
         color: var(--success);
       }
 
+      .merge-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 9px 11px;
+        border-radius: 12px;
+        border: 1px solid var(--border-soft);
+        background: var(--surface-strong);
+        overflow: hidden;
+      }
+
+      .merge-label {
+        font-size: 11px;
+        font-weight: 800;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      .merge-link {
+        flex: 1;
+        min-width: 0;
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 700;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .merge-state {
+        font-size: 11px;
+        font-weight: 800;
+        color: var(--success);
+        white-space: nowrap;
+      }
+
       .card-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -462,6 +500,12 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+      }
+
+      .field .value.link {
+        display: block;
+        color: var(--accent);
+        text-decoration: none;
       }
 
       .editor {
@@ -1013,7 +1057,7 @@
             <p id="heroLabel" class="issue-label">ISSUE #7 · 우신공업 부서별 업무 대시보드</p>
             <p class="hero-sub">패널을 클릭하면 해당 내용이 전체화면 팝업으로 열립니다.</p>
           </div>
-          <div class="hero-chip">2x2 레이아웃</div>
+          <div id="heroChip" class="hero-chip">머지 0건</div>
         </header>
 
         <section class="grid" id="dashboard" aria-label="대시보드 패널">
@@ -1031,7 +1075,7 @@
 
     <script>
       const DEFAULT_DATA = {
-        hero: { number: 7, title: "우신공업 부서별 업무 대시보드" },
+        hero: { number: 7, title: "우신공업 부서별 업무 대시보드", mergedCount: 0, linkedCount: 0 },
         issues: [
           {
             number: 4,
@@ -1047,7 +1091,8 @@
               "필터 조건으로 구현된 화면을 요약",
               "상세 조회와 검증 흐름을 한 패널에서 확인",
               "머지 후 점검 포인트를 정리"
-            ]
+            ],
+            mergedPr: null
           },
           {
             number: 3,
@@ -1063,7 +1108,8 @@
               "핵심 지표와 차트 영역이 구현된 화면",
               "운영자가 빠르게 읽는 요약 영역",
               "대시보드의 중심 정보만 선별해 표시"
-            ]
+            ],
+            mergedPr: null
           },
           {
             number: 2,
@@ -1079,7 +1125,8 @@
               "구매확인서 데이터가 반영되는 화면",
               "업무 데이터 구조를 확인하는 구역",
               "입력과 조회를 함께 보도록 구성"
-            ]
+            ],
+            mergedPr: null
           },
           {
             number: 1,
@@ -1095,7 +1142,8 @@
               "요약 BOM을 빠르게 조회하는 화면",
               "구성 항목을 한눈에 보는 레이아웃",
               "머지 후 확인할 결과 중심으로 정리"
-            ]
+            ],
+            mergedPr: null
           }
         ]
       };
@@ -1115,6 +1163,20 @@
           .join("");
 
         const notes = issue.notes.map((note) => `<li>${note}</li>`).join("");
+        const mergedPr = issue.mergedPr;
+        const mergedRow = mergedPr
+          ? `
+              <div class="merge-row">
+                <span class="merge-label">연결 PR</span>
+                <a class="merge-link" href="${mergedPr.url}" target="_blank" rel="noreferrer">#${mergedPr.number} · ${mergedPr.title}</a>
+                <span class="merge-state">머지 완료</span>
+              </div>`
+          : `
+              <div class="merge-row">
+                <span class="merge-label">연결 PR</span>
+                <span class="merge-link">아직 연결된 PR이 없습니다.</span>
+                <span class="merge-state">대기</span>
+              </div>`;
         const titlePrefix = mode === "modal" ? "#" : "#";
 
         return `
@@ -1147,11 +1209,19 @@
                       <label>화면 성격</label>
                       <div class="value">${issue.summary[0].value}</div>
                     </div>
-                    <div class="field">
-                      <label>핵심 영역</label>
-                      <div class="value">${issue.summary[1].value}</div>
-                    </div>
+                  <div class="field">
+                    <label>핵심 영역</label>
+                    <div class="value">${issue.summary[1].value}</div>
                   </div>
+                  <div class="field" style="grid-column: 1 / -1;">
+                    <label>연결 PR</label>
+                    ${
+                      mergedPr
+                        ? `<a class="value link" href="${mergedPr.url}" target="_blank" rel="noreferrer">#${mergedPr.number} · ${mergedPr.title}</a>`
+                        : `<div class="value">아직 연결된 PR이 없습니다.</div>`
+                    }
+                  </div>
+                </div>
                 </section>
 
                 <section class="work-section">
@@ -1205,6 +1275,7 @@
                 <div class="item-title">${issue.title}</div>
                 <div class="item-state">${issue.status}</div>
               </div>
+              ${mergedRow}
             </div>
 
             <div class="card-grid">
@@ -1239,6 +1310,8 @@
       function renderDashboard() {
         const heroLabel = document.getElementById("heroLabel");
         heroLabel.textContent = `ISSUE #${dashboardData.hero.number} · ${dashboardData.hero.title}`;
+        const heroChip = document.getElementById("heroChip");
+        heroChip.textContent = `머지 ${dashboardData.hero.linkedCount || 0}/${dashboardData.hero.mergedCount || 0}`;
         document.getElementById("dashboard").innerHTML = dashboardData.issues
           .map((issue, index) => panelMarkup(issue, index, "dashboard"))
           .join("");
