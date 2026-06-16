@@ -1,4 +1,4 @@
-name: Sync dashboard issues
+name: Sync merged materials
 
 on:
   workflow_dispatch:
@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Refresh issue data
+      - name: Refresh merged material data
         env:
           SOURCE_TOKEN: ${{ secrets.SOURCE_TOKEN }}
         run: |
@@ -27,138 +27,147 @@ jobs:
             throw new Error('SOURCE_TOKEN secret is missing');
           }
 
-          const ISSUE_TEMPLATES = [
-            {
-              badge: '검증',
-              status: '완료',
-              summary: [
-                { label: '화면', value: '필터 + 상세' },
-                { label: '핵심', value: '통합 검증' },
-                { label: '연결', value: '조회 흐름' }
-              ],
-              notes: [
-                '필터 조건으로 구현된 화면을 요약',
-                '상세 조회와 검증 흐름을 한 패널에서 확인',
-                '머지 후 점검 포인트를 정리'
-              ]
-            },
-            {
-              badge: '지표',
-              status: '완료',
-              summary: [
-                { label: '화면', value: 'KPI + 차트' },
-                { label: '핵심', value: '지표 영역' },
-                { label: '연결', value: '시각화' }
-              ],
-              notes: [
-                '핵심 지표와 차트 영역이 구현된 화면',
-                '운영자가 빠르게 읽는 요약 영역',
-                '대시보드의 중심 정보만 선별해 표시'
-              ]
-            },
-            {
-              badge: '데이터',
-              status: '검토',
-              summary: [
-                { label: '화면', value: '구매확인서' },
-                { label: '핵심', value: '데이터 구성' },
-                { label: '연결', value: '업무 흐름' }
-              ],
-              notes: [
-                '구매확인서 데이터가 반영되는 화면',
-                '업무 데이터 구조를 확인하는 구역',
-                '입력과 조회를 함께 보도록 구성'
-              ]
-            },
-            {
-              badge: '조회',
-              status: '대기',
-              summary: [
-                { label: '화면', value: 'BOM 요약' },
-                { label: '핵심', value: '조회 구조' },
-                { label: '연결', value: '요약 표시' }
-              ],
-              notes: [
-                '요약 BOM을 빠르게 조회하는 화면',
-                '구성 항목을 한 눈에 보는 레이아웃',
-                '머지 후 확인할 결과 중심으로 정리'
-              ]
-            }
-          ];
-
-          function extractIssueNumbers(text) {
-            if (!text) return [];
-            const matches = [...String(text).matchAll(/#(\d+)/g)].map((match) => Number(match[1]));
-            return [...new Set(matches.filter((value) => Number.isFinite(value) && value !== 7))];
-          }
+          const API_BASE = 'https://api.github.com/repos/doduhyeong-cpu/PCD-5';
+          const HEADERS = {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28'
+          };
 
           async function loadJson(url) {
-            const response = await fetch(url, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/vnd.github+json',
-                'X-GitHub-Api-Version': '2026-03-10'
-              }
-            });
-
+            const response = await fetch(url, { headers: HEADERS });
             if (!response.ok) {
               throw new Error(`GitHub API failed: ${response.status} ${response.statusText} for ${url}`);
             }
-
             return response.json();
           }
 
-          async function main() {
-            const [issues, pulls] = await Promise.all([
-              loadJson('https://api.github.com/repos/doduhyeong-cpu/PCD-5/issues?state=all&per_page=100'),
-              loadJson('https://api.github.com/repos/doduhyeong-cpu/PCD-5/pulls?state=closed&per_page=100')
-            ]);
+          async function loadPullFiles(number) {
+            const files = await loadJson(`${API_BASE}/pulls/${number}/files?per_page=100`);
+            return files.map((file) => file.path);
+          }
 
-            const mergedPulls = pulls.filter((pull) => pull.merged_at);
-            const mergedByIssue = new Map();
+          function detectKind(paths) {
+            if (paths.includes('1. 구매확인서/purchase_confirmation_automation.html')) {
+              return 'html-automation';
+            }
+            if (paths.some((path) => path.startsWith('pcd5/'))) {
+              return 'python-gui';
+            }
+            if (paths.some((path) => path.startsWith('src/'))) {
+              return 'electron-dashboard';
+            }
+            return 'generic';
+          }
 
-            for (const pull of mergedPulls) {
-              for (const issueNumber of extractIssueNumbers(`${pull.title}\n${pull.body || ''}`)) {
-                if (!mergedByIssue.has(issueNumber)) {
-                  mergedByIssue.set(issueNumber, pull);
-                }
-              }
+          function buildArtifact(pr, paths) {
+            const kind = detectKind(paths);
+            const base = {
+              number: pr.number,
+              prTitle: pr.title,
+              kind,
+              status: '머지 완료',
+              mergedAt: pr.merged_at,
+              prUrl: pr.html_url,
+              files: paths,
+            };
+
+            if (kind === 'html-automation') {
+              return {
+                ...base,
+                artifactTitle: '구매확인서 CDP 자동화',
+                badge: 'HTML',
+                primaryFile: '1. 구매확인서/purchase_confirmation_automation.html',
+                summary: [
+                  '구매확인서 HTML/GUI 자동화 화면',
+                  '공통 엑셀 생성과 시트 분리',
+                  '실제 다크 테마 작업 화면 미리보기',
+                ],
+                actions: [
+                  { label: '실제 HTML 열기', href: 'assets/previews/purchase_confirmation_automation.html' },
+                  { label: '원본 PR 보기', href: pr.html_url },
+                ],
+              };
             }
 
-            const ordered = issues
-              .filter((issue) => !issue.pull_request && issue.number !== 7)
-              .sort((a, b) => a.number - b.number)
-              .slice(0, 4)
-              .map((issue, index) => {
-                const template = ISSUE_TEMPLATES[index] || ISSUE_TEMPLATES[ISSUE_TEMPLATES.length - 1];
-                const mergedPull = mergedByIssue.get(issue.number) || null;
+            if (kind === 'python-gui') {
+              return {
+                ...base,
+                artifactTitle: 'ERP 작업실적 수집 GUI',
+                badge: 'PY',
+                primaryFile: 'pcd5/gui.py',
+                summary: [
+                  'ERP 조회와 CDP 기록을 묶은 Python GUI',
+                  'CSV 내보내기와 테스트 자동화',
+                  '패키지 구조와 실행 스크립트 정리',
+                ],
+                actions: [
+                  { label: '원본 PR 보기', href: pr.html_url },
+                ],
+              };
+            }
 
-                return {
-                  number: issue.number,
-                  title: issue.title,
-                  badge: template.badge,
-                  status: mergedPull ? '머지 완료' : template.status,
-                  summary: template.summary,
-                  notes: template.notes,
-                  mergedPr: mergedPull
-                    ? {
-                        number: mergedPull.number,
-                        title: mergedPull.title,
-                        url: mergedPull.html_url,
-                        mergedAt: mergedPull.merged_at
-                      }
-                    : null
-                };
-              });
+            if (kind === 'electron-dashboard') {
+              return {
+                ...base,
+                artifactTitle: '공장정보 대시보드 필터·상세조회·통합 검증',
+                badge: 'APP',
+                primaryFile: 'src/renderer/dashboard.ts',
+                summary: [
+                  '필터/상세조회 중심의 공장정보 대시보드',
+                  '결품 메일 자동화와 이력 관리',
+                  '한글 입력 조합 문제 수정',
+                ],
+                actions: [
+                  { label: '원본 PR 보기', href: pr.html_url },
+                ],
+              };
+            }
 
+            return {
+              ...base,
+              artifactTitle: pr.title,
+              badge: 'MERGED',
+              primaryFile: paths[0] || 'unknown',
+              summary: ['머지된 산출물'],
+              actions: [{ label: '원본 PR 보기', href: pr.html_url }],
+            };
+          }
+
+          function orderArtifacts(items) {
+            const kindOrder = {
+              'html-automation': 0,
+              'python-gui': 1,
+              'electron-dashboard': 2,
+              generic: 3
+            };
+
+            return items.sort((a, b) => {
+              const byKind = (kindOrder[a.kind] ?? 99) - (kindOrder[b.kind] ?? 99);
+              if (byKind !== 0) return byKind;
+              return a.number - b.number;
+            });
+          }
+
+          async function main() {
+            const pulls = await loadJson(`${API_BASE}/pulls?state=closed&per_page=100`);
+            const mergedPulls = pulls.filter((pull) => pull.merged_at);
+
+            const artifacts = [];
+            for (const pull of mergedPulls) {
+              const paths = await loadPullFiles(pull.number);
+              artifacts.push(buildArtifact(pull, paths));
+            }
+
+            const ordered = orderArtifacts(artifacts);
             const payload = {
               hero: {
-                number: 7,
-                title: '우신공업 부서별 업무 대시보드',
-                mergedCount: mergedPulls.length,
-                linkedCount: ordered.filter((issue) => issue.mergedPr).length
+                kicker: 'MERGED MATERIALS',
+                title: '머지된 실제 산출물 대시보드',
+                subtitle: '머지된 PR과 실제 생성 파일을 한눈에 보고, 카드 클릭 시 전체화면 작업 화면으로 이동합니다.',
+                mergedCount: ordered.length
               },
-              issues: ordered
+              materials: ordered
             };
 
             fs.mkdirSync('data', { recursive: true });
@@ -176,13 +185,13 @@ jobs:
           PUSH_TOKEN: ${{ secrets.SOURCE_TOKEN }}
         run: |
           if git diff --quiet -- data/issues.json; then
-            echo "No issue data changes"
+            echo "No merged material data changes"
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/issues.json
-          git commit -m "Sync dashboard issue data"
+          git commit -m "Sync merged materials data"
           git remote set-url origin "https://x-access-token:${PUSH_TOKEN}@github.com/wooshin-lee/pcd5-dashboard-preview.git"
           git push origin HEAD:master

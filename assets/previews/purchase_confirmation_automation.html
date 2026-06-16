@@ -1,0 +1,987 @@
+﻿<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>구매확인서 CDP 자동화</title>
+  <style>
+    :root{
+      --bg:#08111d;
+      --panel:#0f1726;
+      --line:rgba(255,255,255,.12);
+      --text:#f2f7ff;
+      --muted:#a8b6cf;
+      --accent:#7cc4ff;
+      --accent2:#91e8bb;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
+      font-family:Segoe UI,Arial,sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(124,196,255,.22), transparent 32%),
+        radial-gradient(circle at right 20%, rgba(145,232,187,.14), transparent 26%),
+        linear-gradient(180deg,#07101b,#0b1322 44%,#07101b);
+    }
+    .wrap{max-width:1480px;margin:0 auto;padding:24px}
+    .hero{display:grid;grid-template-columns:minmax(420px,.9fr) minmax(0,1.4fr);gap:18px;margin-bottom:18px;align-items:start}
+    .card{
+      background:linear-gradient(180deg, rgba(15,23,38,.97), rgba(9,14,24,.97));
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:0 24px 80px rgba(0,0,0,.34);
+    }
+    .panel{padding:20px}
+    h1{margin:0 0 8px;font-size:30px}
+    p{margin:0;color:var(--muted);line-height:1.6}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:16px}
+    .field{display:flex;flex-direction:column;gap:7px}
+    label{font-size:13px;color:var(--muted)}
+    input{
+      width:100%;
+      padding:12px 14px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      outline:none;
+    }
+    input:focus{border-color:rgba(124,196,255,.65);box-shadow:0 0 0 3px rgba(124,196,255,.15)}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    button{
+      border:0;
+      border-radius:12px;
+      padding:12px 16px;
+      font-weight:700;
+      cursor:pointer;
+      color:#08111d;
+      background:linear-gradient(180deg,#9ed5ff,#7cc4ff);
+    }
+    button.secondary{background:linear-gradient(180deg,#d8ffe7,#91e8bb)}
+    button.ghost{background:rgba(255,255,255,.08);color:var(--text);border:1px solid var(--line)}
+    .status{display:flex;align-items:center;gap:10px;margin-top:12px;color:var(--muted)}
+    .dot{width:10px;height:10px;border-radius:999px;background:var(--accent2);box-shadow:0 0 0 5px rgba(145,232,187,.14)}
+    .hint{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5}
+    .toolbar{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .sheet-shell{display:flex;flex-direction:column;gap:12px}
+    .sheet-tabs{display:flex;flex-wrap:wrap;gap:8px}
+    .sheet-tab{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:13px;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .sheet-tab.active{background:linear-gradient(180deg,#9ed5ff,#7cc4ff);color:#08111d}
+    .sheet-meta{font-size:12px;color:var(--muted);line-height:1.5}
+    .sheet-frame{
+      border:1px solid var(--line);
+      border-radius:14px;
+      overflow:auto;
+      background:rgba(7,12,20,.92);
+      max-height:420px;
+    }
+    .sheet-grid{width:100%;border-collapse:collapse;min-width:780px}
+    .sheet-grid th,.sheet-grid td{
+      border:1px solid rgba(255,255,255,.08);
+      padding:8px 10px;
+      font-size:12px;
+      vertical-align:top;
+      text-align:left;
+      white-space:nowrap;
+    }
+    .sheet-grid th{
+      position:sticky;
+      top:0;
+      background:#d9e2f3;
+      color:#08111d;
+      z-index:1;
+    }
+    .sheet-grid tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+    .sheet-grid tr.total-row td{
+      background:rgba(124,196,255,.08);
+      font-weight:700;
+    }
+    .sheet-grid tr.total-row td:nth-child(6),
+    .sheet-grid tr.total-row td:nth-child(9){
+      text-align:right;
+    }
+    pre{
+      margin:0;
+      min-height:420px;
+      max-height:60vh;
+      overflow:auto;
+      padding:18px;
+      white-space:pre-wrap;
+      word-break:break-word;
+      font-family:Consolas,monospace;
+      font-size:13px;
+      background:rgba(7,12,20,.92);
+      border-top:1px solid var(--line);
+      border-radius:0 0 18px 18px;
+    }
+    @media (max-width:900px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <div class="card panel">
+        <h1>구매확인서 CDP 자동화</h1>
+        <p>브리지 서버를 통해 CDP 탭을 찾고, 로그인부터 상단 3개 문서의 데이터를 추출해 엑셀로 저장합니다.</p>
+
+        <div class="grid">
+          <div class="field">
+            <label for="port">CDP 포트</label>
+            <input id="port" value="9222" />
+          </div>
+          <div class="field">
+            <label for="pageUrl">시작 URL</label>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <input id="pageUrl" value="https://weblc.ec-bank.net/index.jsp" style="flex:1 1 auto;" />
+              <button id="openUrlBtn" class="ghost" type="button" style="white-space:nowrap;">URL 열기</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="targetId">Target ID</label>
+            <input id="targetId" placeholder="선택: 71548B..." />
+          </div>
+          <div class="field">
+            <label for="wsUrl">WebSocket URL</label>
+            <input id="wsUrl" placeholder="선택: ws://127.0.0.1:9222/devtools/page/..." />
+          </div>
+          <div class="field">
+            <label for="userId">아이디</label>
+            <input id="userId" placeholder="HMCR151" />
+          </div>
+          <div class="field">
+            <label for="password">비밀번호</label>
+            <input id="password" type="password" placeholder="비밀번호" />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="runBtn">실행</button>
+          <button id="stopBtn" class="ghost">중지</button>
+          <button id="sheetBtn" class="secondary">시트 보기</button>
+          <button id="exportBtn" class="secondary">엑셀 다운로드</button>
+          <button id="saveBtn" class="ghost">로그 저장</button>
+          <button id="clearBtn" class="ghost">로그 지우기</button>
+        </div>
+
+        <div class="status"><span class="dot"></span><span id="status">대기 중</span></div>
+        <div class="hint">
+          이 화면은 브리지 서버에서 열어야 합니다. 브리지 서버가 `/api/targets`와 `/api/open`을 제공하고, HTML은 그 브리지를 통해 CDP 대상을 찾습니다.
+        </div>
+      </div>
+      <div class="card panel">
+        <div class="sheet-shell">
+          <div>
+            <p><strong>시트 보기</strong></p>
+            <div class="sheet-meta" id="sheetMeta">아직 불러온 시트가 없습니다.</div>
+          </div>
+          <div class="sheet-tabs" id="sheetTabs"></div>
+          <div class="sheet-frame">
+            <table class="sheet-grid" id="sheetTable"></table>
+          </div>
+          <div class="hint">
+            화면에서 확인한 회사별 시트를 여기서 바로 볼 수 있고, 같은 데이터로 엑셀 파일을 저장할 수 있습니다.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card"><pre id="log"></pre></div>
+  </div>
+
+  <script>
+    const els = {
+      port: document.getElementById('port'),
+      pageUrl: document.getElementById('pageUrl'),
+      targetId: document.getElementById('targetId'),
+      wsUrl: document.getElementById('wsUrl'),
+      userId: document.getElementById('userId'),
+      password: document.getElementById('password'),
+      runBtn: document.getElementById('runBtn'),
+      stopBtn: document.getElementById('stopBtn'),
+      openUrlBtn: document.getElementById('openUrlBtn'),
+      saveBtn: document.getElementById('saveBtn'),
+      clearBtn: document.getElementById('clearBtn'),
+      sheetBtn: document.getElementById('sheetBtn'),
+      exportBtn: document.getElementById('exportBtn'),
+      status: document.getElementById('status'),
+      log: document.getElementById('log'),
+      sheetMeta: document.getElementById('sheetMeta'),
+      sheetTabs: document.getElementById('sheetTabs'),
+      sheetTable: document.getElementById('sheetTable'),
+    };
+
+    const logRecords = [];
+    const COMPANY_ORDER = ['현대', '기아', '글로비스'];
+    const SHEET_ORDER = ['종합', ...COMPANY_ORDER];
+    const COMPANY_HEADERS = ['순번', '문서번호', '행번호', '③ HS부호', '④ 품명 및 규격', '품번', '⑤ 단위 및 수량', '⑥ 구매(공급)일', '⑦ 단가', '⑧ 금액', '⑨ 비고', '', '', '품번'];
+    const COMBINED_HEADERS = ['순번', '문서번호', '행번호', '③ HS부호', '④ 품명 및 규격', '품번', '⑤ 단위 및 수량', '⑥ 구매(공급)일', '⑦ 단가', '⑧ 금액', '⑨ 비고', '', '출처', '품번'];
+    const sheetState = {
+      documents: [],
+      rowsByCompany: null,
+      activeCompany: '종합',
+      exportedPath: '',
+    };
+    let activeRun = null;
+    const BRIDGE_ORIGIN = 'http://127.0.0.1:8787';
+
+    function apiUrl(path) {
+      return new URL(path, BRIDGE_ORIGIN).toString();
+    }
+
+    function nowIso(){ return new Date().toISOString(); }
+    function append(line, record=null){
+      els.log.textContent += line + '\n';
+      els.log.scrollTop = els.log.scrollHeight;
+      if(record) logRecords.push(record);
+    }
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+    function writeEvent(event, fields = {}){
+      const record = { event, time: nowIso(), ...fields };
+      append(JSON.stringify(record), record);
+    }
+    function setStatus(text){ els.status.textContent = text; }
+    function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+    function text(value) {
+      return String(value ?? '').trim();
+    }
+
+    function formatPartNumber(value) {
+      const cleaned = text(value).replace(/\s+/g, '');
+      if (!cleaned) return '';
+      if (/^[A-Za-z0-9]{5}.+$/.test(cleaned)) {
+        return `${cleaned.slice(0, 5)}-${cleaned.slice(5)}`;
+      }
+      return cleaned;
+    }
+
+    function extractPartNumber(cells) {
+      const candidate = text(cells[2] || '');
+      if (!candidate) return '';
+      if (/EA\b/i.test(candidate) || /^KRW\b/i.test(candidate)) return '';
+      return candidate;
+    }
+
+    function companyNameForBuyer(buyer) {
+      const value = text(buyer);
+      if (!value) return '';
+      if (value.includes('글로비스')) return '글로비스';
+      if (value.includes('기아')) return '기아';
+      if (value.includes('현대')) return '현대';
+      return '';
+    }
+
+    function emptyCompanyRows() {
+      return Object.fromEntries(SHEET_ORDER.map((name) => [name, [getHeadersForSheet(name)]]));
+    }
+
+    function getHeadersForSheet(name) {
+      return name === '종합' ? COMBINED_HEADERS.slice() : COMPANY_HEADERS.slice();
+    }
+
+    function buildCompanySheetRows(documents) {
+      const rowsByCompany = Object.fromEntries(COMPANY_ORDER.map((name) => [name, [COMPANY_HEADERS.slice()]]));
+      documents.forEach((doc, docIndex) => {
+        const company = companyNameForBuyer(doc?.buyer?.company || doc?.buyer?.name);
+        if (!company) return;
+        const rows = rowsByCompany[company];
+        const itemRows = Array.isArray(doc.itemRows) ? doc.itemRows : [];
+        itemRows.forEach((row, rowIndex) => {
+          const cells = Array.isArray(row) ? row.map(text) : [];
+          const isTotal = (cells[1] || '').trim().toUpperCase() === 'TOTAL' || (cells[0] || '').trim().toUpperCase() === 'TOTAL';
+          const partNumber = extractPartNumber(cells);
+          if (!isTotal && !partNumber) return;
+          const raw = [
+            String(docIndex + 1),
+            text(doc.documentNumber),
+            String(rowIndex + 1),
+            cells[0] || '',
+            cells[1] || '',
+            partNumber,
+            cells[3] || '',
+            cells[4] || '',
+            cells[5] || '',
+            cells[6] || '',
+            cells[7] || '',
+            '',
+            '',
+            isTotal ? '' : formatPartNumber(partNumber),
+          ];
+          rows.push(raw);
+        });
+      });
+      return rowsByCompany;
+    }
+
+    function buildCombinedSheetRows(documents) {
+      const rows = [COMBINED_HEADERS.slice()];
+      documents.forEach((doc, docIndex) => {
+        const company = companyNameForBuyer(doc?.buyer?.company || doc?.buyer?.name);
+        const itemRows = Array.isArray(doc.itemRows) ? doc.itemRows : [];
+        itemRows.forEach((row, rowIndex) => {
+          const cells = Array.isArray(row) ? row.map(text) : [];
+          const isTotal = (cells[1] || '').trim().toUpperCase() === 'TOTAL' || (cells[0] || '').trim().toUpperCase() === 'TOTAL';
+          const partNumber = extractPartNumber(cells);
+          if (isTotal || !partNumber) {
+            return;
+          }
+          rows.push([
+            String(docIndex + 1),
+            text(doc.documentNumber),
+            String(rowIndex + 1),
+            cells[0] || '',
+            cells[1] || '',
+            partNumber,
+            cells[3] || '',
+            cells[4] || '',
+            cells[5] || '',
+            cells[6] || '',
+            cells[7] || '',
+            '',
+            company || '',
+            formatPartNumber(partNumber),
+          ]);
+        });
+      });
+      return rows;
+    }
+
+    function buildCombinedSheetRowsFromCompanyRows(rowsByCompany) {
+      const combined = [COMBINED_HEADERS.slice()];
+      COMPANY_ORDER.forEach((company) => {
+        const rows = rowsByCompany?.[company] || [];
+        rows.slice(1).forEach((row, rowIndex) => {
+          const values = [...row, '', '', '', '', '', '', '', '', '', '', '', ''].slice(0, 14);
+          const isTotalRow = String(values[4] || '').trim().toUpperCase() === 'TOTAL';
+          const partNumber = String(values[5] || '').trim();
+          if (isTotalRow || !partNumber) return;
+          combined.push([
+            values[0] || '',
+            values[1] || '',
+            values[2] || String(rowIndex + 1),
+            values[3] || '',
+            values[4] || '',
+            values[5] || '',
+            values[6] || '',
+            values[7] || '',
+            values[8] || '',
+            values[9] || '',
+            values[10] || '',
+            '',
+            company,
+            values[13] || formatPartNumber(partNumber),
+          ]);
+        });
+      });
+      return combined;
+    }
+
+    function buildAllSheetRows(documents) {
+      return {
+        종합: buildCombinedSheetRows(documents),
+        ...buildCompanySheetRows(documents),
+      };
+    }
+
+    function renderSheetTabs() {
+      const rowsByCompany = sheetState.rowsByCompany;
+      if (!rowsByCompany) {
+        els.sheetTabs.innerHTML = '';
+        return;
+      }
+      els.sheetTabs.innerHTML = SHEET_ORDER.map((name) => {
+        const active = sheetState.activeCompany === name ? 'active' : '';
+        const count = Math.max((rowsByCompany[name] || []).length - 1, 0);
+        return `<button class="sheet-tab ${active}" data-company="${name}">${name} (${count})</button>`;
+      }).join('');
+      els.sheetTabs.querySelectorAll('.sheet-tab').forEach((button) => {
+        button.addEventListener('click', () => {
+          sheetState.activeCompany = button.dataset.company;
+          renderSheetPreview();
+        });
+      });
+    }
+
+    function renderSheetPreview() {
+      const rowsByCompany = sheetState.rowsByCompany;
+      if (!rowsByCompany) {
+        els.sheetMeta.textContent = '아직 불러온 시트가 없습니다.';
+        els.sheetTable.innerHTML = '';
+        renderSheetTabs();
+        return;
+      }
+      const rows = rowsByCompany[sheetState.activeCompany] || [getHeadersForSheet(sheetState.activeCompany)];
+      const dataRows = rows.slice(1);
+      els.sheetMeta.textContent = `${sheetState.activeCompany} 시트 | 행 수 ${Math.max(rows.length - 1, 0)} | 문서 ${sheetState.documents.length}건`;
+      renderSheetTabs();
+      if (dataRows.length === 0) {
+        els.sheetTable.innerHTML = `<tbody><tr><td style="padding:14px;color:#a8b6cf;">표시할 행이 없습니다.</td></tr></tbody>`;
+        return;
+      }
+      const isCombinedSheet = sheetState.activeCompany === '종합';
+      els.sheetTable.innerHTML = `
+        <thead><tr>${rows[0].map((cell) => `<th>${escapeHtml(cell)}</th>`).join('')}</tr></thead>
+        <tbody>
+          ${dataRows.map((row) => {
+            const values = [...row, '', '', '', '', '', '', '', '', '', '', '', ''].slice(0, rows[0].length);
+            const isTotalRow = String(values[4] || '').trim().toUpperCase() === 'TOTAL';
+            if (isTotalRow) {
+              const totalQty = values[5] || values[6] || '';
+              const totalAmount = values[9] || values[8] || '';
+              if (isCombinedSheet) {
+                return '';
+              }
+              return `
+                <tr class="total-row">
+                  <td>${escapeHtml(values[0])}</td>
+                  <td>${escapeHtml(values[1])}</td>
+                  <td>${escapeHtml(values[2])}</td>
+                  <td>${escapeHtml(values[3])}</td>
+                  <td colspan="2">${escapeHtml(values[4])}</td>
+                  <td>${escapeHtml(totalQty)}</td>
+                  <td>${escapeHtml(values[7])}</td>
+                  <td></td>
+                  <td>${escapeHtml(totalAmount)}</td>
+                  <td>${escapeHtml(values[10])}</td>
+                  <td></td>
+                  <td></td>
+                  <td>${escapeHtml(values[13])}</td>
+                </tr>`;
+            }
+            return `<tr>${values.map((cell) => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`;
+          }).join('')}
+        </tbody>
+      `;
+    }
+
+    async function loadSheetPreview(documents) {
+      sheetState.documents = documents;
+      try {
+        const response = await fetchJson('/api/company-sheets', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ documents }),
+        });
+        if (response && response.sheetRows) {
+          sheetState.rowsByCompany = {
+            종합: buildCombinedSheetRowsFromCompanyRows(response.sheetRows),
+            ...response.sheetRows,
+          };
+        } else {
+          sheetState.rowsByCompany = buildAllSheetRows(documents);
+        }
+      } catch (error) {
+        sheetState.rowsByCompany = buildAllSheetRows(documents);
+      }
+      sheetState.activeCompany = '종합';
+      renderSheetPreview();
+      return { ok: true };
+    }
+
+    async function exportCompanySheets() {
+      if (!sheetState.documents.length) {
+        throw new Error('먼저 실행해서 데이터를 수집해 주세요.');
+      }
+      const response = await fetch(apiUrl('/api/export-company-sheets-bytes'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          documents: sheetState.documents,
+          outputName: 'purchase_confirmation_company_sheets.xlsx',
+        }),
+      });
+      if (!response.ok) throw new Error('엑셀 저장 실패: HTTP ' + response.status);
+      const blob = await response.blob();
+      const suggestedName = 'purchase_confirmation_company_sheets.xlsx';
+      if (window.showSaveFilePicker) {
+        const handle = await window.showSaveFilePicker({
+          suggestedName,
+          types: [
+            {
+              description: 'Excel Workbook',
+              accept: { 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'] },
+            },
+          ],
+        });
+        const writable = await handle.createWritable();
+        await writable.write(blob);
+        await writable.close();
+        sheetState.exportedPath = handle.name || suggestedName;
+        setStatus(`엑셀 저장 완료: ${sheetState.exportedPath}`);
+        writeEvent('company_excel_saved', { savedPath: sheetState.exportedPath, via: 'save_picker' });
+        append(`저장 완료: ${sheetState.exportedPath}`);
+        return { ok: true, savedPath: sheetState.exportedPath };
+      }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = suggestedName;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      sheetState.exportedPath = suggestedName;
+      setStatus(`엑셀 다운로드 완료: ${suggestedName}`);
+      writeEvent('company_excel_saved', { savedPath: suggestedName, via: 'download' });
+      append(`다운로드 완료: ${suggestedName}`);
+      return { ok: true, savedPath: suggestedName };
+    }
+
+    async function fetchJson(path, init = {}){
+      const res = await fetch(apiUrl(path), init);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    }
+
+    class CdpClient {
+      constructor(wsUrl, onEvent){
+        this.wsUrl = wsUrl;
+        this.onEvent = onEvent;
+        this.ws = null;
+        this.nextId = 0;
+        this.pending = new Map();
+      }
+      connect(){
+        return new Promise((resolve, reject) => {
+          const ws = new WebSocket(this.wsUrl);
+          this.ws = ws;
+          ws.onopen = () => resolve();
+          ws.onerror = () => reject(new Error('WebSocket 연결 실패'));
+          ws.onmessage = (message) => {
+            const payload = JSON.parse(message.data);
+            if (payload.id) {
+              const pending = this.pending.get(payload.id);
+              if (!pending) return;
+              this.pending.delete(payload.id);
+              if (payload.error) pending.reject(new Error(payload.error.message || 'CDP call failed'));
+              else pending.resolve(payload.result);
+              return;
+            }
+            this.onEvent?.(payload);
+          };
+          ws.onclose = () => {
+            for (const [, pending] of this.pending.entries()) pending.reject(new Error('WebSocket closed'));
+            this.pending.clear();
+          };
+        });
+      }
+      call(method, params = {}){
+        const id = ++this.nextId;
+        const msg = JSON.stringify({ id, method, params });
+        return new Promise((resolve, reject) => {
+          this.pending.set(id, { resolve, reject });
+          this.ws.send(msg);
+          setTimeout(() => {
+            if (!this.pending.has(id)) return;
+            this.pending.delete(id);
+            reject(new Error(`CDP timeout: ${method}`));
+          }, 30000);
+        });
+      }
+      async eval(expression, awaitPromise = false){
+        const result = await this.call('Runtime.evaluate', {
+          expression,
+          returnByValue: true,
+          awaitPromise,
+          userGesture: true,
+          includeCommandLineAPI: true,
+        });
+        if (result.exceptionDetails) throw new Error(`JavaScript exception: ${JSON.stringify(result.exceptionDetails)}`);
+        return result.result ? result.result.value : undefined;
+      }
+      close(){ try { this.ws?.close(); } catch {} }
+    }
+
+    function buildPageUrl() {
+      const explicit = els.pageUrl.value.trim();
+      return explicit || 'https://weblc.ec-bank.net/index.jsp';
+    }
+
+    function openPageUrl() {
+      const pageUrl = buildPageUrl();
+      window.open(pageUrl, '_blank', 'noopener,noreferrer');
+      writeEvent('open_url_clicked', { pageUrl });
+      setStatus('URL 열기');
+    }
+
+    async function resolveWsUrl() {
+      const explicit = els.wsUrl.value.trim();
+      if (explicit.startsWith('ws://')) return explicit;
+
+      const port = els.port.value.trim() || '9222';
+      const pageUrl = buildPageUrl();
+      const targetId = els.targetId.value.trim();
+      if (targetId) return `ws://127.0.0.1:${port}/devtools/page/${targetId}`;
+
+      const target = await fetchJson(`/api/targets?port=${encodeURIComponent(port)}&pageUrl=${encodeURIComponent(pageUrl)}`);
+      if (target?.webSocketDebuggerUrl) return target.webSocketDebuggerUrl;
+
+      const opened = await fetchJson(`/api/open?port=${encodeURIComponent(port)}&pageUrl=${encodeURIComponent(pageUrl)}`);
+      if (!opened?.webSocketDebuggerUrl) throw new Error('대상 탭을 찾지 못했습니다.');
+      return opened.webSocketDebuggerUrl;
+    }
+
+    function jsState() {
+      return `
+        (() => {
+          const out = {
+            topUrl: location.href,
+            topTitle: document.title,
+            loginUser: !!document.querySelector('input[name="userid"]'),
+            loginPass: !!document.querySelector('input[name="password"]')
+          };
+          for (const name of ['leftFrame', 'bodyFrame', 'topFrame']) {
+            try {
+              const frame = window.frames[name];
+              if (!frame) { out[name] = null; continue; }
+              const doc = frame.document;
+              out[name] = {
+                href: frame.location.href,
+                title: doc.title || '',
+                text: (doc.body && doc.body.innerText ? doc.body.innerText : '').slice(0, 350)
+              };
+            } catch (error) {
+              out[name] = { error: String(error) };
+            }
+          }
+          return out;
+        })()
+      `;
+    }
+
+    function jsLogin(userId, password) {
+      return `
+        (() => {
+          const setValue = (selector, value) => {
+            const el = document.querySelector(selector);
+            if (!el) throw new Error('Login element not found: ' + selector);
+            const proto = Object.getPrototypeOf(el);
+            const descriptor = Object.getOwnPropertyDescriptor(proto, 'value');
+            if (descriptor && descriptor.set) descriptor.set.call(el, value);
+            else el.value = value;
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+          };
+          setValue('input[name="userid"]', ${JSON.stringify(userId)});
+          setValue('input[name="password"]', ${JSON.stringify(password)});
+          const form = document.querySelector('form') || document.forms[0];
+          if (!form) throw new Error('Login form not found');
+          form.submit();
+          return true;
+        })()
+      `;
+    }
+
+    const jsClickPurchase = `
+      (() => {
+        const frame = window.frames['leftFrame'];
+        if (!frame) throw new Error('leftFrame not found');
+        const doc = frame.document;
+        const normalized = (value) => String(value || '').replace(/\\s+/g, '');
+        const isVisible = (el) => !!el && el.getClientRects && el.getClientRects().length > 0;
+        const anchors = Array.from(doc.querySelectorAll('a, area, span, li, td, div, font')).filter(isVisible);
+        const exactAnchors = anchors.filter((a) => normalized(a.textContent) === '구매확인서');
+        const target =
+          exactAnchors[0]
+          || anchors.find((a) => normalized(a.textContent).includes('구매확인서') && !normalized(a.textContent).includes('구매확인신청서'))
+          || Array.from(doc.querySelectorAll('a[href], area[href]'))
+            .find((a) => String(a.getAttribute('href') || a.href || '').includes('purlic'))
+          || Array.from(doc.querySelectorAll('li, span, td'))
+            .find((el) => normalized(el.textContent) === '구매확인서' && isVisible(el));
+        const bodyFrame = window.frames['bodyFrame'];
+        if (!target) {
+          if (bodyFrame) {
+            bodyFrame.location.href = '/purlic';
+            return { text: '구매확인서', href: '/purlic', fallback: true };
+          }
+          throw new Error('purchase menu anchor not found');
+        }
+        const anchor = target.tagName === 'A' ? target : target.closest?.('a') || target.querySelector?.('a');
+        const href = (anchor && (anchor.getAttribute('href') || anchor.href)) || target.getAttribute?.('href') || '';
+        if (anchor) {
+          anchor.click();
+        } else if (typeof target.click === 'function') {
+          target.click();
+        } else {
+          throw new Error('purchase menu anchor not clickable');
+        }
+        if (bodyFrame && !String(bodyFrame.location.href || '').includes('/purlic')) {
+          bodyFrame.location.href = href || '/purlic';
+        }
+        return { text: (target.textContent || '').trim(), href: href || '/purlic' };
+      })()
+    `;    function jsCollectDocs(limit = 3) {
+      return `
+        (() => {
+          const frame = window.frames['bodyFrame'];
+          if (!frame) throw new Error('bodyFrame not found');
+          const links = Array.from(frame.document.querySelectorAll('a[href*="pcrlicAction.do"]'))
+            .map((a) => ({ text: (a.textContent || '').trim(), href: a.getAttribute('href') || a.href }))
+            .filter((item) => item.text && item.href);
+          return links.slice(0, ${limit});
+        })()
+      `;
+    }
+
+    function jsOpenDoc(href) {
+      return `
+        (() => {
+          const frame = window.frames['bodyFrame'];
+          if (!frame) throw new Error('bodyFrame not found');
+          frame.location.href = ${JSON.stringify(href)};
+          return true;
+        })()
+      `;
+    }
+
+    const jsReturnList = `
+      (() => {
+        const frame = window.frames['bodyFrame'];
+        if (!frame) throw new Error('bodyFrame not found');
+        frame.location.href = '/purlic';
+        return true;
+      })()
+    `;
+
+    const jsExtractDocData = `
+      (() => {
+        const frame = window.frames['bodyFrame'];
+        if (!frame) throw new Error('bodyFrame not found');
+        const doc = frame.document;
+        const clean = (value) => String(value || '').replace(/\\u00a0/g, ' ').replace(/\\s+/g, ' ').trim();
+        const text = clean(doc.body ? doc.body.innerText : '');
+        const pick = (pattern) => {
+          const match = text.match(pattern);
+          return match ? clean(match[1]) : '';
+        };
+        const purchaseNo = pick(/구매확인서번호\\s*:\\s*([A-Z0-9]+)/);
+        const buyerMatch = text.match(/①\\s*구매자\\s*\\(상호\\)\\s*(.*?)\\s*\\(주소\\)\\s*(.*?)\\s*\\(성명\\)\\s*(.*?)\\s*\\(사업자등록번호\\)\\s*([0-9-]+)/);
+        const supplierMatch = text.match(/②\\s*공급자\\s*\\(상호\\)\\s*(.*?)\\s*\\(주소\\)\\s*(.*?)\\s*\\(성명\\)\\s*(.*?)\\s*\\(사업자등록번호\\)\\s*([0-9-]+)/);
+        const detailTable = Array.from(doc.querySelectorAll('table')).find((table) =>
+          Array.from(table.querySelectorAll('tr')).some((row) => {
+            const header = clean(row.innerText);
+            return header.includes('HS부호') && header.includes('품명') && header.includes('단위') && header.includes('금액');
+          })
+        );
+        const itemRows = [];
+        if (detailTable) {
+          const rows = Array.from(detailTable.querySelectorAll('tr'));
+          let startIndex = -1;
+          for (let i = 0; i < rows.length; i += 1) {
+            const rowText = clean(rows[i].innerText);
+            if (rowText.includes('HS부호') && rowText.includes('품명') && rowText.includes('단위') && rowText.includes('금액')) {
+              startIndex = i + 1;
+              break;
+            }
+          }
+          if (startIndex >= 0) {
+            for (let i = startIndex; i < rows.length; i += 1) {
+              const rowText = clean(rows[i].innerText);
+              if (!rowText) continue;
+              if (rowText.startsWith('2.') || rowText.includes('세금계산서') || rowText.includes('적색고무날인') || rowText.includes('본 문서는')) {
+                break;
+              }
+              const cells = Array.from(rows[i].querySelectorAll('td, th')).map((td) => clean(td.innerText || td.textContent));
+              if (cells.some(Boolean)) itemRows.push(cells);
+            }
+          }
+        }
+        return {
+          pageTitle: doc.title || '',
+          pageUrl: frame.location.href,
+          purchaseNo,
+          buyer: buyerMatch ? { company: clean(buyerMatch[1]), address: clean(buyerMatch[2]), name: clean(buyerMatch[3]), businessNumber: clean(buyerMatch[4]) } : {},
+          supplier: supplierMatch ? { company: clean(supplierMatch[1]), address: clean(supplierMatch[2]), name: clean(supplierMatch[3]), businessNumber: clean(supplierMatch[4]) } : {},
+          itemRows,
+          rawText: text
+        };
+      })()
+    `;
+
+    async function waitFor(client, predicate, label, timeoutMs = 30000) {
+      const deadline = Date.now() + timeoutMs;
+      while (Date.now() < deadline) {
+        if (activeRun?.aborted) throw new Error('사용자가 중지했습니다.');
+        try {
+          const state = await client.eval(jsState());
+          if (predicate(state)) return state;
+        } catch {}
+        await sleep(500);
+      }
+      throw new Error(`대기 실패: ${label}`);
+    }
+
+    async function runAutomation() {
+      const userId = els.userId.value.trim();
+      const password = els.password.value.trim();
+      if (!userId || !password) throw new Error('Please enter both ID and password.');
+
+      logRecords.length = 0;
+      setStatus('Connecting');
+      writeEvent('start', { userId });
+
+      const wsUrl = await resolveWsUrl();
+      writeEvent('resolved_ws', { wsUrl });
+
+      const client = new CdpClient(wsUrl, (event) => {
+        if (event.method === 'Page.frameNavigated' || event.method === 'Page.loadEventFired' || event.method === 'Runtime.exceptionThrown') {
+          writeEvent(event.method, event.params || {});
+        }
+      });
+
+      try {
+        await client.connect();
+        await client.call('Page.enable');
+        await client.call('Runtime.enable');
+        await client.call('Log.enable');
+
+        setStatus('Checking state');
+        let state = await client.eval(jsState());
+        writeEvent('state', { state });
+
+        if (state.loginUser && state.loginPass) {
+          setStatus('Submitting login');
+          await client.eval(jsLogin(userId, password));
+          writeEvent('login_submitted', { userId });
+        }
+
+        await waitFor(client, (s) => s.leftFrame && s.bodyFrame, 'main frames', 45000);
+        state = await client.eval(jsState());
+        writeEvent('state', { state });
+
+        if (!String(state.bodyFrame?.href || '').includes('/purlic')) {
+          setStatus('Opening purchase confirmation');
+          await client.eval(jsClickPurchase);
+          writeEvent('menu_click', { text: 'purchase confirmation' });
+          await waitFor(client, (s) => s.bodyFrame && String(s.bodyFrame.href || '').includes('/purlic'), 'purchase list', 30000);
+        }
+
+        const docs = await client.eval(jsCollectDocs(3));
+        if (!Array.isArray(docs) || docs.length < 3) {
+          throw new Error('Need at least 3 documents. Collected: ' + (Array.isArray(docs) ? docs.length : 0));
+        }
+        writeEvent('docs_collected', { docs: docs.slice(0, 3) });
+        const extractedDocs = [];
+
+        for (let index = 0; index < 3; index += 1) {
+          if (activeRun?.aborted) throw new Error('Operation cancelled.');
+          const doc = docs[index];
+          setStatus(`${index + 1}/3 opening`);
+          await client.eval(jsOpenDoc(doc.href));
+          writeEvent('doc_opened', { index: index + 1, text: doc.text, href: doc.href });
+          await waitFor(client, (s, target = doc.href) => s.bodyFrame && String(s.bodyFrame.href || '').includes(target), 'doc ' + (index + 1), 30000);
+
+          setStatus(`${index + 1}/3 extracting`);
+          const extracted = await client.eval(jsExtractDocData);
+          if (!extracted || typeof extracted !== 'object') {
+            throw new Error('Failed to extract document data.');
+          }
+          extracted.documentNumber = doc.text;
+          extracted.sourceHref = doc.href;
+          extractedDocs.push(extracted);
+          writeEvent('doc_extracted', { index: index + 1, href: doc.href });
+
+          await client.eval(jsReturnList);
+          await waitFor(client, (s) => s.bodyFrame && String(s.bodyFrame.href || '').includes('/purlic'), 'return list ' + (index + 1), 30000);
+          writeEvent('returned_to_list', { index: index + 1 });
+        }
+
+        setStatus('Saving Excel');
+        const exportRes = await fetch(apiUrl('/api/export'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ documents: extractedDocs, outputName: 'purchase_confirmation_output.xlsx' }),
+        });
+        if (!exportRes.ok) {
+          throw new Error('Excel save failed: HTTP ' + exportRes.status);
+        }
+        const exportData = await exportRes.json();
+        writeEvent('excel_saved', exportData);
+        setStatus('시트 미리보기 준비');
+        await loadSheetPreview(extractedDocs);
+        writeEvent('complete');
+        setStatus('완료: 시트 보기 가능');
+      } catch (error) {
+        writeEvent('error', { message: String(error?.message || error) });
+        setStatus('Error');
+        throw error;
+      } finally {
+        client.close();
+      }
+    }
+    function saveLogs() {
+      const blob = new Blob([logRecords.map((r) => JSON.stringify(r)).join('\n') + '\n'], { type: 'application/jsonl' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'purchase_confirmation_run.jsonl';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    els.runBtn.addEventListener('click', async () => {
+      if (activeRun && !activeRun.aborted) return;
+      activeRun = { aborted: false };
+      els.runBtn.disabled = true;
+      writeEvent('ui_start');
+      try {
+        await runAutomation();
+      } catch (error) {
+        append(`오류: ${error.message || error}`);
+        alert(error.message || String(error));
+      } finally {
+        activeRun = null;
+        els.runBtn.disabled = false;
+      }
+    });
+
+    els.stopBtn.addEventListener('click', () => {
+      if (activeRun) {
+        activeRun.aborted = true;
+        writeEvent('ui_stop');
+        setStatus('Stop requested');
+      }
+    });
+    els.openUrlBtn.addEventListener('click', openPageUrl);
+    els.sheetBtn.addEventListener('click', () => {
+      if (!sheetState.rowsByCompany) {
+        renderSheetPreview();
+        return;
+      }
+      renderSheetPreview();
+      setStatus(`시트 보기: ${sheetState.activeCompany}`);
+    });
+    els.exportBtn.addEventListener('click', async () => {
+      try {
+        if (!sheetState.rowsByCompany) {
+          throw new Error('먼저 실행해서 데이터를 수집해 주세요.');
+        }
+        setStatus('엑셀 저장 중');
+        await exportCompanySheets();
+      } catch (error) {
+        writeEvent('error', { message: String(error?.message || error) });
+        alert(error.message || String(error));
+      }
+    });
+    els.saveBtn.addEventListener('click', saveLogs);
+    els.clearBtn.addEventListener('click', () => { els.log.textContent = ''; logRecords.length = 0; setStatus('로그 지움'); });
+  </script>
+</body>
+</html>
+
