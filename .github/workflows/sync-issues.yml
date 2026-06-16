@@ -51,7 +51,7 @@ jobs:
             if (paths.includes('1. 구매확인서/purchase_confirmation_automation.html')) {
               return 'html-automation';
             }
-            if (paths.some((path) => path.startsWith('pcd5/'))) {
+            if (paths.some((path) => path.includes('python_gui/'))) {
               return 'python-gui';
             }
             if (paths.some((path) => path.startsWith('src/'))) {
@@ -94,16 +94,17 @@ jobs:
             if (kind === 'python-gui') {
               return {
                 ...base,
-                artifactTitle: 'ERP 작업실적 수집 GUI',
+                artifactTitle: '구매확인서 엑셀 편집기',
                 badge: 'PY',
-                primaryFile: 'pcd5/gui.py',
-                previewPath: 'assets/previews/erp_workflow_preview.html',
+                primaryFile: '1. 구매확인서/python_gui/app.py',
+                previewPath: 'assets/previews/purchase_workbook_editor_preview.html',
                 summary: [
-                  'ERP 조회와 CDP 기록을 묶은 Python GUI',
-                  'CSV 내보내기와 테스트 자동화',
-                  '패키지 구조와 실행 스크립트 정리',
+                  '엑셀 파일을 불러와 1페이지와 2페이지 데이터를 편집',
+                  '선택한 통합본을 복사 저장하고 다시 읽기',
+                  'HTML 편집기와 PySide6 GUI가 함께 제공',
                 ],
                 actions: [
+                  { label: '엑셀 편집기 보기', href: 'assets/previews/purchase_workbook_editor_preview.html' },
                   { label: '원본 PR 보기', href: pr.html_url },
                 ],
               };

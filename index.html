@@ -670,30 +670,29 @@
           {
             number: 5,
             prTitle: "ERP 작업실적 CSV 추출 GUI",
-            artifactTitle: "ERP 작업실적 수집 GUI",
+            artifactTitle: "구매확인서 엑셀 편집기",
             kind: "python-gui",
             badge: "PY",
             status: "머지 완료",
             mergedAt: "2026-06-16T08:06:41Z",
             prUrl: "https://github.com/doduhyeong-cpu/PCD-5/pull/5",
-            primaryFile: "pcd5/gui.py",
-            previewPath: "assets/previews/erp_workflow_preview.html",
+            primaryFile: "1. 구매확인서/python_gui/app.py",
+            previewPath: "assets/previews/purchase_workbook_editor_preview.html",
             files: [
-              "pcd5/app.py",
-              "pcd5/cdp.py",
-              "pcd5/erp.py",
-              "pcd5/exporter.py",
-              "pcd5/gui.py",
-              "pcd5/models.py",
-              "pcd5/recorder.py",
-              "tests/test_gui_smoke.py"
+              "1. 구매확인서/python_gui/app.py",
+              "1. 구매확인서/html/index.html",
+              "1. 구매확인서/html/app.js",
+              "1. 구매확인서/html/styles.css",
+              "1. 구매확인서/python_gui/dist/purchase-confirmation-editor.exe",
+              "1. 구매확인서/README.md"
             ],
             summary: [
-              "ERP 조회와 CDP 기록을 묶은 Python GUI",
-              "CSV 내보내기와 테스트 자동화",
-              "패키지 구조와 실행 스크립트 정리"
+              "엑셀 파일을 불러와 1페이지와 2페이지 데이터를 편집",
+              "선택한 통합본을 복사 저장하고 다시 읽기",
+              "HTML 편집기와 PySide6 GUI가 함께 제공"
             ],
             actions: [
+              { label: "엑셀 편집기 보기", href: "assets/previews/purchase_workbook_editor_preview.html" },
               { label: "원본 PR 보기", href: "https://github.com/doduhyeong-cpu/PCD-5/pull/5" }
             ]
           },

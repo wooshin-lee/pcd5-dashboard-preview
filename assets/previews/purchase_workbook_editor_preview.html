@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>구매확인서 엑셀 편집기</title>
+    <style>
+      :root {
+        --bg: #f1f5fb;
+        --surface: #ffffff;
+        --panel: #f8fbff;
+        --panel-strong: #f0f5fb;
+        --border: #d7e2ef;
+        --text: #12243a;
+        --muted: #66778b;
+        --accent: #2563eb;
+        --accent-soft: rgba(37, 99, 235, 0.08);
+        --success: #15915d;
+      }
+
+      * { box-sizing: border-box; }
+      html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: linear-gradient(180deg, #f7faff, var(--bg)); color: var(--text); font-family: "Segoe UI", "Noto Sans KR", system-ui, sans-serif; }
+      body { padding: 18px; }
+      .app { height: 100%; display: grid; grid-template-rows: auto auto 1fr auto; gap: 14px; }
+      .hero { padding: 18px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 18px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+      .hero h1 { margin: 0 0 8px; font-size: clamp(26px, 2.4vw, 38px); line-height: 1.15; }
+      .hero p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; max-width: 860px; }
+      .badge { padding: 10px 14px; border-radius: 999px; border: 1px solid rgba(37, 99, 235, 0.18); background: var(--accent-soft); color: var(--accent); font-weight: 900; white-space: nowrap; }
+      .toolbar { display: flex; flex-wrap: wrap; gap: 10px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; align-items: center; }
+      .toolbar .path { flex: 1; min-width: 240px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 12px; background: #fff; color: var(--muted); font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .toolbar button { border: 1px solid var(--border); background: #fff; color: var(--text); border-radius: 12px; padding: 10px 14px; font: inherit; font-weight: 800; cursor: pointer; }
+      .toolbar button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+      .toolbar button.success { background: #dff8ea; border-color: #b7ebcf; color: #0f7b4a; }
+      .content { min-height: 0; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 14px; }
+      .panel { min-height: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 16px; display: grid; gap: 14px; overflow: hidden; }
+      .panel h2 { margin: 0; font-size: 20px; }
+      .panel p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+      .summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+      .chip { padding: 12px; background: var(--panel); border: 1px solid var(--border); border-radius: 14px; }
+      .chip .label { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+      .chip .value { font-weight: 900; font-size: 16px; line-height: 1.2; }
+      .tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+      .tab { border: 1px solid var(--border); background: #fff; color: var(--text); border-radius: 999px; padding: 8px 12px; font: inherit; font-size: 12px; font-weight: 900; cursor: pointer; }
+      .tab.active { background: var(--accent-soft); color: var(--accent); border-color: rgba(37, 99, 235, 0.24); }
+      .sheet { min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 12px; }
+      .table-wrap { min-height: 0; overflow: auto; border: 1px solid var(--border); border-radius: 16px; background: #fff; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid #edf2f7; text-align: left; font-size: 13px; }
+      th { position: sticky; top: 0; background: #f6f9fe; z-index: 1; font-size: 12px; color: var(--muted); }
+      tr:last-child td { border-bottom: 0; }
+      .sheet-foot { display: flex; flex-wrap: wrap; gap: 8px; }
+      .foot-pill { padding: 8px 10px; border-radius: 999px; background: var(--panel-strong); border: 1px solid var(--border); font-size: 12px; font-weight: 800; }
+      .side { display: grid; gap: 14px; grid-template-rows: auto auto 1fr; }
+      .card { padding: 14px; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+      .card h3 { margin: 0 0 8px; font-size: 15px; }
+      .card ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 13px; line-height: 1.55; }
+      .editor-snapshot { padding: 16px; border-radius: 16px; border: 1px dashed rgba(18, 36, 58, 0.18); background: linear-gradient(180deg, #fbfdff, #f0f5fb); display: grid; gap: 10px; }
+      .editor-snapshot .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+      .mini { padding: 12px; background: #fff; border: 1px solid var(--border); border-radius: 12px; }
+      .mini .label { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+      .mini .value { font-size: 13px; font-weight: 900; line-height: 1.3; }
+      .statusbar { padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; color: var(--muted); font-size: 13px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+      .statusbar strong { color: var(--text); }
+
+      @media (max-width: 1180px) {
+        body { overflow: auto; }
+        .app { height: auto; overflow: visible; }
+        .content, .summary { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <section class="hero">
+        <div>
+          <h1>구매확인서 엑셀 편집기</h1>
+          <p>PR #5에서 머지된 실제 기능을 기준으로 만든 프리뷰입니다. 엑셀 원본을 불러와 두 개의 시트를 편집하고, HTML 브라우저 편집기와 PySide6 GUI가 같은 데이터를 공유하는 흐름을 보여줍니다.</p>
+        </div>
+        <div class="badge">PR #5 · 머지 완료</div>
+      </section>
+
+      <section class="toolbar">
+        <div class="path">기간별 분증 잔량.xlsx</div>
+        <button class="primary">열기</button>
+        <button>다시 읽기</button>
+        <button class="success">다른 이름으로 저장</button>
+      </section>
+
+      <section class="content">
+        <div class="panel">
+          <div>
+            <h2>PySide6 GUI</h2>
+            <p>원본 엑셀을 열고, 1페이지와 2페이지의 추출 결과를 탭으로 확인한 뒤 새 파일로 저장하는 앱의 동작 구조입니다.</p>
+          </div>
+
+          <div class="summary">
+            <div class="chip"><div class="label">원본 파일</div><div class="value">기간별 분증 잔량.xlsx</div></div>
+            <div class="chip"><div class="label">1페이지</div><div class="value">P1_분증잔량</div></div>
+            <div class="chip"><div class="label">2페이지</div><div class="value">P2_ASSY조회</div></div>
+            <div class="chip"><div class="label">저장 결과</div><div class="value">4개 시트 저장</div></div>
+          </div>
+
+          <div class="tabs">
+            <button class="tab active" data-tab="page1">1페이지 구매확인서</button>
+            <button class="tab" data-tab="page2">2페이지 ASSY 번호</button>
+            <button class="tab" data-tab="html">HTML 편집기</button>
+          </div>
+
+          <div class="sheet" id="sheetView">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>자재코드</th>
+                    <th>품명</th>
+                    <th>재고수량</th>
+                    <th>세액합계</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>1</td><td>A-1001</td><td>구매확인서 주요 품목</td><td>126</td><td>1,240</td></tr>
+                  <tr><td>2</td><td>A-1002</td><td>편집 대상 품목</td><td>84</td><td>990</td></tr>
+                  <tr><td>3</td><td>A-1003</td><td>분증 잔량 집계 항목</td><td>62</td><td>710</td></tr>
+                  <tr><td>4</td><td>A-1004</td><td>저장 결과 확인 항목</td><td>28</td><td>240</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="sheet-foot">
+              <div class="foot-pill">합계 수량 300</div>
+              <div class="foot-pill">세액 합계 3,180</div>
+              <div class="foot-pill">소스 행 2~48</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="side">
+          <div class="card">
+            <h3>상세 흐름</h3>
+            <ul>
+              <li>엑셀 파일을 선택하면 원본 시트를 읽어 들입니다.</li>
+              <li>1페이지는 자재코드별로 묶어 재고와 세액을 합산합니다.</li>
+              <li>2페이지는 ASSY 번호와 발행처 정보를 정리합니다.</li>
+              <li>저장 버튼은 현재 편집본을 다른 이름으로 복사 저장합니다.</li>
+            </ul>
+          </div>
+
+          <div class="editor-snapshot" id="snapshot">
+            <div class="row">
+              <div class="mini"><div class="label">HTML 편집기</div><div class="value">브라우저에서 같은 데이터를 편집</div></div>
+              <div class="mini"><div class="label">동기화</div><div class="value">PySide6 GUI와 같은 워크북 규칙 사용</div></div>
+            </div>
+            <div class="row">
+              <div class="mini"><div class="label">시트 이름</div><div class="value">P1_분증잔량 / P2_ASSY조회</div></div>
+              <div class="mini"><div class="label">출력</div><div class="value">기간별 분증 잔량_편집본.xlsx</div></div>
+            </div>
+            <div class="mini">
+              <div class="label">상태 메시지</div>
+              <div class="value">원본 엑셀 파일을 불러오세요. 불러온 뒤 편집 결과를 저장하면 4개 시트가 포함된 복사본이 생성됩니다.</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>버튼 동작</h3>
+            <ul>
+              <li>열기: 원본 워크북 로드</li>
+              <li>다시 읽기: 현재 파일 재적재</li>
+              <li>다른 이름으로 저장: 편집본 저장</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <div class="statusbar">
+        <div><strong>상태:</strong> 원본 엑셀 파일을 불러오세요.</div>
+        <div><strong>원본:</strong> 1. 구매확인서/python_gui/app.py, html/index.html, html/app.js</div>
+      </div>
+    </main>
+
+    <script>
+      const tabs = document.querySelectorAll('.tab');
+      const sheetView = document.getElementById('sheetView');
+      const snapshot = document.getElementById('snapshot');
+      const states = {
+        page1: {
+          title: '1페이지 구매확인서',
+          body: `
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>No</th><th>자재코드</th><th>품명</th><th>재고수량</th><th>세액합계</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td>A-1001</td><td>구매확인서 주요 품목</td><td>126</td><td>1,240</td></tr>
+                  <tr><td>2</td><td>A-1002</td><td>편집 대상 품목</td><td>84</td><td>990</td></tr>
+                  <tr><td>3</td><td>A-1003</td><td>분증 잔량 집계 항목</td><td>62</td><td>710</td></tr>
+                  <tr><td>4</td><td>A-1004</td><td>저장 결과 확인 항목</td><td>28</td><td>240</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="sheet-foot">
+              <div class="foot-pill">합계 수량 300</div>
+              <div class="foot-pill">세액 합계 3,180</div>
+              <div class="foot-pill">소스 행 2~48</div>
+            </div>`
+        },
+        page2: {
+          title: '2페이지 ASSY 번호',
+          body: `
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>No</th><th>카탈리스트</th><th>차종</th><th>발행처</th><th>ASSY</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td>C-2001</td><td>승용</td><td>현대 / 기아</td><td>ASSY 1, 2</td></tr>
+                  <tr><td>2</td><td>C-2002</td><td>상용</td><td>기아 / 글로비스</td><td>ASSY 3, 4</td></tr>
+                  <tr><td>3</td><td>C-2003</td><td>전기차</td><td>현대 / 기아 / 제네시스</td><td>ASSY 5, 6</td></tr>
+                  <tr><td>4</td><td>C-2004</td><td>특장</td><td>기아 / 현대 / 글로비스</td><td>ASSY 7</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="sheet-foot">
+              <div class="foot-pill">ASSY 코드 7개</div>
+              <div class="foot-pill">차종 그룹 4개</div>
+              <div class="foot-pill">발행처 정리 완료</div>
+            </div>`
+        },
+        html: {
+          title: 'HTML 편집기',
+          body: `
+            <div class="table-wrap" style="padding:16px;">
+              <div class="editor-snapshot" style="margin:0;">
+                <div class="row">
+                  <div class="mini"><div class="label">브라우저 편집</div><div class="value">html/index.html</div></div>
+                  <div class="mini"><div class="label">스크립트</div><div class="value">html/app.js + xlsx 라이브러리</div></div>
+                </div>
+                <div class="row">
+                  <div class="mini"><div class="label">입력</div><div class="value">엑셀 파일 열기</div></div>
+                  <div class="mini"><div class="label">저장</div><div class="value">회사별/종합 시트로 내보내기</div></div>
+                </div>
+                <div class="mini">
+                  <div class="label">미리보기 상태</div>
+                  <div class="value">HTML 편집기와 PySide6 GUI가 같은 워크북 규칙을 공유합니다.</div>
+                </div>
+              </div>
+            </div>
+            <div class="sheet-foot">
+              <div class="foot-pill">브라우저 편집기</div>
+              <div class="foot-pill">시트 동기화</div>
+              <div class="foot-pill">xlsx export</div>
+            </div>`
+        }
+      };
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          tabs.forEach((item) => item.classList.remove('active'));
+          tab.classList.add('active');
+          const state = states[tab.dataset.tab];
+          sheetView.innerHTML = state.body;
+          const status = document.querySelector('.statusbar div');
+          status.innerHTML = `<strong>상태:</strong> ${state.title} 화면을 보고 있습니다.`;
+        });
+      });
+    </script>
+  </body>
+</html>
