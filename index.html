@@ -328,37 +328,160 @@
 
       .modal-content {
         min-height: 0;
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        grid-template-rows: repeat(2, minmax(0, 1fr));
-        gap: 12px;
+        display: block;
       }
 
       .modal-panel {
+        width: 100%;
+        height: 100%;
         min-width: 0;
         min-height: 0;
-        padding: 16px;
+        padding: 18px;
         border: 1px solid var(--border);
         border-radius: 16px;
         background: var(--surface);
         box-shadow: var(--shadow);
         backdrop-filter: blur(12px);
         display: grid;
-        grid-template-rows: auto 1fr auto;
-        gap: 12px;
+        grid-template-rows: auto auto 1fr auto;
+        gap: 14px;
         overflow: hidden;
       }
 
       .modal-panel .panel-title {
-        font-size: clamp(18px, 1.6vw, 24px);
+        font-size: clamp(24px, 2vw, 34px);
       }
 
       .modal-panel .summary-value {
-        font-size: clamp(24px, 2.4vw, 40px);
+        font-size: clamp(28px, 3vw, 52px);
       }
 
       .modal-panel .mini-card ul {
+        font-size: 14px;
+      }
+
+      .workspace {
+        min-height: 0;
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 14px;
+      }
+
+      .workspace-main,
+      .workspace-side {
+        min-height: 0;
+        display: grid;
+        gap: 14px;
+      }
+
+      .workspace-side {
+        grid-template-rows: auto auto 1fr;
+      }
+
+      .work-section {
+        padding: 14px;
+        border-radius: 14px;
+        border: 1px solid var(--border-soft);
+        background: var(--surface-strong);
+        min-height: 0;
+        display: grid;
+        gap: 10px;
+      }
+
+      .work-section h3 {
+        margin: 0;
+        font-size: 14px;
+      }
+
+      .work-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .work-item {
+        display: grid;
+        grid-template-columns: 88px 1fr auto;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid var(--border-soft);
+        background: #fff;
+      }
+
+      .work-item strong {
         font-size: 13px;
+      }
+
+      .work-item span {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .field {
+        padding: 12px;
+        border: 1px solid var(--border-soft);
+        border-radius: 12px;
+        background: #fff;
+      }
+
+      .field label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+
+      .field .value {
+        font-size: 18px;
+        font-weight: 800;
+        line-height: 1.2;
+      }
+
+      .editor {
+        min-height: 0;
+        display: grid;
+        gap: 10px;
+      }
+
+      .editor textarea {
+        width: 100%;
+        min-height: 180px;
+        resize: none;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        font: inherit;
+        line-height: 1.45;
+        color: var(--text);
+        background: #fff;
+      }
+
+      .action-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .action-btn {
+        padding: 10px 14px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: #fff;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .action-btn.primary {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
       }
 
       .loading {
@@ -368,9 +491,10 @@
 
       @media (max-width: 1180px) {
         .grid,
-        .modal-content,
         .summary-grid,
-        .card-grid {
+        .card-grid,
+        .workspace,
+        .form-grid {
           grid-template-columns: 1fr;
         }
 
@@ -521,11 +645,82 @@
             <div class="panel-head">
               <div>
                 <h2 class="panel-title">${titlePrefix}${issue.number} · ${issue.title}</h2>
-                <p class="panel-subtitle">머지된 구현 화면을 운영 관점에서 바로 읽을 수 있게 정리한 요약 카드입니다.</p>
+                <p class="panel-subtitle">${mode === "modal" ? "여기서는 이슈별 구현 화면을 바로 작업할 수 있습니다." : "머지된 구현 화면을 운영 관점에서 바로 읽을 수 있게 정리한 요약 카드입니다."}</p>
               </div>
               <div class="pill">${issue.badge}</div>
             </div>
 
+            ${
+              mode === "modal"
+                ? `
+            <div class="workspace">
+              <div class="workspace-main">
+                <section class="work-section">
+                  <h3>업무 정보</h3>
+                  <div class="form-grid">
+                    <div class="field">
+                      <label>이슈 제목</label>
+                      <div class="value">${issue.title}</div>
+                    </div>
+                    <div class="field">
+                      <label>진행 상태</label>
+                      <div class="value">${issue.status}</div>
+                    </div>
+                    <div class="field">
+                      <label>화면 성격</label>
+                      <div class="value">${issue.summary[0].value}</div>
+                    </div>
+                    <div class="field">
+                      <label>핵심 영역</label>
+                      <div class="value">${issue.summary[1].value}</div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="work-section">
+                  <h3>구현 내용</h3>
+                  <div class="work-list">
+                    ${issue.notes
+                      .map(
+                        (note, noteIndex) => `
+                          <div class="work-item">
+                            <strong>작업 ${noteIndex + 1}</strong>
+                            <span>${note}</span>
+                            <span class="item-state">반영</span>
+                          </div>`
+                      )
+                      .join("")}
+                  </div>
+                </section>
+              </div>
+
+              <div class="workspace-side">
+                <section class="work-section">
+                  <h3>상태 선택</h3>
+                  <div class="status-row">
+                    <span class="status done">완료</span>
+                    <span class="status review">검토</span>
+                    <span class="status wait">대기</span>
+                  </div>
+                </section>
+
+                <section class="work-section">
+                  <h3>빠른 작업</h3>
+                  <div class="action-row">
+                    <button class="action-btn primary" type="button">저장</button>
+                    <button class="action-btn" type="button">임시보관</button>
+                    <button class="action-btn" type="button">미리보기</button>
+                  </div>
+                </section>
+
+                <section class="work-section editor">
+                  <h3>작업 메모</h3>
+                  <textarea aria-label="작업 메모">${issue.title} 관련 작업 메모를 여기에 입력합니다.</textarea>
+                </section>
+              </div>
+            </div>
+            `
+                : `
             <div class="content">
               <div class="summary-grid">${summary}</div>
               <div class="item">
@@ -549,6 +744,8 @@
                 </div>
               </div>
             </div>
+            `
+            }
           </article>`;
       }
 
