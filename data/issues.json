@@ -16,6 +16,7 @@
       "mergedAt": "2026-06-16T08:07:09Z",
       "prUrl": "https://github.com/doduhyeong-cpu/PCD-5/pull/6",
       "primaryFile": "1. 구매확인서/purchase_confirmation_automation.html",
+      "previewPath": "assets/previews/purchase_confirmation_automation.html",
       "files": [
         "1. 구매확인서/purchase_confirmation_automation.html",
         "1. 구매확인서/purchase_confirmation_gui.py",
@@ -50,6 +51,7 @@
       "mergedAt": "2026-06-16T08:06:41Z",
       "prUrl": "https://github.com/doduhyeong-cpu/PCD-5/pull/5",
       "primaryFile": "pcd5/gui.py",
+      "previewPath": "assets/previews/erp_workflow_preview.html",
       "files": [
         "pcd5/app.py",
         "pcd5/cdp.py",
@@ -82,6 +84,7 @@
       "mergedAt": "2026-06-16T08:10:57Z",
       "prUrl": "https://github.com/doduhyeong-cpu/PCD-5/pull/8",
       "primaryFile": "src/renderer/dashboard.ts",
+      "previewPath": "assets/previews/factory_dashboard_preview.html",
       "files": [
         "src/main/main.ts",
         "src/main/ipc.ts",

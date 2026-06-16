@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ERP 작업실적 수집 GUI</title>
+    <style>
+      :root {
+        --bg: #0f1725;
+        --panel: #161f2f;
+        --panel-2: #1b2639;
+        --border: rgba(255, 255, 255, 0.08);
+        --text: #e7eefb;
+        --muted: #93a4bc;
+        --accent: #79b8ff;
+        --success: #8be0a7;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; width: 100%; height: 100%; background: radial-gradient(circle at top, #182338, #0b1220 55%); color: var(--text); font-family: "Segoe UI", "Noto Sans KR", system-ui, sans-serif; overflow: hidden; }
+      .app { height: 100%; padding: 24px; display: grid; grid-template-rows: auto 1fr auto; gap: 18px; }
+      .hero { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; padding: 22px 24px; background: rgba(15, 23, 37, 0.94); border: 1px solid var(--border); border-radius: 22px; }
+      .hero h1 { margin: 0 0 10px; font-size: clamp(28px, 3vw, 40px); line-height: 1.1; }
+      .hero p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; max-width: 720px; }
+      .badge { padding: 10px 14px; border-radius: 999px; border: 1px solid rgba(121, 184, 255, 0.3); background: rgba(121, 184, 255, 0.08); color: #cfe4ff; font-weight: 800; white-space: nowrap; }
+      .grid { min-height: 0; display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 18px; }
+      .panel { min-height: 0; padding: 18px; background: rgba(15, 23, 37, 0.9); border: 1px solid var(--border); border-radius: 22px; overflow: hidden; }
+      .panel h2 { margin: 0 0 10px; font-size: 22px; }
+      .panel .sub { margin: 0 0 18px; color: var(--muted); font-size: 14px; }
+      .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+      .field { padding: 12px; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; }
+      .field label { display: block; color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+      .field .value { font-size: 16px; font-weight: 800; line-height: 1.25; word-break: break-all; }
+      .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+      button { border: 0; border-radius: 14px; padding: 12px 16px; font: inherit; font-weight: 800; cursor: pointer; }
+      .primary { background: linear-gradient(180deg, #9bd0ff, #65a7f8); color: #08101d; }
+      .ghost { background: #232c3d; color: var(--text); border: 1px solid var(--border); }
+      .mint { background: linear-gradient(180deg, #c7f8d4, #8de9bf); color: #07120d; }
+      .log { margin-top: 16px; height: 220px; padding: 14px; border-radius: 18px; background: #09111e; border: 1px solid var(--border); overflow: auto; font: 12px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; color: #dce7f8; }
+      .sheet { height: 100%; display: grid; grid-template-rows: auto 1fr; gap: 14px; }
+      .sheet .empty { display: grid; place-items: center; min-height: 100%; color: var(--muted); border: 1px dashed rgba(255,255,255,0.14); border-radius: 18px; background: rgba(255,255,255,0.02); text-align: center; padding: 24px; }
+      .footer { color: var(--muted); font-size: 12px; }
+      .statline { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+      .stat { padding: 10px 12px; border-radius: 999px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--text); font-size: 12px; font-weight: 800; }
+      @media (max-width: 1100px) {
+        body { overflow: auto; }
+        .app { height: auto; overflow: visible; }
+        .grid, .form-grid { grid-template-columns: 1fr; }
+        .sheet { min-height: 320px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <section class="hero">
+        <div>
+          <h1>ERP 작업실적 수집 GUI</h1>
+          <p>PR #5의 결과를 브라우저에서 확인할 수 있도록 재구성한 프리뷰입니다. ERP 조회, CDP 기록, CSV 추출, 로그 저장의 흐름을 한 화면에 모았습니다.</p>
+        </div>
+        <div class="badge">PR #5 · 머지 완료</div>
+      </section>
+
+      <section class="grid">
+        <div class="panel">
+          <h2>작업 입력</h2>
+          <p class="sub">ERP 대상과 기간을 입력한 뒤 작업 버튼을 누르는 흐름을 보여줍니다.</p>
+          <div class="form-grid">
+            <div class="field"><label>ERP URL</label><div class="value">http://58.72.235.17:8300/</div></div>
+            <div class="field"><label>대상 기간</label><div class="value">2026-01-01 ~ 2026-01-31</div></div>
+            <div class="field"><label>CDP 포트</label><div class="value">9222</div></div>
+            <div class="field"><label>상태</label><div class="value">Connecting</div></div>
+            <div class="field"><label>아이디</label><div class="value">HMCR151</div></div>
+            <div class="field"><label>비밀번호</label><div class="value">••••••••</div></div>
+          </div>
+          <div class="actions">
+            <button class="primary" onclick="appendLog('실행: 작업 수집을 시작했습니다.')">실행</button>
+            <button class="ghost" onclick="appendLog('중지: 현재 작업을 멈췄습니다.')">중지</button>
+            <button class="mint" onclick="appendLog('시트 보기: 회사별 시트 미리보기를 열었습니다.')">시트 보기</button>
+            <button class="ghost" onclick="appendLog('엑셀 다운로드: 결과 파일을 저장했습니다.')">엑셀 다운로드</button>
+            <button class="ghost" onclick="appendLog('로그 저장: 실행 로그를 파일로 저장했습니다.')">로그 저장</button>
+          </div>
+          <div class="statline">
+            <div class="stat">ERP 조회 1260 rows</div>
+            <div class="stat">CSV UTF-8 BOM</div>
+            <div class="stat">GUI smoke test 통과</div>
+          </div>
+          <div id="log" class="log">{ "event": "app_start", "status": "ready" }</div>
+        </div>
+
+        <div class="sheet">
+          <div class="panel">
+            <h2>시트 보기</h2>
+            <p class="sub">실제 구현에서는 회사별 시트와 엑셀 출력이 연결됩니다.</p>
+            <div class="empty">
+              아직 불러온 시트가 없습니다.
+              <br />
+              <br />
+              오른쪽의 프리뷰는 작업 결과를 저장한 뒤 자동으로 채워집니다.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer">원본 파일: pcd5/gui.py · pcd5/exporter.py · pcd5/recorder.py</div>
+    </main>
+
+    <script>
+      const log = document.getElementById('log');
+      function appendLog(message) {
+        const time = new Date().toISOString();
+        log.textContent = log.textContent + '\n' + JSON.stringify({ time, message });
+        log.scrollTop = log.scrollHeight;
+      }
+    </script>
+  </body>
+  </html>

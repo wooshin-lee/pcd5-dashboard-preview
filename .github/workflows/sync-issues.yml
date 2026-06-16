@@ -78,6 +78,7 @@ jobs:
                 artifactTitle: '구매확인서 CDP 자동화',
                 badge: 'HTML',
                 primaryFile: '1. 구매확인서/purchase_confirmation_automation.html',
+                previewPath: 'assets/previews/purchase_confirmation_automation.html',
                 summary: [
                   '구매확인서 HTML/GUI 자동화 화면',
                   '공통 엑셀 생성과 시트 분리',
@@ -96,6 +97,7 @@ jobs:
                 artifactTitle: 'ERP 작업실적 수집 GUI',
                 badge: 'PY',
                 primaryFile: 'pcd5/gui.py',
+                previewPath: 'assets/previews/erp_workflow_preview.html',
                 summary: [
                   'ERP 조회와 CDP 기록을 묶은 Python GUI',
                   'CSV 내보내기와 테스트 자동화',
@@ -113,6 +115,7 @@ jobs:
                 artifactTitle: '공장정보 대시보드 필터·상세조회·통합 검증',
                 badge: 'APP',
                 primaryFile: 'src/renderer/dashboard.ts',
+                previewPath: 'assets/previews/factory_dashboard_preview.html',
                 summary: [
                   '필터/상세조회 중심의 공장정보 대시보드',
                   '결품 메일 자동화와 이력 관리',

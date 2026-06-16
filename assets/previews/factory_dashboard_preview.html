@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>공장정보 대시보드 필터·상세조회·통합 검증</title>
+    <style>
+      :root {
+        --bg: #f3f6fb;
+        --surface: #ffffff;
+        --panel: #f8fbff;
+        --border: #d8e3f0;
+        --text: #16263b;
+        --muted: #64748b;
+        --accent: #2563eb;
+        --success: #1d9a62;
+        --warning: #b87900;
+        --danger: #d14c4c;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; font-family: "Segoe UI", "Noto Sans KR", system-ui, sans-serif; color: var(--text); background: linear-gradient(180deg, #f8fbff, #edf3f9); }
+      .app { height: 100%; padding: 18px; display: grid; grid-template-rows: auto 1fr auto; gap: 14px; }
+      .hero { padding: 18px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 18px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+      .hero h1 { margin: 0 0 8px; font-size: clamp(26px, 2.5vw, 38px); line-height: 1.15; }
+      .hero p { margin: 0; color: var(--muted); font-size: 14px; max-width: 820px; line-height: 1.55; }
+      .badge { padding: 10px 14px; border-radius: 999px; background: rgba(37, 99, 235, 0.08); border: 1px solid rgba(37, 99, 235, 0.18); color: var(--accent); font-weight: 900; white-space: nowrap; }
+      .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+      .stat { padding: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; }
+      .stat .label { color: var(--muted); font-size: 12px; }
+      .stat .value { margin-top: 6px; font-size: 26px; font-weight: 900; }
+      .stat .desc { margin-top: 2px; color: var(--muted); font-size: 12px; }
+      .grid { min-height: 0; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 14px; }
+      .panel { min-height: 0; padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; display: grid; grid-template-rows: auto auto 1fr; gap: 12px; }
+      .panel h2 { margin: 0; font-size: 20px; }
+      .panel p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+      .filter-row { display: flex; flex-wrap: wrap; gap: 8px; }
+      .filter { padding: 9px 12px; border-radius: 999px; border: 1px solid var(--border); background: #fff; font-size: 12px; font-weight: 800; cursor: pointer; }
+      .filter.active { background: rgba(37, 99, 235, 0.08); border-color: rgba(37, 99, 235, 0.2); color: var(--accent); }
+      .list { min-height: 0; display: grid; gap: 10px; overflow: auto; padding-right: 4px; }
+      .item { padding: 14px; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px; align-items: center; }
+      .item h3 { margin: 0 0 6px; font-size: 16px; }
+      .item p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+      .item .state { font-size: 12px; font-weight: 900; color: var(--success); }
+      .item .state.review { color: var(--warning); }
+      .item .state.wait { color: var(--danger); }
+      .detail { display: grid; gap: 12px; }
+      .detail .box { padding: 14px; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; }
+      .detail .box h3 { margin: 0 0 8px; font-size: 15px; }
+      .detail .box ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 13px; line-height: 1.55; }
+      .mail-log { height: 100%; padding: 14px; background: #0f1725; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; color: #dfe9f7; font: 12px/1.55 ui-monospace, SFMono-Regular, Consolas, monospace; overflow: auto; }
+      .footer { color: var(--muted); font-size: 12px; }
+      @media (max-width: 1100px) {
+        body { overflow: auto; }
+        .app { height: auto; overflow: visible; }
+        .stats, .grid { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <section class="hero">
+        <div>
+          <h1>공장정보 대시보드 필터·상세조회·통합 검증</h1>
+          <p>PR #8의 결과를 브라우저 프리뷰로 재구성했습니다. 필터, 상세조회, 결품 메일 이력, 후속 조치 흐름을 한 화면에서 볼 수 있게 만든 작업 화면입니다.</p>
+        </div>
+        <div class="badge">PR #8 · 머지 완료</div>
+      </section>
+
+      <section class="stats">
+        <div class="stat"><div class="label">오늘 결품</div><div class="value">12</div><div class="desc">승인 후 반영</div></div>
+        <div class="stat"><div class="label">진행 중</div><div class="value">8</div><div class="desc">부서별 작업</div></div>
+        <div class="stat"><div class="label">대기</div><div class="value">5</div><div class="desc">검토 필요</div></div>
+        <div class="stat"><div class="label">이력 조회</div><div class="value">94%</div><div class="desc">통합 검증 완료</div></div>
+      </section>
+
+      <section class="grid">
+        <div class="panel">
+          <h2>필터 / 목록</h2>
+          <p>필터와 검색 결과가 같은 화면에서 갱신되는 흐름을 보여줍니다.</p>
+          <div class="filter-row">
+            <button class="filter active" onclick="selectFilter(this, '전체')">전체</button>
+            <button class="filter" onclick="selectFilter(this, '검증')">검증</button>
+            <button class="filter" onclick="selectFilter(this, '메일')">메일</button>
+            <button class="filter" onclick="selectFilter(this, '대기')">대기</button>
+          </div>
+          <div class="list" id="list">
+            <div class="item">
+              <div>
+                <h3>필터 + 상세조회</h3>
+                <p>조건으로 구현된 화면을 요약해 보여주는 카드</p>
+              </div>
+              <div class="state">완료</div>
+            </div>
+            <div class="item">
+              <div>
+                <h3>지표 영역</h3>
+                <p>KPI와 차트 영역이 연결된 요약 카드</p>
+              </div>
+              <div class="state">진행</div>
+            </div>
+            <div class="item">
+              <div>
+                <h3>조회 구조</h3>
+                <p>상세 조회와 필터가 함께 동작하는 레이아웃</p>
+              </div>
+              <div class="state review">검토</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail">
+          <div class="box">
+            <h3>상세 조회</h3>
+            <ul>
+              <li>선택된 공장 정보와 결품 상태를 한 번에 표시</li>
+              <li>메일 발송 상태와 회신 상태를 같이 추적</li>
+              <li>후속 조치, 회신 기록, 필터 조건을 연결</li>
+            </ul>
+          </div>
+          <div class="box">
+            <h3>메일 로그</h3>
+            <div class="mail-log" id="mailLog">[10:05] 대시보드 필터 적용 완료\n[10:06] 결품 메일 발송 대기\n[10:07] 상세 조회 선택됨\n[10:08] 후속 조치 항목 저장</div>
+          </div>
+          <div class="box">
+            <h3>검증 포인트</h3>
+            <ul>
+              <li>한글 입력 조합이 깨지지 않는지 확인</li>
+              <li>필터와 상세 조회가 같은 상태를 공유하는지 확인</li>
+              <li>메일 자동화와 목록 갱신이 함께 움직이는지 확인</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer">원본 파일: src/renderer/dashboard.ts · src/main/ipc.ts · src/main/main.ts</div>
+    </main>
+
+    <script>
+      function selectFilter(button, label) {
+        document.querySelectorAll('.filter').forEach((item) => item.classList.remove('active'));
+        button.classList.add('active');
+        document.getElementById('mailLog').textContent =
+          '[10:05] ' + label + ' 필터 적용 완료\n' +
+          '[10:06] 상세 조회 상태 동기화\n' +
+          '[10:07] 메일 로그와 목록 일치 확인\n' +
+          '[10:08] 통합 검증 완료';
+      }
+    </script>
+  </body>
+  </html>
