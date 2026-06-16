@@ -945,6 +945,64 @@
           grid-template-columns: 1fr;
         }
       }
+
+      /* Final overrides to keep the dashboard inside the viewport and make the main page scrollable. */
+      .app {
+        overflow: hidden;
+      }
+
+      .shell {
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 6px;
+        scrollbar-gutter: stable;
+      }
+
+      .grid {
+        grid-template-rows: none;
+        grid-auto-rows: minmax(0, 1fr);
+        align-content: start;
+      }
+
+      .back-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+      }
+
+      .modal-shell,
+      .workspace,
+      .workspace-main,
+      .workspace-side {
+        overflow: hidden;
+      }
+
+      .shell::-webkit-scrollbar,
+      .modal-shell::-webkit-scrollbar,
+      .workspace::-webkit-scrollbar,
+      .workspace-main::-webkit-scrollbar,
+      .workspace-side::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      .shell::-webkit-scrollbar-thumb,
+      .modal-shell::-webkit-scrollbar-thumb,
+      .workspace::-webkit-scrollbar-thumb,
+      .workspace-main::-webkit-scrollbar-thumb,
+      .workspace-side::-webkit-scrollbar-thumb {
+        background: rgba(31, 111, 235, 0.18);
+        border-radius: 999px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+      }
+
+      .shell::-webkit-scrollbar-track,
+      .modal-shell::-webkit-scrollbar-track,
+      .workspace::-webkit-scrollbar-track,
+      .workspace-main::-webkit-scrollbar-track,
+      .workspace-side::-webkit-scrollbar-track {
+        background: transparent;
+      }
     </style>
   </head>
   <body>
