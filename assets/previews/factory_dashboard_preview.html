@@ -874,8 +874,8 @@
     </div>
 
     <script>
-      // index.jsp는 로그인 진입점이라, 버튼은 로그인 후 바로 보이는 ERP 메인 화면을 연다.
-      const ERP_URL = "https://weblc.ec-bank.net/index_Main.jsp?menuGroup=001&menuUrl=/recentMonthAction.do";
+      // ERP 열기는 로그인 진입점(index.jsp)보다 상위인 ERP 루트로 연다.
+      const ERP_URL = "https://weblc.ec-bank.net";
 
       const shortageRows = [
         {
