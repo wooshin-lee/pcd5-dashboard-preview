@@ -447,7 +447,7 @@
           </div>
         </article>
 
-        <article class="card" data-preview="erp-gui" tabindex="0" role="button" aria-label="PR 5 ERP 작업실적 CSV 추출 GUI">
+        <article class="card" data-preview="erpGui" tabindex="0" role="button" aria-label="PR 5 ERP 작업실적 CSV 추출 GUI">
           <div class="card-head">
             <div>
               <div class="kicker">PR #5 · gabchajang-jpg · ERP 작업실적 CSV 추출 GUI</div>
@@ -567,6 +567,7 @@
           title: "구매확인서 CDP 자동화",
           sub: "PR #6 · purchase_confirmation_automation.html",
           kind: "HTML",
+          previewPath: "assets/previews/purchase_confirmation_automation.html",
           html: `<!doctype html>
 <html lang="ko"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>구매확인서 CDP 자동화</title>
@@ -616,6 +617,7 @@
           title: "ERP 작업실적 CSV 추출 GUI",
           sub: "PR #5 · pcd5/gui.py",
           kind: "PY",
+          previewPath: "assets/previews/erp_workflow_preview.html",
           html: `<!doctype html>
 <html lang="ko"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ERP 작업실적 CSV 추출 GUI</title>
@@ -681,6 +683,7 @@
           title: "우신공업 ERP 결품 대응센터",
           sub: "PR #8 · src/renderer/dashboard.ts",
           kind: "APP",
+          previewPath: "assets/previews/factory_dashboard_preview.html",
           html: `<!doctype html>
 <html lang="ko"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>우신공업 ERP 결품 대응센터</title>
@@ -785,12 +788,19 @@
         modalTitle.textContent = preview.title;
         modalSub.textContent = preview.sub;
         modalKind.textContent = preview.kind;
-        previewFrame.srcdoc = preview.html;
+        if (preview.previewPath) {
+          previewFrame.removeAttribute("srcdoc");
+          previewFrame.src = preview.previewPath;
+        } else {
+          previewFrame.src = "about:blank";
+          previewFrame.srcdoc = preview.html;
+        }
       }
 
       function closePreview() {
         modal.classList.remove("open");
-        previewFrame.srcdoc = "";
+        previewFrame.removeAttribute("src");
+        previewFrame.removeAttribute("srcdoc");
       }
 
       document.querySelectorAll("[data-preview]").forEach((card) => {
