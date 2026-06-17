@@ -780,24 +780,41 @@
       const modalSub = document.getElementById("modal-sub");
       const modalKind = document.getElementById("modal-kind");
       const previewFrame = document.getElementById("preview-frame");
+      let activePreviewToken = 0;
 
-      function openPreview(key) {
+      async function loadPreviewHtml(preview, key) {
+        if (!preview.previewPath) return preview.html;
+        const response = await fetch(`${preview.previewPath}?v=${Date.now()}&k=${encodeURIComponent(key)}`, {
+          cache: "no-store",
+        });
+        if (!response.ok) {
+          throw new Error(`미리보기 파일을 불러오지 못했습니다: ${response.status}`);
+        }
+        return response.text();
+      }
+
+      async function openPreview(key) {
         const preview = previews[key];
         if (!preview) return;
+        const token = ++activePreviewToken;
         modal.classList.add("open");
         modalTitle.textContent = preview.title;
         modalSub.textContent = preview.sub;
         modalKind.textContent = preview.kind;
-        if (preview.previewPath) {
-          previewFrame.removeAttribute("srcdoc");
-          previewFrame.src = preview.previewPath;
-        } else {
-          previewFrame.src = "about:blank";
-          previewFrame.srcdoc = preview.html;
+        previewFrame.removeAttribute("src");
+        previewFrame.srcdoc = "<!doctype html><html><body style=\"margin:0;font-family:Segoe UI,Noto Sans KR,sans-serif;display:grid;place-items:center;min-height:100vh;color:#62758a;background:#eef3f8;\">미리보기를 불러오는 중...</body></html>";
+        try {
+          const html = await loadPreviewHtml(preview, key);
+          if (token !== activePreviewToken) return;
+          previewFrame.srcdoc = html;
+        } catch (error) {
+          if (token !== activePreviewToken) return;
+          previewFrame.srcdoc = `<!doctype html><html><body style="margin:0;font-family:Segoe UI,Noto Sans KR,sans-serif;display:grid;place-items:center;min-height:100vh;color:#c73636;background:#eef3f8;">${String(error.message || error)}</body></html>`;
         }
       }
 
       function closePreview() {
+        activePreviewToken += 1;
         modal.classList.remove("open");
         previewFrame.removeAttribute("src");
         previewFrame.removeAttribute("srcdoc");
