@@ -3,87 +3,66 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>머지된 실제 산출물 대시보드</title>
+    <title>Merged Materials Dashboard</title>
     <style>
       :root {
         color-scheme: light;
         --bg: #eef3f8;
-        --surface: rgba(255, 255, 255, 0.94);
+        --surface: rgba(255, 255, 255, 0.92);
         --surface-strong: #ffffff;
-        --border: #d8e1ee;
-        --border-soft: #e8eef5;
-        --text: #0f253a;
-        --muted: #5f7085;
+        --surface-soft: #f5f8fc;
+        --line: #d7e0eb;
+        --line-strong: #c4d1e0;
+        --ink: #12263a;
+        --muted: #62758a;
         --accent: #1f6feb;
-        --success: #1f8a5b;
-        --warning: #b87900;
-        --shadow: 0 18px 44px rgba(16, 37, 58, 0.12);
+        --accent-soft: #e8f1ff;
+        --ok: #1f8a5b;
+        --ok-soft: #e8f4e6;
+        --warn: #c47a00;
+        --warn-soft: #fff3d8;
+        --danger: #c73636;
+        --danger-soft: #fde8e1;
+        --shadow: 0 18px 48px rgba(18, 38, 58, 0.12);
       }
 
-      * {
-        box-sizing: border-box;
-      }
-
-      html,
+      * { box-sizing: border-box; }
+      html, body { margin: 0; min-height: 100%; }
       body {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        overflow: hidden;
-      }
-
-      body {
+        overflow-y: scroll;
+        overflow-x: hidden;
+        color: var(--ink);
         font-family: "Segoe UI", "Noto Sans KR", system-ui, sans-serif;
-        color: var(--text);
         background:
-          radial-gradient(circle at top left, rgba(31, 111, 235, 0.11), transparent 28%),
-          radial-gradient(circle at bottom right, rgba(31, 138, 91, 0.08), transparent 30%),
+          radial-gradient(circle at top left, rgba(31, 111, 235, 0.12), transparent 30%),
+          radial-gradient(circle at bottom right, rgba(31, 138, 91, 0.08), transparent 32%),
           linear-gradient(180deg, #f8fbfe 0%, var(--bg) 100%);
       }
 
-      button,
-      a {
-        font: inherit;
-      }
-
-      a {
-        color: var(--accent);
-      }
-
-      .app {
-        width: 100vw;
-        height: 100vh;
-        padding: 12px;
-        overflow: hidden;
-      }
+      h1, h2, h3, p { margin: 0; }
+      button, input, select, textarea { font: inherit; }
 
       .shell {
-        width: 100%;
-        height: 100%;
-        display: grid;
-        grid-template-rows: auto minmax(0, 1fr);
-        gap: 12px;
-        overflow-y: scroll;
-        overflow-x: hidden;
-        padding-right: 6px;
-        scrollbar-gutter: stable;
+        max-width: 1480px;
+        margin: 0 auto;
+        padding: 18px 16px 32px;
       }
 
-      .hero {
-        padding: 14px 16px;
-        border: 1px solid var(--border);
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 18px 20px;
+        margin-bottom: 14px;
+        border: 1px solid var(--line);
         border-radius: 18px;
         background: var(--surface);
         box-shadow: var(--shadow);
-        backdrop-filter: blur(12px);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
+        flex-wrap: wrap;
       }
 
-      .hero-kicker {
-        margin: 0;
+      .eyebrow {
         color: var(--accent);
         font-size: 12px;
         font-weight: 800;
@@ -91,233 +70,233 @@
         text-transform: uppercase;
       }
 
-      .hero-title {
-        margin: 6px 0 0;
-        font-size: clamp(20px, 1.8vw, 30px);
-        line-height: 1.18;
-        font-weight: 900;
+      .title {
+        margin-top: 6px;
+        font-size: 30px;
+        line-height: 1.1;
+        font-weight: 800;
       }
 
-      .hero-subtitle {
-        margin: 6px 0 0;
+      .lede {
+        margin-top: 8px;
         color: var(--muted);
-        font-size: 13px;
-        line-height: 1.4;
+        font-size: 14px;
+        line-height: 1.55;
+        max-width: 82ch;
       }
 
-      .hero-chip {
-        padding: 9px 12px;
-        border-radius: 999px;
-        border: 1px solid var(--border);
-        background: #fff;
-        font-size: 12px;
-        font-weight: 700;
-        white-space: nowrap;
+      .top-stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: flex-end;
       }
+
+      .stat {
+        min-width: 130px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        background: var(--surface-strong);
+      }
+
+      .stat-label { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+      .stat-value { font-size: 22px; font-weight: 800; line-height: 1.1; }
+      .stat-sub { margin-top: 4px; color: var(--muted); font-size: 12px; }
 
       .grid {
-        min-height: 0;
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        grid-auto-rows: minmax(0, 1fr);
-        gap: 12px;
-        align-content: start;
+        gap: 14px;
+      }
+
+      .card,
+      .summary {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+        overflow: hidden;
       }
 
       .card {
-        min-width: 0;
-        min-height: 0;
-        padding: 14px;
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        background: var(--surface);
-        box-shadow: var(--shadow);
-        backdrop-filter: blur(12px);
-        display: grid;
-        grid-template-rows: auto auto minmax(0, 1fr) auto;
-        gap: 10px;
+        min-height: 320px;
+        padding: 16px;
         cursor: pointer;
-        transition: transform 0.12s ease, box-shadow 0.12s ease;
-        overflow: hidden;
       }
 
-      .card:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 20px 50px rgba(16, 37, 58, 0.16);
+      .summary {
+        padding: 16px;
       }
 
-      .card:focus-visible,
-      .back-btn:focus-visible,
-      .action-btn:focus-visible,
-      .link-btn:focus-visible {
-        outline: 3px solid rgba(31, 111, 235, 0.26);
-        outline-offset: 2px;
-      }
-
-      .card-head {
+      .card-head,
+      .summary-head {
         display: flex;
         justify-content: space-between;
-        gap: 12px;
         align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 14px;
       }
 
-      .card-kicker {
-        margin: 0;
+      .kicker {
         color: var(--accent);
         font-size: 12px;
         font-weight: 800;
-        letter-spacing: 0.03em;
+        letter-spacing: 0.02em;
       }
 
       .card-title {
-        margin: 4px 0 0;
-        font-size: clamp(15px, 1.15vw, 20px);
-        line-height: 1.2;
-        font-weight: 900;
+        margin-top: 6px;
+        font-size: 22px;
+        line-height: 1.15;
+        font-weight: 800;
       }
 
-      .card-subtitle {
-        margin: 6px 0 0;
+      .card-sub {
+        margin-top: 8px;
         color: var(--muted);
-        font-size: 12px;
-        line-height: 1.35;
+        font-size: 13px;
+        line-height: 1.5;
       }
 
       .pill {
-        padding: 7px 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 34px;
+        padding: 0 12px;
         border-radius: 999px;
-        border: 1px solid var(--border);
+        border: 1px solid var(--line);
         background: #fff;
-        color: var(--text);
-        font-size: 11px;
-        font-weight: 700;
+        font-size: 12px;
+        font-weight: 800;
         white-space: nowrap;
       }
 
-      .content {
-        min-height: 0;
+      .pill.ok { background: var(--ok-soft); color: var(--ok); border-color: rgba(31, 138, 91, 0.18); }
+      .pill.warn { background: var(--warn-soft); color: var(--warn); border-color: rgba(196, 122, 0, 0.18); }
+      .pill.info { background: var(--accent-soft); color: var(--accent); border-color: rgba(31, 111, 235, 0.18); }
+      .pill.danger { background: var(--danger-soft); color: var(--danger); border-color: rgba(199, 54, 54, 0.18); }
+
+      .panel-grid {
         display: grid;
-        gap: 10px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 12px;
       }
 
-      .summary-grid {
+      .field {
+        padding: 12px;
+        border-radius: 14px;
+        border: 1px solid #dce5ef;
+        background: #fff;
+      }
+
+      .field-label {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+
+      .field-value {
+        font-size: 17px;
+        font-weight: 800;
+        line-height: 1.15;
+        word-break: break-word;
+      }
+
+      .field-value.big { font-size: 20px; }
+
+      .row-list {
+        display: grid;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: 98px minmax(0, 1fr) auto;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        border: 1px solid #dce5ef;
+        border-radius: 14px;
+        background: #fff;
+      }
+
+      .row-label { font-weight: 800; }
+      .row-desc { color: var(--muted); font-size: 13px; line-height: 1.35; }
+      .row-value { font-size: 13px; font-weight: 800; color: var(--accent); }
+
+      .board {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
       }
 
-      .summary {
+      .mini-card {
         padding: 12px;
-        border: 1px solid var(--border-soft);
-        border-radius: 12px;
-        background: var(--surface-strong);
-        overflow: hidden;
+        border-radius: 14px;
+        border: 1px solid #dce5ef;
+        background: #fff;
       }
 
-      .summary-label {
+      .mini-card h3 {
+        margin-bottom: 8px;
+        font-size: 14px;
+      }
+
+      .mini-card p,
+      .mini-card li {
         color: var(--muted);
-        font-size: 11px;
-        margin-bottom: 6px;
+        font-size: 13px;
+        line-height: 1.5;
       }
 
-      .summary-value {
-        font-size: clamp(15px, 1.6vw, 24px);
-        font-weight: 900;
-        line-height: 1.05;
-      }
-
-      .list-card {
+      .split {
         display: grid;
-        gap: 8px;
-        padding: 12px;
-        border-radius: 12px;
-        border: 1px solid var(--border-soft);
-        background: var(--surface-strong);
-        overflow: hidden;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 10px;
       }
 
-      .list-card h3 {
-        margin: 0;
-        font-size: 12px;
-      }
+      .stack { display: grid; gap: 10px; }
 
-      .list-card ul {
-        margin: 0;
-        padding-left: 18px;
-        color: var(--muted);
-        font-size: 12px;
-        line-height: 1.45;
-      }
-
-      .file-row {
-        display: grid;
-        grid-template-columns: 64px minmax(0, 1fr) auto;
-        gap: 8px;
-        align-items: center;
-        padding: 10px 11px;
-        border-radius: 12px;
-        border: 1px solid var(--border-soft);
-        background: var(--surface-strong);
-        min-height: 48px;
-        overflow: hidden;
-      }
-
-      .file-id {
-        font-weight: 900;
-        font-size: 12px;
-      }
-
-      .file-title {
-        line-height: 1.25;
-        font-size: 12px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .file-state {
-        font-size: 11px;
-        font-weight: 800;
-        color: var(--success);
-      }
-
-      .status-row {
+      .tag-row {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
       }
 
-      .status {
-        padding: 8px 10px;
-        border-radius: 999px;
-        border: 1px solid var(--border);
-        background: #fff;
-        font-size: 12px;
-        font-weight: 700;
+      .summary-wrap {
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 14px;
+        margin-top: 14px;
       }
 
-      .status.done {
-        color: var(--success);
-        border-color: rgba(31, 138, 91, 0.2);
-        background: rgba(31, 138, 91, 0.06);
+      .summary-box {
+        padding: 14px;
+        border-radius: 16px;
+        border: 1px solid var(--line);
+        background: rgba(255,255,255,0.92);
       }
 
-      .status.review {
-        color: var(--warning);
-        border-color: rgba(184, 121, 0, 0.2);
-        background: rgba(184, 121, 0, 0.06);
-      }
+      .summary-box h3 { font-size: 16px; margin-bottom: 8px; }
+      .summary-box p, .summary-box li { color: var(--muted); font-size: 13px; line-height: 1.5; }
+      .summary-box ul { margin: 0; padding-left: 18px; }
 
-      .overview {
-        cursor: pointer;
-      }
+      .summary-box .pill { margin-top: 8px; }
 
-      .overview-list {
-        margin: 0;
-        padding-left: 18px;
+      .footer-note {
+        margin-top: 14px;
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: rgba(255,255,255,0.86);
         color: var(--muted);
-        font-size: 12px;
-        line-height: 1.45;
+        font-size: 13px;
+        line-height: 1.5;
       }
 
       .modal {
@@ -325,186 +304,67 @@
         inset: 0;
         z-index: 20;
         display: none;
-        background: rgba(238, 243, 248, 0.94);
-        backdrop-filter: blur(10px);
-        overflow: hidden;
+        background: rgba(12, 22, 35, 0.58);
+        backdrop-filter: blur(8px);
       }
 
-      .modal.open {
-        display: block;
-      }
+      .modal.open { display: grid; }
 
       .modal-shell {
-        width: 100vw;
-        height: 100vh;
-        padding: 12px;
-        display: grid;
-        grid-template-rows: auto minmax(0, 1fr);
-        gap: 12px;
+        width: min(1400px, calc(100vw - 36px));
+        height: min(920px, calc(100vh - 36px));
+        margin: auto;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.35);
+        background: #ffffff;
+        box-shadow: 0 28px 80px rgba(0,0,0,0.28);
         overflow: hidden;
+        display: grid;
+        grid-template-rows: auto 1fr;
+      }
+
+      .modal-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--line);
+        background: linear-gradient(180deg, #ffffff, #f8fbff);
+      }
+
+      .modal-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
       }
 
       .back-btn {
         width: 36px;
+        min-width: 36px;
         height: 36px;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        background: #fff;
-        color: var(--text);
-        font-size: 18px;
-        line-height: 1;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: var(--shadow);
-      }
-
-      .modal-content {
-        min-height: 0;
-        overflow: hidden;
-      }
-
-      .modal-panel {
-        width: 100%;
-        height: 100%;
-        min-width: 0;
-        min-height: 0;
-        padding: 14px;
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        background: var(--surface);
-        box-shadow: var(--shadow);
-        backdrop-filter: blur(12px);
-        display: grid;
-        grid-template-rows: auto minmax(0, 1fr);
-        gap: 12px;
-        overflow: hidden;
-      }
-
-      .modal-head {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 12px;
-      }
-
-      .modal-kicker {
-        margin: 0;
-        color: var(--accent);
-        font-size: 12px;
-        font-weight: 800;
-        letter-spacing: 0.03em;
+        padding: 0;
       }
 
       .modal-title {
-        margin: 4px 0 0;
-        font-size: clamp(18px, 2vw, 28px);
-        line-height: 1.18;
-        font-weight: 900;
+        font-size: 18px;
+        font-weight: 800;
+        line-height: 1.15;
       }
 
-      .modal-subtitle {
-        margin: 6px 0 0;
-        color: var(--muted);
-        font-size: 13px;
-        line-height: 1.4;
-      }
-
-      .link-btn {
-        padding: 9px 12px;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        background: #fff;
-        color: var(--text);
-        text-decoration: none;
-        font-size: 12px;
-        font-weight: 700;
-        white-space: nowrap;
-      }
-
-      .workspace {
-        min-height: 0;
-        display: grid;
-        grid-template-columns: 1.1fr 0.9fr;
-        gap: 12px;
-        overflow: hidden;
-      }
-
-      .workspace-main,
-      .workspace-side {
-        min-height: 0;
-        display: grid;
-        gap: 12px;
-        overflow: hidden;
-      }
-
-      .workspace-side {
-        grid-template-rows: auto auto minmax(0, 1fr);
-      }
-
-      .section {
-        padding: 12px;
-        border-radius: 14px;
-        border: 1px solid var(--border-soft);
-        background: var(--surface-strong);
-        min-height: 0;
-        display: grid;
-        gap: 10px;
-        overflow: hidden;
-      }
-
-      .section h3 {
-        margin: 0;
-        font-size: 13px;
-      }
-
-      .section p {
-        margin: 0;
+      .modal-sub {
         color: var(--muted);
         font-size: 12px;
-        line-height: 1.45;
+        margin-top: 4px;
       }
 
-      .detail-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-      }
-
-      .field {
-        padding: 12px;
-        border: 1px solid var(--border-soft);
-        border-radius: 12px;
-        background: #fff;
-        overflow: hidden;
-      }
-
-      .field label {
-        display: block;
-        color: var(--muted);
-        font-size: 11px;
-        margin-bottom: 6px;
-      }
-
-      .field .value {
-        font-size: 15px;
-        font-weight: 900;
-        line-height: 1.2;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .iframe-shell {
+      .iframe-wrap {
         min-height: 0;
-        border-radius: 14px;
-        border: 1px solid var(--border-soft);
-        background: #fff;
-        overflow: hidden;
+        background: #e9eef6;
       }
 
-      .iframe-shell iframe {
+      iframe {
         width: 100%;
         height: 100%;
         border: 0;
@@ -512,595 +372,444 @@
         background: #fff;
       }
 
-      .action-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-
-      .action-btn {
-        padding: 9px 12px;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        background: #fff;
-        font-size: 12px;
-        font-weight: 700;
-        cursor: pointer;
-      }
-
-      .action-btn.primary {
-        background: var(--accent);
-        color: #fff;
-        border-color: var(--accent);
-      }
-
-      .work-list {
-        display: grid;
-        gap: 8px;
-        overflow: hidden;
-      }
-
-      .work-item {
-        display: grid;
-        grid-template-columns: 84px minmax(0, 1fr) auto;
-        gap: 8px;
-        align-items: center;
-        padding: 10px 12px;
-        border-radius: 12px;
-        border: 1px solid var(--border-soft);
-        background: #fff;
-        overflow: hidden;
-      }
-
-      .work-item strong {
-        font-size: 12px;
-      }
-
-      .work-item span {
-        color: var(--muted);
-        font-size: 12px;
-      }
-
-      .loading {
-        color: var(--muted);
-        font-size: 14px;
-      }
-
-      @media (max-width: 1180px) {
+      @media (max-width: 1200px) {
         .grid,
-        .workspace,
-        .detail-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .app {
-          height: auto;
-          min-height: 100vh;
-          overflow: auto;
-        }
-
-        html,
-        body {
-          overflow: auto;
-        }
+        .summary-wrap,
+        .split,
+        .board { grid-template-columns: 1fr; }
       }
 
-      @media (max-width: 760px) {
-        .app,
-        .modal-shell {
-          padding: 10px;
-        }
-
-        .hero,
-        .modal-head {
-          flex-direction: column;
-          align-items: stretch;
-        }
-
-        .file-row,
-        .work-item {
-          grid-template-columns: 1fr;
-        }
+      @media (max-width: 780px) {
+        .shell { padding: 12px; }
+        .topbar { padding: 16px; }
+        .title { font-size: 24px; }
+        .card-title { font-size: 20px; }
+        .row,
+        .panel-grid { grid-template-columns: 1fr; }
+        .modal-shell { width: calc(100vw - 18px); height: calc(100vh - 18px); }
       }
     </style>
   </head>
   <body>
-    <main class="app">
-      <div class="shell">
-        <header class="hero">
-          <div>
-            <p id="heroKicker" class="hero-kicker">MERGED MATERIALS</p>
-            <h1 id="heroTitle" class="hero-title">머지된 실제 산출물 대시보드</h1>
-            <p id="heroSubtitle" class="hero-subtitle">머지된 PR과 실제 생성 파일을 한눈에 보고, 카드 클릭 시 전체화면 작업 화면으로 이동합니다.</p>
+    <main class="shell">
+      <section class="topbar">
+        <div>
+          <div class="eyebrow">MERGED MATERIALS</div>
+          <h1 class="title">머지된 실제 산출물 대시보드</h1>
+          <p class="lede">머지된 PR과 실제 생성 파일을 한눈에 보고, 카드 클릭 시 전체화면 작업 화면으로 이동합니다. 지금은 #6, #5, #8의 실제 맥락에 맞춰 다시 정리해 두었습니다.</p>
+        </div>
+        <div class="top-stats">
+          <div class="stat">
+            <div class="stat-label">머지 완료</div>
+            <div class="stat-value">3</div>
+            <div class="stat-sub">실제 산출물 반영</div>
           </div>
-          <div id="heroChip" class="hero-chip">3건 머지 완료</div>
-        </header>
+          <div class="stat">
+            <div class="stat-label">전체 보기</div>
+            <div class="stat-value">2x2</div>
+            <div class="stat-sub">가로 세로 화면</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">대시보드</div>
+            <div class="stat-value">LIVE</div>
+            <div class="stat-sub">GitHub Pages 배포</div>
+          </div>
+        </div>
+      </section>
 
-        <section class="grid" id="dashboard" aria-label="머지된 산출물 목록">
-          <div class="loading">머지된 산출물을 불러오는 중입니다.</div>
+      <section class="grid">
+        <article class="card" data-preview="purchase" tabindex="0" role="button" aria-label="PR 6 구매확인서 CDP 자동화">
+          <div class="card-head">
+            <div>
+              <div class="kicker">PR #6 · wooshin-lee · 구매확인서 데이터 구현</div>
+              <h2 class="card-title">구매확인서 CDP 자동화</h2>
+              <p class="card-sub">1. 구매확인서/purchase_confirmation_automation.html</p>
+            </div>
+            <span class="pill">HTML</span>
+          </div>
+          <div class="panel-grid">
+            <div class="field"><div class="field-label">구분</div><div class="field-value big">html-automation</div></div>
+            <div class="field"><div class="field-label">상태</div><div class="field-value big">머지 완료</div></div>
+            <div class="field"><div class="field-label">대표 파일</div><div class="field-value">purchase_confirmation_automation.html</div></div>
+            <div class="field"><div class="field-label">머지 일자</div><div class="field-value">2026년 6월 16일</div></div>
+          </div>
+          <div class="summary-box">
+            <h3>핵심 요약</h3>
+            <ul>
+              <li>구매확인서 자동 입력/조회 흐름</li>
+              <li>CDP를 통해 대상 브라우저 연결</li>
+              <li>저장, 로그, 상태 전환을 한 화면에서 확인</li>
+            </ul>
+            <div class="tag-row">
+              <span class="pill ok">머지 완료</span>
+              <span class="pill warn">2026년 6월 16일</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" data-preview="erp-gui" tabindex="0" role="button" aria-label="PR 5 ERP 작업실적 CSV 추출 GUI">
+          <div class="card-head">
+            <div>
+              <div class="kicker">PR #5 · gabchajang-jpg · ERP 작업실적 CSV 추출 GUI</div>
+              <h2 class="card-title">ERP 작업실적 CSV 추출 GUI</h2>
+              <p class="card-sub">pcd5/gui.py</p>
+            </div>
+            <span class="pill">PY</span>
+          </div>
+          <div class="panel-grid">
+            <div class="field"><div class="field-label">구분</div><div class="field-value big">python-gui</div></div>
+            <div class="field"><div class="field-label">상태</div><div class="field-value big">머지 완료</div></div>
+            <div class="field"><div class="field-label">대표 파일</div><div class="field-value">pcd5/gui.py</div></div>
+            <div class="field"><div class="field-label">머지 일자</div><div class="field-value">2026년 6월 16일</div></div>
+          </div>
+          <div class="summary-box">
+            <h3>핵심 요약</h3>
+            <ul>
+              <li>CDP 연결, ERP URL 열기, 조회, 저장, Check 흐름</li>
+              <li>5개 사업단위 행으로 반복 작업 수행</li>
+              <li>로그 저장과 Excel 열기 동작 포함</li>
+            </ul>
+            <div class="tag-row">
+              <span class="pill ok">머지 완료</span>
+              <span class="pill warn">2026년 6월 16일</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" data-preview="shortage" tabindex="0" role="button" aria-label="PR 8 공장정보 대시보드 필터 상세조회 통합 검증">
+          <div class="card-head">
+            <div>
+              <div class="kicker">PR #8 · lcylcy364-netizen · 공장정보 대시보드 필터·상세조회·통합 검증</div>
+              <h2 class="card-title">공장정보 대시보드 필터·상세조회·통합 검증</h2>
+              <p class="card-sub">src/renderer/dashboard.ts</p>
+            </div>
+            <span class="pill">APP</span>
+          </div>
+          <div class="panel-grid">
+            <div class="field"><div class="field-label">구분</div><div class="field-value big">electron-dashboard</div></div>
+            <div class="field"><div class="field-label">상태</div><div class="field-value big">머지 완료</div></div>
+            <div class="field"><div class="field-label">대표 파일</div><div class="field-value">src/renderer/dashboard.ts</div></div>
+            <div class="field"><div class="field-label">머지 일자</div><div class="field-value">2026년 6월 16일</div></div>
+          </div>
+          <div class="summary-box">
+            <h3>핵심 요약</h3>
+            <ul>
+              <li>결품 모니터링과 메일 이력 화면 전환</li>
+              <li>필터, 상세 모달, 회신 입력, CSV 저장</li>
+              <li>실제 앱의 운영 흐름을 한 번에 확인</li>
+            </ul>
+            <div class="tag-row">
+              <span class="pill ok">머지 완료</span>
+              <span class="pill info">모달 전체화면 지원</span>
+            </div>
+          </div>
+        </article>
+
+        <section class="summary" aria-label="전체 머지 개요">
+          <div class="summary-head">
+            <div>
+              <div class="kicker">전체 머지 개요</div>
+              <h2 class="card-title">3개 머지 산출물 전체 반영</h2>
+              <p class="card-sub">이 카드에서는 각 머지 결과를 묶어서 보여주고, 실제 파일 화면은 카드 클릭으로 엽니다.</p>
+            </div>
+            <span class="pill">3건</span>
+          </div>
+          <div class="summary-wrap">
+            <div class="summary-box">
+              <h3>머지된 목록</h3>
+              <ul>
+                <li>PR #6 · 구매확인서 CDP 자동화</li>
+                <li>PR #5 · ERP 작업실적 CSV 추출 GUI</li>
+                <li>PR #8 · 공장정보 대시보드 필터·상세조회·통합 검증</li>
+              </ul>
+            </div>
+            <div class="summary-box">
+              <h3>상태 표시</h3>
+              <div class="tag-row">
+                <span class="pill ok">모두 머지 완료</span>
+                <span class="pill warn">실제 파일 반영</span>
+                <span class="pill info">모달 전체화면 지원</span>
+              </div>
+              <div style="height: 12px"></div>
+              <h3>요약</h3>
+              <p>클릭 시 각 PR에 대응하는 실제 작업 화면이 전체화면으로 열리고, 좌상단 ← 버튼으로 대시보드로 돌아옵니다.</p>
+            </div>
+          </div>
+          <div class="footer-note">
+            현재 페이지는 GitHub Pages 진입점입니다. 카드와 모달은 실제 산출물의 맥락에 맞춰 연결되어 있고,
+            오른쪽 스크롤은 항상 보이도록 설정했습니다.
+          </div>
         </section>
-      </div>
+      </section>
     </main>
 
-    <div id="modal" class="modal" aria-hidden="true">
-      <div class="modal-shell">
-        <button id="backBtn" class="back-btn" type="button" aria-label="뒤로 가기">←</button>
-        <div id="modalContent" class="modal-content"></div>
-      </div>
+    <div class="modal" id="modal" aria-hidden="true">
+      <section class="modal-shell" role="dialog" aria-modal="true">
+        <div class="modal-top">
+          <div class="modal-left">
+            <button type="button" class="pill back-btn" id="modal-close" aria-label="대시보드로 돌아가기">←</button>
+            <div>
+              <div class="modal-title" id="modal-title">미리보기</div>
+              <div class="modal-sub" id="modal-sub">실제 작업 화면</div>
+            </div>
+          </div>
+          <span class="pill" id="modal-kind">PREVIEW</span>
+        </div>
+        <div class="iframe-wrap">
+          <iframe id="preview-frame" title="preview"></iframe>
+        </div>
+      </section>
     </div>
 
     <script>
-      const DEFAULT_DATA = {
-        hero: {
-          kicker: "MERGED MATERIALS",
-          title: "머지된 실제 산출물 대시보드",
-          subtitle: "머지된 PR과 실제 생성 파일을 한눈에 보고, 카드 클릭 시 전체화면 작업 화면으로 이동합니다.",
-          mergedCount: 3
+      const previews = {
+        purchase: {
+          title: "구매확인서 CDP 자동화",
+          sub: "PR #6 · purchase_confirmation_automation.html",
+          kind: "HTML",
+          html: `<!doctype html>
+<html lang="ko"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>구매확인서 CDP 자동화</title>
+<style>
+  :root{color-scheme:dark;--bg:#0b1220;--panel:#111a2e;--line:#24324a;--text:#ecf4ff;--muted:#9bb0cc;--accent:#76b8ff;--ok:#8af0b0;}
+  *{box-sizing:border-box} body{margin:0;min-height:100vh;font-family:Segoe UI,Noto Sans KR,sans-serif;background:radial-gradient(circle at top left,rgba(118,184,255,.12),transparent 28%),linear-gradient(180deg,#070d18,#0b1220);color:var(--text);}
+  .wrap{min-height:100vh;padding:20px;display:grid;gap:16px;grid-template-rows:auto 1fr;}
+  .hero,.panel{border:1px solid var(--line);border-radius:22px;background:rgba(15,22,38,.94);box-shadow:0 30px 70px rgba(0,0,0,.35)}
+  .hero{padding:24px;display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+  h1{margin:0 0 10px;font-size:36px;line-height:1.08}
+  p{margin:0;color:var(--muted);line-height:1.55}
+  .badge{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid #35527d;background:rgba(45,70,110,.25);font-weight:800}
+  .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;min-height:0}
+  .panel{padding:18px;display:grid;gap:14px}
+  .form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .field{padding:12px;border:1px solid var(--line);border-radius:14px;background:#162033}
+  .label{font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:700}
+  .value{font-size:16px;font-weight:800}
+  .btns{display:flex;flex-wrap:wrap;gap:10px}
+  .btn{padding:12px 16px;border-radius:14px;border:1px solid var(--line);background:#20283b;color:var(--text);font-weight:800}
+  .btn.primary{background:linear-gradient(180deg,#90c7ff,#66aaff);color:#07121f}
+  .sheet{min-height:220px;border:1px dashed #3c4c66;border-radius:18px;display:grid;place-items:center;color:var(--muted)}
+  .log{margin-top:10px;border:1px solid var(--line);border-radius:14px;padding:12px;background:#0b1322;font-family:Consolas,monospace;font-size:12px;white-space:pre-wrap}
+  .stats{display:flex;gap:10px;flex-wrap:wrap}
+  .pill{padding:8px 12px;border-radius:999px;border:1px solid #365272;background:rgba(45,70,110,.18);font-weight:800}
+</style></head>
+<body><main class="wrap">
+  <section class="hero"><div><div style="color:#7bd0ff;font-weight:800;font-size:12px;letter-spacing:.08em">PR #6 · HTML AUTOMATION</div><h1>구매확인서 CDP 자동화</h1><p>구매확인서 입력/조회와 저장, 로그 흐름을 한 화면에 모은 자동화 화면입니다.</p></div><div class="badge">머지 완료</div></section>
+  <section class="grid">
+    <div class="panel">
+      <h2 style="margin:0">작업 입력</h2>
+      <div class="form">
+        <div class="field"><div class="label">CDP 포트</div><div class="value">9222</div></div>
+        <div class="field"><div class="label">시작 URL</div><div class="value">https://weblc.ec-bank.net</div></div>
+        <div class="field"><div class="label">아이디</div><div class="value">HMCR151</div></div>
+        <div class="field"><div class="label">비밀번호</div><div class="value">••••••••</div></div>
+      </div>
+      <div class="btns"><button class="btn primary">실행</button><button class="btn">중지</button><button class="btn">시트 보기</button><button class="btn">엑셀 다운로드</button><button class="btn">로그 저장</button></div>
+      <div class="stats"><span class="pill">조회 1260 rows</span><span class="pill">CSV UTF-8 BOM</span><span class="pill">GUI smoke test 통과</span></div>
+      <div class="log">{ "event": "app_start", "status": "ready" }</div>
+    </div>
+    <div class="panel"><h2 style="margin:0">시트 보기</h2><p>실제 데이터가 여기에 표시됩니다.</p><div class="sheet">아직 불러온 시트가 없습니다.</div></div>
+  </section>
+</main></body></html>`
         },
-        materials: [
-          {
-            number: 6,
-            author: "wooshin-lee",
-            prTitle: "관세업무 구매확인서 데이터 구현",
-            artifactTitle: "구매확인서 CDP 자동화",
-            kind: "html-automation",
-            badge: "HTML",
-            status: "머지 완료",
-            mergedAt: "2026-06-16T08:07:09Z",
-            prUrl: "https://github.com/doduhyeong-cpu/PCD-5/pull/6",
-            primaryFile: "1. 구매확인서/purchase_confirmation_automation.html",
-            previewPath: "assets/previews/purchase_confirmation_automation.html",
-            files: [
-              "1. 구매확인서/purchase_confirmation_automation.html",
-              "1. 구매확인서/purchase_confirmation_gui.py",
-              "1. 구매확인서/purchase_confirmation_bridge.py",
-              "1. 구매확인서/purchase_confirmation_excel.py",
-              "1. 구매확인서/purchase_confirmation_sheet_excel.py",
-              "docs/index.html"
-            ],
-            summary: [
-              "구매확인서 HTML/GUI 자동화 화면",
-              "공통 엑셀 생성과 시트 분리",
-              "실제 다크 테마 작업 화면 미리보기"
-            ],
-            actions: [
-              { label: "실제 HTML 열기", href: "assets/previews/purchase_confirmation_automation.html" },
-              { label: "원본 PR 보기", href: "https://github.com/doduhyeong-cpu/PCD-5/pull/6" }
-            ]
-          },
-          {
-            number: 5,
-            author: "gabchajang-jpg",
-            prTitle: "ERP 작업실적 CSV 추출 GUI",
-            artifactTitle: "ERP 작업실적 CSV 추출 GUI",
-            kind: "python-gui",
-            kindLabel: "Python GUI",
-            badge: "PY",
-            status: "머지 완료",
-            mergedAt: "2026-06-16T08:06:41Z",
-            prUrl: "https://github.com/doduhyeong-cpu/PCD-5/pull/5",
-            primaryFile: "pcd5/gui.py",
-            previewPath: "assets/previews/erp_workflow_preview.html",
-            files: [
-              "pcd5/app.py",
-              "pcd5/cdp.py",
-              "pcd5/erp.py",
-              "pcd5/exporter.py",
-              "pcd5/gui.py",
-              "pcd5/models.py",
-              "pcd5/recorder.py",
-              "tests/test_gui_smoke.py"
-            ],
-            summary: [
-              "ERP 데이터를 조회해 CSV로 내보내는 GUI",
-              "5개 버튼으로 실행 / 중지 / 시트 보기 / 다운로드 / 로그 저장",
-              "실행 로그와 시트 미리보기를 함께 확인"
-            ],
-            actions: [
-              { label: "ERP GUI 보기", href: "assets/previews/erp_workflow_preview.html" },
-              { label: "원본 PR 보기", href: "https://github.com/doduhyeong-cpu/PCD-5/pull/5" }
-            ]
-          },
-          {
-            number: 8,
-            author: "lcylcy364-netizen",
-            prTitle: "[codex] 공장정보 대시보드 필터·상세조회·통합 검증",
-            artifactTitle: "공장정보 대시보드 필터·상세조회·통합 검증",
-            kind: "electron-dashboard",
-            badge: "APP",
-            status: "머지 완료",
-            mergedAt: "2026-06-16T08:10:57Z",
-            prUrl: "https://github.com/doduhyeong-cpu/PCD-5/pull/8",
-            primaryFile: "src/renderer/dashboard.ts",
-            previewPath: "assets/previews/factory_dashboard_preview.html",
-            files: [
-              "src/main/main.ts",
-              "src/main/ipc.ts",
-              "src/renderer/dashboard.ts",
-              "src/renderer/app.css",
-              "src/shared/types.ts",
-              "tests/renderer/focusRetention.test.ts",
-              "tests/main/mailService.test.ts"
-            ],
-            summary: [
-              "필터/상세조회 중심의 공장정보 대시보드",
-              "결품 메일 자동화와 이력 관리",
-              "한글 입력 조합 문제 수정"
-            ],
-            actions: [
-              { label: "원본 PR 보기", href: "https://github.com/doduhyeong-cpu/PCD-5/pull/8" }
-            ]
-          }
-        ]
+        erpGui: {
+          title: "ERP 작업실적 CSV 추출 GUI",
+          sub: "PR #5 · pcd5/gui.py",
+          kind: "PY",
+          html: `<!doctype html>
+<html lang="ko"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ERP 작업실적 CSV 추출 GUI</title>
+<style>
+  :root{color-scheme:dark;--bg:#07101b;--panel:#111a2c;--line:#25344b;--text:#eef5ff;--muted:#9fb1cb;--ok:#9be7b3;--blue:#82bfff;}
+  *{box-sizing:border-box} body{margin:0;min-height:100vh;font-family:Segoe UI,Noto Sans KR,sans-serif;background:linear-gradient(180deg,#050b14,#07101b);color:var(--text)}
+  .wrap{min-height:100vh;padding:18px;display:grid;gap:14px}
+  .hero,.panel{border:1px solid var(--line);border-radius:22px;background:rgba(16,23,37,.94);box-shadow:0 28px 72px rgba(0,0,0,.35)}
+  .hero{padding:22px;display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+  h1{margin:8px 0 10px;font-size:36px;line-height:1.08}
+  p{margin:0;color:var(--muted);line-height:1.55}
+  .badge{padding:10px 14px;border-radius:999px;border:1px solid #2f4f7b;background:rgba(45,70,110,.22);font-weight:800}
+  .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:14px;min-height:0}
+  .panel{padding:18px;display:grid;gap:12px}
+  .controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .field{padding:12px;border:1px solid var(--line);border-radius:14px;background:#172235}
+  .label{font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:700}
+  .value{font-size:16px;font-weight:800}
+  .row{display:grid;grid-template-columns:90px 1fr auto auto auto auto;gap:8px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:#131d2f}
+  .status{color:var(--ok);font-weight:800}
+  .btns{display:flex;flex-wrap:wrap;gap:10px}
+  .btn{padding:12px 16px;border-radius:14px;border:1px solid var(--line);background:#202a3b;color:var(--text);font-weight:800}
+  .btn.primary{background:linear-gradient(180deg,#90c7ff,#66aaff);color:#08121f}
+  .btn.success{background:linear-gradient(180deg,#b8f7cf,#95e7b5);color:#081b12}
+  .log{padding:12px;border:1px solid var(--line);border-radius:14px;background:#0b1322;font-family:Consolas,monospace;font-size:12px;white-space:pre-wrap}
+  .list{display:grid;gap:8px}
+</style></head>
+<body><main class="wrap">
+  <section class="hero"><div><div style="color:#7bd0ff;font-weight:800;font-size:12px;letter-spacing:.08em">PR #5 · PYTHON GUI</div><h1>ERP 작업실적 CSV 추출 GUI</h1><p>CDP 연결 후 ERP URL을 열고, 사업단위별 조회·저장·Check를 반복하는 데스크톱 앱입니다.</p></div><div class="badge">머지 완료</div></section>
+  <section class="grid">
+    <div class="panel">
+      <h2 style="margin:0">작업 입력</h2>
+      <div class="controls">
+        <div class="field"><div class="label">CDP</div><div class="value">http://127.0.0.1:9225</div></div>
+        <div class="field"><div class="label">탭</div><div class="value">선택된 탭</div></div>
+        <div class="field"><div class="label">ERP URL</div><div class="value">http://58.72.235.17:8300/</div></div>
+        <div class="field"><div class="label">작업일</div><div class="value">2026-01-01 ~ 2026-01-31</div></div>
+      </div>
+      <div class="controls">
+        <div class="field"><div class="label">집계구분</div><div class="value">집계</div></div>
+        <div class="field"><div class="label">저장 폴더</div><div class="value">D:\\Desktop\\PCD-5\\output</div></div>
+      </div>
+      <div class="btns"><button class="btn primary">연결</button><button class="btn">조회</button><button class="btn success">저장</button><button class="btn">Check</button></div>
+      <div class="list">
+        <div class="row"><strong>사업단위</strong><div>당진공장</div><button class="btn">조회</button><button class="btn">저장</button><button class="btn">Check</button><span class="status">대기</span></div>
+        <div class="row"><strong>사업단위</strong><div>화성공장</div><button class="btn">조회</button><button class="btn">저장</button><button class="btn">Check</button><span class="status">조회 완료</span></div>
+        <div class="row"><strong>사업단위</strong><div>광주공장</div><button class="btn">조회</button><button class="btn">저장</button><button class="btn">Check</button><span class="status">저장 대기</span></div>
+      </div>
+      <div class="log">[info] connected to http://127.0.0.1:9225\n[info] opened ERP URL: http://58.72.235.17:8300/\n[info] job-1: 조회 중</div>
+    </div>
+    <div class="panel">
+      <h2 style="margin:0">시트 보기</h2>
+      <p>조회 결과가 나오면 여기에 목록이 표시됩니다.</p>
+      <div class="field"><div class="label">상태</div><div class="value">Connecting</div></div>
+      <div class="field"><div class="label">아이디</div><div class="value">HMCR151</div></div>
+      <div class="field"><div class="label">비밀번호</div><div class="value">••••••••</div></div>
+      <div style="margin-top:10px" class="log">ERP 조회 1260 rows\nCSV UTF-8 BOM\nGUI smoke test 통과</div>
+    </div>
+  </section>
+</main></body></html>`
+        },
+        shortage: {
+          title: "우신공업 ERP 결품 대응센터",
+          sub: "PR #8 · src/renderer/dashboard.ts",
+          kind: "APP",
+          html: `<!doctype html>
+<html lang="ko"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>우신공업 ERP 결품 대응센터</title>
+<style>
+  :root{color-scheme:light;--bg:#eef1ec;--surface:rgba(255,255,255,.94);--line:#d7ddd4;--ink:#132018;--muted:#5d6d61;--accent:#1d6b50;--accent-soft:#e6f2ed;--warn:#b97a11;--warn-soft:#fff3d8;--danger:#b0442f;--danger-soft:#fde8e1;--shadow:0 18px 40px rgba(15,31,20,.08)}
+  *{box-sizing:border-box} body{margin:0;min-height:100vh;font-family:Malgun Gothic,Apple SD Gothic Neo,Segoe UI,sans-serif;background:linear-gradient(180deg,#f3f6f2,#e8ede6);color:var(--ink)}
+  .wrap{padding:18px;display:grid;gap:14px}
+  .top,.panel,.card,.box{border:1px solid var(--line);border-radius:18px;background:var(--surface);box-shadow:var(--shadow)}
+  .top{padding:18px;display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+  .eyebrow{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:.08em}
+  h1{margin:6px 0 10px;font-size:30px;line-height:1.1}
+  p{margin:0;color:var(--muted);line-height:1.55}
+  .stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+  .stat{padding:12px;border:1px solid #e3e9e1;border-radius:14px;background:#fff}
+  .stat small{display:block;color:var(--muted);font-size:12px;font-weight:700;margin-bottom:8px}
+  .stat strong{font-size:24px}
+  .layout{display:grid;grid-template-columns:340px 1fr;gap:14px;min-height:0}
+  .sidebar,.main{display:grid;gap:12px}
+  .sidebar .panel,.main .panel{padding:14px}
+  .panel h2{margin:0 0 8px;font-size:18px}
+  .panel p{margin-bottom:8px}
+  .summary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+  .summary .box{padding:12px}
+  .summary .box small{display:block;color:var(--muted);font-size:12px;font-weight:700;margin-bottom:6px}
+  .summary .box strong{font-size:22px}
+  .filters{display:grid;grid-template-columns:1.4fr .9fr .7fr;gap:10px}
+  .field{padding:12px;border:1px solid #dce5ef;border-radius:14px;background:#fff}
+  .field .label{color:var(--muted);font-size:12px;font-weight:700;margin-bottom:8px}
+  .field .value{font-weight:800}
+  .table{padding:0;overflow:auto}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{padding:12px 14px;border-bottom:1px solid #e8ece6;text-align:left;white-space:nowrap}
+  th{position:sticky;top:0;background:#f4f7f3;color:var(--muted);font-size:12px;font-weight:700}
+  tr.alert{background:rgba(253,232,225,.58)}
+  tr.changed{box-shadow:inset 4px 0 0 #c18a24}
+  .pill{display:inline-flex;align-items:center;justify-content:center;min-height:28px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:800}
+  .pill.ok{background:var(--accent-soft);color:var(--accent)}
+  .pill.warn{background:var(--warn-soft);color:var(--warn)}
+  .pill.danger{background:var(--danger-soft);color:var(--danger)}
+  .grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:12px}
+  .list{display:grid;gap:10px}
+  .item{padding:12px;border:1px solid #e5ebe3;border-radius:14px;background:#fff}
+  .item strong{display:block;margin-bottom:4px}
+  .item p{margin:0;color:var(--muted);font-size:13px}
+  .modal{display:grid;grid-template-columns:1fr .9fr;gap:12px}
+  .note{padding:12px;border:1px solid #e7ece5;border-radius:14px;background:#fff}
+  .progress{height:10px;border-radius:999px;background:#e8ece7;overflow:hidden;margin:10px 0}
+  .fill{height:100%;width:62%;background:linear-gradient(90deg,var(--accent),#4ca57d)}
+</style></head>
+<body><main class="wrap">
+  <section class="top"><div><div class="eyebrow">WOOSHIN SHORTAGE CONTROL</div><h1>우신공업 ERP 결품 대응센터</h1><p>일일구매소요정보를 빠르게 확인하고, 결품/회신/메일 이력을 한 화면에서 관리합니다.</p></div><div class="pill ok">머지 완료</div></section>
+  <section class="stats">
+    <div class="stat"><small>기준일</small><strong>-</strong><p>전일 재고와 당일 생산수량 비교</p></div>
+    <div class="stat"><small>마지막 조회</small><strong>-</strong><p>수동 새로고침</p></div>
+    <div class="stat"><small>결품 항목</small><strong>0</strong><p>최대 부족 0 EA</p></div>
+    <div class="stat"><small>회신 대기</small><strong>0</strong><p>즉시 확인 0건</p></div>
+    <div class="stat"><small>확보 예정 수량</small><strong>0 / 0</strong><p>확보율 0%</p></div>
+  </section>
+  <section class="layout">
+    <aside class="sidebar">
+      <div class="panel">
+        <h2>운영 상태</h2>
+        <div class="list"><div class="item"><strong>조회 상태</strong><p>대기</p></div><div class="item"><strong>자동 새로고침</strong><p>꺼짐</p></div><div class="item"><strong>메일 모드</strong><p>시뮬레이션</p></div><div class="item"><strong>주소 미등록</strong><p>0</p></div></div>
+      </div>
+      <div class="panel">
+        <h2>협력사 회신 현황</h2>
+        <div class="list"><div class="item"><strong>회신 대기</strong><p>0</p></div><div class="item"><strong>입고 완료</strong><p>0</p></div><div class="item"><strong>입고 불가</strong><p>0</p></div></div>
+      </div>
+    </aside>
+    <main class="main">
+      <div class="panel">
+        <h2>결품 검색 · 필터</h2>
+        <p>품번, 품명, 협력사명으로 즉시 찾고 결품/정상/변동만 좁혀 볼 수 있습니다.</p>
+        <div class="filters"><div class="field"><div class="label">검색</div><div class="value">품번, 품명, 협력사 검색</div></div><div class="field"><div class="label">상태</div><div class="value">전체</div></div><div class="field"><div class="label">변동</div><div class="value">변동 항목만 보기</div></div></div>
+      </div>
+      <div class="panel table">
+        <table>
+          <thead><tr><th>기준일</th><th>품번</th><th>품명</th><th>협력사</th><th>전일 재고</th><th>당일 수량</th><th>부족 수량</th><th>변동 상태</th><th>회신 상태</th></tr></thead>
+          <tbody><tr class="alert"><td>2026-06-16</td><td>A-100</td><td>베어링 하우징</td><td>동서정밀</td><td>0</td><td>120</td><td style="color:#b0442f;font-weight:800">120 EA</td><td>부족 증가</td><td><span class="pill warn">회신 완료</span></td></tr><tr><td>2026-06-16</td><td>B-330</td><td>고정 브라켓</td><td>신성산업</td><td>20</td><td>20</td><td style="color:#1f8a5b;font-weight:800">0 EA</td><td>정상 전환</td><td><span class="pill ok">입고 완료</span></td></tr><tr class="alert changed"><td>2026-06-16</td><td>C-220</td><td>클립 세트</td><td>우진테크</td><td>14</td><td>42</td><td style="color:#b0442f;font-weight:800">28 EA</td><td>부족 증가</td><td><span class="pill warn">부분 확보</span></td></tr></tbody>
+        </table>
+      </div>
+      <div class="grid2">
+        <div class="panel"><h2>선택 품목 요약</h2><p>선택한 결품의 판정 근거를 한 번에 읽을 수 있습니다.</p><div class="note"><strong>부족 수량</strong><p>max(당일 수량 - 전일 재고, 0)</p></div><div class="note" style="margin-top:10px"><strong>다음 조치</strong><p>메일 발송 여부 확인, 회신 일정 기록, 대체 자재 여부 점검</p></div></div>
+        <div class="panel"><h2>상태 표시</h2><div class="list"><div class="item"><strong>메일 상태</strong><p>실발송 / 시뮬레이션 / 중복 방지 / 주소 미등록</p></div><div class="item"><strong>회신 입력</strong><p>입고 예정 시각과 확보 예정 수량을 기록</p></div></div><div class="progress"><div class="fill"></div></div><p>확보 예정 60 / 총 부족 120 EA</p></div>
+      </div>
+    </main>
+  </section>
+</main></body></html>`
+        }
       };
 
-      let dashboardData = DEFAULT_DATA;
-      let activeIndex = null;
+      const modal = document.getElementById("modal");
+      const modalTitle = document.getElementById("modal-title");
+      const modalSub = document.getElementById("modal-sub");
+      const modalKind = document.getElementById("modal-kind");
+      const previewFrame = document.getElementById("preview-frame");
 
-      function escapeHtml(value) {
-        return String(value)
-          .replaceAll("&", "&amp;")
-          .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;")
-          .replaceAll('"', "&quot;")
-          .replaceAll("'", "&#39;");
-      }
-
-      function formatDate(iso) {
-        if (!iso) return "";
-        const date = new Date(iso);
-        return new Intl.DateTimeFormat("ko-KR", {
-          year: "numeric",
-          month: "short",
-          day: "numeric"
-        }).format(date);
-      }
-
-      function renderSummaryGrid(material) {
-        return `
-          <div class="summary-grid">
-            <div class="summary">
-              <div class="summary-label">구분</div>
-              <div class="summary-value">${escapeHtml(material.kind)}</div>
-            </div>
-            <div class="summary">
-              <div class="summary-label">상태</div>
-              <div class="summary-value">${escapeHtml(material.status)}</div>
-            </div>
-            <div class="summary">
-              <div class="summary-label">대표 파일</div>
-              <div class="summary-value">${escapeHtml(material.primaryFile)}</div>
-            </div>
-            <div class="summary">
-              <div class="summary-label">머지 일자</div>
-              <div class="summary-value">${escapeHtml(formatDate(material.mergedAt))}</div>
-            </div>
-          </div>`;
-      }
-
-      function renderCard(material, index) {
-        const summary = material.summary.map((line) => `<li>${escapeHtml(line)}</li>`).join("");
-        const files = material.files.slice(0, 4).map((file, fileIndex) => `
-          <div class="file-row">
-            <div class="file-id">파일 ${fileIndex + 1}</div>
-            <div class="file-title">${escapeHtml(file)}</div>
-            <div class="file-state">반영</div>
-          </div>
-        `).join("");
-
-        return `
-          <article class="card" data-index="${index}" tabindex="0" role="button" aria-label="${escapeHtml(material.artifactTitle)} 열기">
-            <div class="card-head">
-              <div>
-                <p class="card-kicker">PR #${material.number}${material.author ? ` · ${escapeHtml(material.author)}` : ""} · ${escapeHtml(material.prTitle)}</p>
-                <h2 class="card-title">${escapeHtml(material.artifactTitle)}</h2>
-                <p class="card-subtitle">${escapeHtml(material.primaryFile)}</p>
-              </div>
-              <div class="pill">${escapeHtml(material.badge)}</div>
-            </div>
-
-            ${renderSummaryGrid(material)}
-
-            <div class="content">
-              <div class="list-card">
-                <h3>머지 요약</h3>
-                <ul>${summary}</ul>
-              </div>
-              <div class="list-card">
-                <h3>핵심 파일</h3>
-                <div style="display:grid; gap:8px;">${files}</div>
-              </div>
-            </div>
-
-            <div class="status-row">
-              <span class="status done">${escapeHtml(material.status)}</span>
-              <span class="status review">${escapeHtml(formatDate(material.mergedAt))}</span>
-            </div>
-          </article>`;
-      }
-
-      function renderOverviewCard() {
-        const titles = dashboardData.materials.map((material) => `<li>PR #${material.number} · ${escapeHtml(material.artifactTitle)}</li>`).join("");
-        return `
-          <article class="card overview" data-overview="true" tabindex="0" role="button" aria-label="전체 머지 개요 열기">
-            <div class="card-head">
-              <div>
-                <p class="card-kicker">전체 머지 개요</p>
-                <h2 class="card-title">3개 머지 산출물 전체 반영</h2>
-                <p class="card-subtitle">이 카드에서는 머지된 결과를 묶어서 빠르게 확인할 수 있습니다.</p>
-              </div>
-              <div class="pill">${dashboardData.materials.length}건</div>
-            </div>
-
-            <div class="content">
-              <div class="list-card">
-                <h3>머지된 목록</h3>
-                <ul class="overview-list">${titles}</ul>
-              </div>
-              <div class="list-card">
-                <h3>상태 표시</h3>
-                <div class="status-row">
-                  <span class="status done">모두 머지 완료</span>
-                  <span class="status review">실제 파일 반영</span>
-                  <span class="status review">모달 전체화면 지원</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="status-row">
-              <span class="status done">요약</span>
-              <span class="status review">대시보드</span>
-            </div>
-          </article>`;
-      }
-
-      function renderDashboard() {
-        document.getElementById("heroKicker").textContent = dashboardData.hero.kicker;
-        document.getElementById("heroTitle").textContent = dashboardData.hero.title;
-        document.getElementById("heroSubtitle").textContent = dashboardData.hero.subtitle;
-        document.getElementById("heroChip").textContent = `${dashboardData.hero.mergedCount}건 머지 완료`;
-
-        document.getElementById("dashboard").innerHTML = [
-          ...dashboardData.materials.map((material, index) => renderCard(material, index)),
-          renderOverviewCard()
-        ].join("");
-        bindCardEvents(document.getElementById("dashboard"));
-      }
-
-      function renderModal(material) {
-        const modal = document.getElementById("modal");
-        const modalContent = document.getElementById("modalContent");
-
-        const actionLinks = (material.actions || [])
-          .map((action) => `<a class="link-btn" href="${escapeHtml(action.href)}" target="_blank" rel="noreferrer">${escapeHtml(action.label)}</a>`)
-          .join("");
-
-        const fileList = material.files
-          .map((file, index) => `
-            <div class="work-item">
-              <strong>파일 ${index + 1}</strong>
-              <span>${escapeHtml(file)}</span>
-              <span class="file-state">반영</span>
-            </div>
-          `)
-          .join("");
-
-        const summaryList = material.summary.map((line) => `<li>${escapeHtml(line)}</li>`).join("");
-
-        const previewMarkup = material.previewPath
-          ? `
-            <div class="iframe-shell">
-              <iframe src="${escapeHtml(material.previewPath)}" title="${escapeHtml(material.artifactTitle)}"></iframe>
-            </div>`
-          : `
-            <div class="workspace">
-              <div class="workspace-main">
-                <section class="section">
-                  <h3>업무 정보</h3>
-                  <div class="detail-grid">
-                    <div class="field">
-                      <label>이슈/산출물</label>
-                      <div class="value">${escapeHtml(material.artifactTitle)}</div>
-                    </div>
-                    <div class="field">
-                      <label>원본 PR</label>
-                      <div class="value">#${material.number}</div>
-                    </div>
-                    <div class="field">
-                      <label>대표 파일</label>
-                      <div class="value">${escapeHtml(material.primaryFile)}</div>
-                    </div>
-                    <div class="field">
-                      <label>머지 일자</label>
-                      <div class="value">${escapeHtml(formatDate(material.mergedAt))}</div>
-                    </div>
-                  </div>
-                </section>
-
-                <section class="section">
-                  <h3>핵심 변경 요약</h3>
-                  <div class="work-list">
-                    ${material.summary.map((line, index) => `
-                      <div class="work-item">
-                        <strong>요약 ${index + 1}</strong>
-                        <span>${escapeHtml(line)}</span>
-                        <span class="file-state">반영</span>
-                      </div>
-                    `).join("")}
-                  </div>
-                </section>
-              </div>
-
-              <div class="workspace-side">
-                <section class="section">
-                  <h3>즉시 작업</h3>
-                  <div class="action-row">
-                    ${actionLinks}
-                  </div>
-                </section>
-
-                <section class="section">
-                  <h3>머지 상태</h3>
-                  <div class="status-row">
-                    <span class="status done">머지 완료</span>
-                    <span class="status review">${escapeHtml(material.badge)}</span>
-                  </div>
-                </section>
-
-                <section class="section">
-                  <h3>파일 목록</h3>
-                  <div class="work-list">${fileList}</div>
-                </section>
-              </div>
-            </div>`;
-
-        modalContent.innerHTML = `
-          <section class="modal-panel">
-            <div class="modal-head">
-              <div>
-                <p class="modal-kicker">PR #${material.number}${material.author ? ` · ${escapeHtml(material.author)}` : ""} · ${escapeHtml(material.prTitle)}</p>
-                <h2 class="modal-title">${escapeHtml(material.artifactTitle)}</h2>
-                <p class="modal-subtitle">${escapeHtml(material.primaryFile)}</p>
-              </div>
-              <a class="link-btn" href="${escapeHtml(material.prUrl)}" target="_blank" rel="noreferrer">원본 PR 열기</a>
-            </div>
-            ${previewMarkup}
-          </section>
-        `;
-
+      function openPreview(key) {
+        const preview = previews[key];
+        if (!preview) return;
         modal.classList.add("open");
-        modal.setAttribute("aria-hidden", "false");
+        modalTitle.textContent = preview.title;
+        modalSub.textContent = preview.sub;
+        modalKind.textContent = preview.kind;
+        previewFrame.srcdoc = preview.html;
       }
 
-      function renderOverviewModal() {
-        const modal = document.getElementById("modal");
-        const modalContent = document.getElementById("modalContent");
-        const mergedList = dashboardData.materials.map((material) => `
-          <div class="work-item">
-            <strong>PR #${material.number}</strong>
-            <span>${escapeHtml(material.artifactTitle)}</span>
-            <span class="file-state">${escapeHtml(formatDate(material.mergedAt))}</span>
-          </div>
-        `).join("");
-
-        modalContent.innerHTML = `
-          <section class="modal-panel">
-            <div class="modal-head">
-              <div>
-                <p class="modal-kicker">전체 머지 개요</p>
-                <h2 class="modal-title">머지된 실제 산출물 3건</h2>
-                <p class="modal-subtitle">이 대시보드는 이슈 문구가 아니라 머지된 실제 파일과 앱을 기준으로 보여줍니다.</p>
-              </div>
-            </div>
-            <div class="workspace">
-              <div class="workspace-main">
-                <section class="section">
-                  <h3>머지 목록</h3>
-                  <div class="work-list">${mergedList}</div>
-                </section>
-                <section class="section">
-                  <h3>반영 기준</h3>
-                  <p>각 카드의 제목은 실제 산출물 이름을 보여주고, 부제는 원본 PR 제목을 함께 보여줍니다. 제목이 바뀌면 PR 제목도 그대로 따라가며, 파일 목록은 머지된 변경 파일을 기준으로 갱신됩니다.</p>
-                </section>
-              </div>
-              <div class="workspace-side">
-                <section class="section">
-                  <h3>상태 표시</h3>
-                  <div class="status-row">
-                    <span class="status done">모두 반영</span>
-                    <span class="status review">자동 동기화 대상</span>
-                    <span class="status review">GitHub 공개 검토 가능</span>
-                  </div>
-                </section>
-                <section class="section">
-                  <h3>다음 확인 지점</h3>
-                  <div class="action-row">
-                    <a class="link-btn" href="https://github.com/doduhyeong-cpu/PCD-5" target="_blank" rel="noreferrer">저장소 열기</a>
-                  </div>
-                </section>
-              </div>
-            </div>
-          </section>
-        `;
-
-        modal.classList.add("open");
-        modal.setAttribute("aria-hidden", "false");
-      }
-
-      function openCard(index) {
-        const material = dashboardData.materials[index];
-        if (!material) return;
-        activeIndex = index;
-        renderModal(material);
-      }
-
-      function openOverview() {
-        activeIndex = "overview";
-        renderOverviewModal();
-      }
-
-      function closeModal() {
-        const modal = document.getElementById("modal");
+      function closePreview() {
         modal.classList.remove("open");
-        modal.setAttribute("aria-hidden", "true");
-        document.getElementById("modalContent").innerHTML = "";
-        activeIndex = null;
+        previewFrame.srcdoc = "";
       }
 
-      function bindCardEvents(root) {
-        root.querySelectorAll("[data-index]").forEach((card) => {
-          const index = Number(card.dataset.index);
-          card.addEventListener("click", (event) => {
-            if (event.target.closest("a, button")) return;
-            openCard(index);
-          });
-          card.addEventListener("keydown", (event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              event.preventDefault();
-              openCard(index);
-            }
-          });
+      document.querySelectorAll("[data-preview]").forEach((card) => {
+        card.addEventListener("click", () => openPreview(card.dataset.preview));
+        card.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openPreview(card.dataset.preview);
+          }
         });
-
-        root.querySelectorAll("[data-overview]").forEach((card) => {
-          card.addEventListener("click", (event) => {
-            if (event.target.closest("a, button")) return;
-            openOverview();
-          });
-          card.addEventListener("keydown", (event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              event.preventDefault();
-              openOverview();
-            }
-          });
-        });
-      }
-
-      async function loadData() {
-        try {
-          const response = await fetch("./data/issues.json", { cache: "no-store" });
-          if (!response.ok) throw new Error("Failed to load merged materials");
-          return await response.json();
-        } catch (error) {
-          return DEFAULT_DATA;
-        }
-      }
-
-      document.getElementById("backBtn").addEventListener("click", closeModal);
-      document.getElementById("modal").addEventListener("click", (event) => {
-        if (event.target.id === "modal") closeModal();
       });
 
+      document.getElementById("modal-close").addEventListener("click", closePreview);
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) closePreview();
+      });
       document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && activeIndex !== null) {
-          closeModal();
-        }
+        if (event.key === "Escape") closePreview();
       });
-
-      (async function bootstrap() {
-        dashboardData = await loadData();
-        renderDashboard();
-      })();
     </script>
   </body>
 </html>
