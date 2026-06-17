@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>±¸¸ÅÈ®ÀÎ¼­ CDP ÀÚµ¿È­</title>
+  <title>êµ¬ë§¤í™•ì¸ì„œ CDP ìë™í™”</title>
   <style>
     :root{
       --bg:#08111d;
@@ -146,69 +146,69 @@
   </style>
 </head>
 <body>
-  <a class="back-link" href="../../index.html" aria-label="´ë½Ãº¸µå·Î µ¹¾Æ°¡±â">¡ç</a>
+  <a class="back-link" href="../../index.html" aria-label="ëŒ€ì‹œë³´ë“œë¡œ ëŒì•„ê°€ê¸°">â†</a>
   <div class="wrap">
     <div class="hero">
       <div class="card panel">
-        <h1>±¸¸ÅÈ®ÀÎ¼­ CDP ÀÚµ¿È­</h1>
-        <p>ºê¸®Áö ¼­¹ö¸¦ ÅëÇØ CDP ÅÇÀ» Ã£°í, ·Î±×ÀÎºÎÅÍ »ó´Ü 3°³ ¹®¼­ÀÇ µ¥ÀÌÅÍ¸¦ ÃßÃâÇØ ¿¢¼¿·Î ÀúÀåÇÕ´Ï´Ù.</p>
+        <h1>êµ¬ë§¤í™•ì¸ì„œ CDP ìë™í™”</h1>
+        <p>ë¸Œë¦¬ì§€ ì„œë²„ë¥¼ í†µí•´ CDP íƒ­ì„ ì°¾ê³ , ë¡œê·¸ì¸ë¶€í„° ìƒë‹¨ 3ê°œ ë¬¸ì„œì˜ ë°ì´í„°ë¥¼ ì¶”ì¶œí•´ ì—‘ì…€ë¡œ ì €ì¥í•©ë‹ˆë‹¤.</p>
 
         <div class="grid">
           <div class="field">
-            <label for="port">CDP Æ÷Æ®</label>
+            <label for="port">CDP í¬íŠ¸</label>
             <input id="port" value="9222" />
           </div>
           <div class="field">
-            <label for="pageUrl">½ÃÀÛ URL</label>
+            <label for="pageUrl">ì‹œì‘ URL</label>
             <div style="display:flex;gap:8px;align-items:center;">
               <input id="pageUrl" value="https://weblc.ec-bank.net/index.jsp" style="flex:1 1 auto;" />
-              <button id="openUrlBtn" class="ghost" type="button" style="white-space:nowrap;">URL ¿­±â</button>
+              <button id="openUrlBtn" class="ghost" type="button" style="white-space:nowrap;">URL ì—´ê¸°</button>
             </div>
           </div>
           <div class="field">
             <label for="targetId">Target ID</label>
-            <input id="targetId" placeholder="¼±ÅÃ: 71548B..." />
+            <input id="targetId" placeholder="ì„ íƒ: 71548B..." />
           </div>
           <div class="field">
             <label for="wsUrl">WebSocket URL</label>
-            <input id="wsUrl" placeholder="¼±ÅÃ: ws://127.0.0.1:9222/devtools/page/..." />
+            <input id="wsUrl" placeholder="ì„ íƒ: ws://127.0.0.1:9222/devtools/page/..." />
           </div>
           <div class="field">
-            <label for="userId">¾ÆÀÌµğ</label>
+            <label for="userId">ì•„ì´ë””</label>
             <input id="userId" placeholder="HMCR151" />
           </div>
           <div class="field">
-            <label for="password">ºñ¹Ğ¹øÈ£</label>
-            <input id="password" type="password" placeholder="ºñ¹Ğ¹øÈ£" />
+            <label for="password">ë¹„ë°€ë²ˆí˜¸</label>
+            <input id="password" type="password" placeholder="ë¹„ë°€ë²ˆí˜¸" />
           </div>
         </div>
 
         <div class="actions">
-          <button id="runBtn">½ÇÇà</button>
-          <button id="stopBtn" class="ghost">ÁßÁö</button>
-          <button id="sheetBtn" class="secondary">½ÃÆ® º¸±â</button>
-          <button id="exportBtn" class="secondary">¿¢¼¿ ´Ù¿î·Îµå</button>
-          <button id="saveBtn" class="ghost">·Î±× ÀúÀå</button>
-          <button id="clearBtn" class="ghost">·Î±× Áö¿ì±â</button>
+          <button id="runBtn">ì‹¤í–‰</button>
+          <button id="stopBtn" class="ghost">ì¤‘ì§€</button>
+          <button id="sheetBtn" class="secondary">ì‹œíŠ¸ ë³´ê¸°</button>
+          <button id="exportBtn" class="secondary">ì—‘ì…€ ë‹¤ìš´ë¡œë“œ</button>
+          <button id="saveBtn" class="ghost">ë¡œê·¸ ì €ì¥</button>
+          <button id="clearBtn" class="ghost">ë¡œê·¸ ì§€ìš°ê¸°</button>
         </div>
 
-        <div class="status"><span class="dot"></span><span id="status">´ë±â Áß</span></div>
+        <div class="status"><span class="dot"></span><span id="status">ëŒ€ê¸° ì¤‘</span></div>
         <div class="hint">
-          ÀÌ È­¸éÀº ºê¸®Áö ¼­¹ö¿¡¼­ ¿­¾î¾ß ÇÕ´Ï´Ù. ºê¸®Áö ¼­¹ö°¡ `/api/targets`¿Í `/api/open`À» Á¦°øÇÏ°í, HTMLÀº ±× ºê¸®Áö¸¦ ÅëÇØ CDP ´ë»óÀ» Ã£½À´Ï´Ù.
+          ì´ í™”ë©´ì€ ë¸Œë¦¬ì§€ ì„œë²„ì—ì„œ ì—´ì–´ì•¼ í•©ë‹ˆë‹¤. ë¸Œë¦¬ì§€ ì„œë²„ê°€ `/api/targets`ì™€ `/api/open`ì„ ì œê³µí•˜ê³ , HTMLì€ ê·¸ ë¸Œë¦¬ì§€ë¥¼ í†µí•´ CDP ëŒ€ìƒì„ ì°¾ìŠµë‹ˆë‹¤.
         </div>
       </div>
       <div class="card panel">
         <div class="sheet-shell">
           <div>
-            <p><strong>½ÃÆ® º¸±â</strong></p>
-            <div class="sheet-meta" id="sheetMeta">¾ÆÁ÷ ºÒ·¯¿Â ½ÃÆ®°¡ ¾ø½À´Ï´Ù.</div>
+            <p><strong>ì‹œíŠ¸ ë³´ê¸°</strong></p>
+            <div class="sheet-meta" id="sheetMeta">ì•„ì§ ë¶ˆëŸ¬ì˜¨ ì‹œíŠ¸ê°€ ì—†ìŠµë‹ˆë‹¤.</div>
           </div>
           <div class="sheet-tabs" id="sheetTabs"></div>
           <div class="sheet-frame">
             <table class="sheet-grid" id="sheetTable"></table>
           </div>
           <div class="hint">
-            È­¸é¿¡¼­ È®ÀÎÇÑ È¸»çº° ½ÃÆ®¸¦ ¿©±â¼­ ¹Ù·Î º¼ ¼ö ÀÖ°í, °°Àº µ¥ÀÌÅÍ·Î ¿¢¼¿ ÆÄÀÏÀ» ÀúÀåÇÒ ¼ö ÀÖ½À´Ï´Ù.
+            í™”ë©´ì—ì„œ í™•ì¸í•œ íšŒì‚¬ë³„ ì‹œíŠ¸ë¥¼ ì—¬ê¸°ì„œ ë°”ë¡œ ë³¼ ìˆ˜ ìˆê³ , ê°™ì€ ë°ì´í„°ë¡œ ì—‘ì…€ íŒŒì¼ì„ ì €ì¥í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.
           </div>
         </div>
       </div>
@@ -240,55 +240,55 @@
     };
 
     const logRecords = [];
-    const COMPANY_ORDER = ['Çö´ë', '±â¾Æ', '±Û·Îºñ½º'];
-    const SHEET_ORDER = ['Á¾ÇÕ', ...COMPANY_ORDER];
-    const COMPANY_HEADERS = ['¼ø¹ø', '¹®¼­¹øÈ£', 'Çà¹øÈ£', '¨é HSºÎÈ£', '¨ê Ç°¸í ¹× ±Ô°İ', 'Ç°¹ø', '¨ë ´ÜÀ§ ¹× ¼ö·®', '¨ì ±¸¸Å(°ø±Ş)ÀÏ', '¨í ´Ü°¡', '¨î ±İ¾×', '¨ï ºñ°í', '', '', 'Ç°¹ø'];
-    const COMBINED_HEADERS = ['¼ø¹ø', '¹®¼­¹øÈ£', 'Çà¹øÈ£', '¨é HSºÎÈ£', '¨ê Ç°¸í ¹× ±Ô°İ', 'Ç°¹ø', '¨ë ´ÜÀ§ ¹× ¼ö·®', '¨ì ±¸¸Å(°ø±Ş)ÀÏ', '¨í ´Ü°¡', '¨î ±İ¾×', '¨ï ºñ°í', '', 'ÃâÃ³', 'Ç°¹ø'];
+    const COMPANY_ORDER = ['í˜„ëŒ€', 'ê¸°ì•„', 'ê¸€ë¡œë¹„ìŠ¤'];
+    const SHEET_ORDER = ['ì¢…í•©', ...COMPANY_ORDER];
+    const COMPANY_HEADERS = ['ìˆœë²ˆ', 'ë¬¸ì„œë²ˆí˜¸', 'í–‰ë²ˆí˜¸', 'â‘¢ HSë¶€í˜¸', 'â‘£ í’ˆëª… ë° ê·œê²©', 'í’ˆë²ˆ', 'â‘¤ ë‹¨ìœ„ ë° ìˆ˜ëŸ‰', 'â‘¥ êµ¬ë§¤(ê³µê¸‰)ì¼', 'â‘¦ ë‹¨ê°€', 'â‘§ ê¸ˆì•¡', 'â‘¨ ë¹„ê³ ', '', '', 'í’ˆë²ˆ'];
+    const COMBINED_HEADERS = ['ìˆœë²ˆ', 'ë¬¸ì„œë²ˆí˜¸', 'í–‰ë²ˆí˜¸', 'â‘¢ HSë¶€í˜¸', 'â‘£ í’ˆëª… ë° ê·œê²©', 'í’ˆë²ˆ', 'â‘¤ ë‹¨ìœ„ ë° ìˆ˜ëŸ‰', 'â‘¥ êµ¬ë§¤(ê³µê¸‰)ì¼', 'â‘¦ ë‹¨ê°€', 'â‘§ ê¸ˆì•¡', 'â‘¨ ë¹„ê³ ', '', 'ì¶œì²˜', 'í’ˆë²ˆ'];
     const sheetState = {
       documents: [],
       rowsByCompany: null,
-      activeCompany: 'Á¾ÇÕ',
+      activeCompany: 'ì¢…í•©',
       exportedPath: '',
     };
     let activeRun = null;
     const BRIDGE_ORIGIN = 'http://127.0.0.1:8787';
     const PREVIEW_DOCUMENTS = [
       {
-        documentNumber: '±¸¸ÅÈ®ÀÎ¼­ 2026-001',
-        pageTitle: '±¸¸ÅÈ®ÀÎ¼­ - Çö´ë',
+        documentNumber: 'êµ¬ë§¤í™•ì¸ì„œ 2026-001',
+        pageTitle: 'êµ¬ë§¤í™•ì¸ì„œ - í˜„ëŒ€',
         pageUrl: 'https://weblc.ec-bank.net/purlic/doc/1',
-        buyer: { company: 'Çö´ë' },
-        supplier: { company: '¿ì½Å' },
+        buyer: { company: 'í˜„ëŒ€' },
+        supplier: { company: 'ìš°ì‹ ' },
         itemRows: [
-          ['HS1001', 'ºê¶óÄÏ', 'BRKT-01', 'EA', '100', '1200', '120000', 'ºñ°í'],
-          ['TOTAL', 'ÇÕ°è', '', '', '100', '', '120000', ''],
+          ['HS1001', 'ë¸Œë¼ì¼“', 'BRKT-01', 'EA', '100', '1200', '120000', 'ë¹„ê³ '],
+          ['TOTAL', 'í•©ê³„', '', '', '100', '', '120000', ''],
         ],
-        rawText: '±¸¸ÅÈ®ÀÎ¼­ Çö´ë'
+        rawText: 'êµ¬ë§¤í™•ì¸ì„œ í˜„ëŒ€'
       },
       {
-        documentNumber: '±¸¸ÅÈ®ÀÎ¼­ 2026-002',
-        pageTitle: '±¸¸ÅÈ®ÀÎ¼­ - ±â¾Æ',
+        documentNumber: 'êµ¬ë§¤í™•ì¸ì„œ 2026-002',
+        pageTitle: 'êµ¬ë§¤í™•ì¸ì„œ - ê¸°ì•„',
         pageUrl: 'https://weblc.ec-bank.net/purlic/doc/2',
-        buyer: { company: '±â¾Æ' },
-        supplier: { company: '¿ì½Å' },
+        buyer: { company: 'ê¸°ì•„' },
+        supplier: { company: 'ìš°ì‹ ' },
         itemRows: [
-          ['HS2002', 'Ä¸', 'CAP-22', 'EA', '80', '800', '64000', 'ºñ°í'],
-          ['HS2003', 'ÆĞ³Î', 'PNL-03', 'EA', '20', '1500', '30000', 'ºñ°í'],
-          ['TOTAL', 'ÇÕ°è', '', '', '100', '', '94000', ''],
+          ['HS2002', 'ìº¡', 'CAP-22', 'EA', '80', '800', '64000', 'ë¹„ê³ '],
+          ['HS2003', 'íŒ¨ë„', 'PNL-03', 'EA', '20', '1500', '30000', 'ë¹„ê³ '],
+          ['TOTAL', 'í•©ê³„', '', '', '100', '', '94000', ''],
         ],
-        rawText: '±¸¸ÅÈ®ÀÎ¼­ ±â¾Æ'
+        rawText: 'êµ¬ë§¤í™•ì¸ì„œ ê¸°ì•„'
       },
       {
-        documentNumber: '±¸¸ÅÈ®ÀÎ¼­ 2026-003',
-        pageTitle: '±¸¸ÅÈ®ÀÎ¼­ - ±Û·Îºñ½º',
+        documentNumber: 'êµ¬ë§¤í™•ì¸ì„œ 2026-003',
+        pageTitle: 'êµ¬ë§¤í™•ì¸ì„œ - ê¸€ë¡œë¹„ìŠ¤',
         pageUrl: 'https://weblc.ec-bank.net/purlic/doc/3',
-        buyer: { company: '±Û·Îºñ½º' },
-        supplier: { company: '¿ì½Å' },
+        buyer: { company: 'ê¸€ë¡œë¹„ìŠ¤' },
+        supplier: { company: 'ìš°ì‹ ' },
         itemRows: [
-          ['HS3001', '»şÇÁÆ®', 'SFT-10', 'EA', '50', '2600', '130000', 'ºñ°í'],
-          ['TOTAL', 'ÇÕ°è', '', '', '50', '', '130000', ''],
+          ['HS3001', 'ìƒ¤í”„íŠ¸', 'SFT-10', 'EA', '50', '2600', '130000', 'ë¹„ê³ '],
+          ['TOTAL', 'í•©ê³„', '', '', '50', '', '130000', ''],
         ],
-        rawText: '±¸¸ÅÈ®ÀÎ¼­ ±Û·Îºñ½º'
+        rawText: 'êµ¬ë§¤í™•ì¸ì„œ ê¸€ë¡œë¹„ìŠ¤'
       }
     ];
 
@@ -340,9 +340,9 @@
     function companyNameForBuyer(buyer) {
       const value = text(buyer);
       if (!value) return '';
-      if (value.includes('±Û·Îºñ½º')) return '±Û·Îºñ½º';
-      if (value.includes('±â¾Æ')) return '±â¾Æ';
-      if (value.includes('Çö´ë')) return 'Çö´ë';
+      if (value.includes('ê¸€ë¡œë¹„ìŠ¤')) return 'ê¸€ë¡œë¹„ìŠ¤';
+      if (value.includes('ê¸°ì•„')) return 'ê¸°ì•„';
+      if (value.includes('í˜„ëŒ€')) return 'í˜„ëŒ€';
       return '';
     }
 
@@ -351,7 +351,7 @@
     }
 
     function getHeadersForSheet(name) {
-      return name === 'Á¾ÇÕ' ? COMBINED_HEADERS.slice() : COMPANY_HEADERS.slice();
+      return name === 'ì¢…í•©' ? COMBINED_HEADERS.slice() : COMPANY_HEADERS.slice();
     }
 
     function buildCompanySheetRows(documents) {
@@ -453,7 +453,7 @@
 
     function buildAllSheetRows(documents) {
       return {
-        Á¾ÇÕ: buildCombinedSheetRows(documents),
+        ì¢…í•©: buildCombinedSheetRows(documents),
         ...buildCompanySheetRows(documents),
       };
     }
@@ -480,20 +480,20 @@
     function renderSheetPreview() {
       const rowsByCompany = sheetState.rowsByCompany;
       if (!rowsByCompany) {
-        els.sheetMeta.textContent = '¾ÆÁ÷ ºÒ·¯¿Â ½ÃÆ®°¡ ¾ø½À´Ï´Ù.';
+        els.sheetMeta.textContent = 'ì•„ì§ ë¶ˆëŸ¬ì˜¨ ì‹œíŠ¸ê°€ ì—†ìŠµë‹ˆë‹¤.';
         els.sheetTable.innerHTML = '';
         renderSheetTabs();
         return;
       }
       const rows = rowsByCompany[sheetState.activeCompany] || [getHeadersForSheet(sheetState.activeCompany)];
       const dataRows = rows.slice(1);
-      els.sheetMeta.textContent = `${sheetState.activeCompany} ½ÃÆ® | Çà ¼ö ${Math.max(rows.length - 1, 0)} | ¹®¼­ ${sheetState.documents.length}°Ç`;
+      els.sheetMeta.textContent = `${sheetState.activeCompany} ì‹œíŠ¸ | í–‰ ìˆ˜ ${Math.max(rows.length - 1, 0)} | ë¬¸ì„œ ${sheetState.documents.length}ê±´`;
       renderSheetTabs();
       if (dataRows.length === 0) {
-        els.sheetTable.innerHTML = `<tbody><tr><td style="padding:14px;color:#a8b6cf;">Ç¥½ÃÇÒ ÇàÀÌ ¾ø½À´Ï´Ù.</td></tr></tbody>`;
+        els.sheetTable.innerHTML = `<tbody><tr><td style="padding:14px;color:#a8b6cf;">í‘œì‹œí•  í–‰ì´ ì—†ìŠµë‹ˆë‹¤.</td></tr></tbody>`;
         return;
       }
-      const isCombinedSheet = sheetState.activeCompany === 'Á¾ÇÕ';
+      const isCombinedSheet = sheetState.activeCompany === 'ì¢…í•©';
       els.sheetTable.innerHTML = `
         <thead><tr>${rows[0].map((cell) => `<th>${escapeHtml(cell)}</th>`).join('')}</tr></thead>
         <tbody>
@@ -539,7 +539,7 @@
         });
         if (response && response.sheetRows) {
           sheetState.rowsByCompany = {
-            Á¾ÇÕ: buildCombinedSheetRowsFromCompanyRows(response.sheetRows),
+            ì¢…í•©: buildCombinedSheetRowsFromCompanyRows(response.sheetRows),
             ...response.sheetRows,
           };
         } else {
@@ -548,14 +548,14 @@
       } catch (error) {
         sheetState.rowsByCompany = buildAllSheetRows(documents);
       }
-      sheetState.activeCompany = 'Á¾ÇÕ';
+      sheetState.activeCompany = 'ì¢…í•©';
       renderSheetPreview();
       return { ok: true };
     }
 
     async function exportCompanySheets() {
       if (!sheetState.documents.length) {
-        throw new Error('¸ÕÀú ½ÇÇàÇØ¼­ µ¥ÀÌÅÍ¸¦ ¼öÁıÇØ ÁÖ¼¼¿ä.');
+        throw new Error('ë¨¼ì € ì‹¤í–‰í•´ì„œ ë°ì´í„°ë¥¼ ìˆ˜ì§‘í•´ ì£¼ì„¸ìš”.');
       }
       const suggestedName = 'purchase_confirmation_company_sheets.xls';
       try {
@@ -567,7 +567,7 @@
             outputName: 'purchase_confirmation_company_sheets.xlsx',
           }),
         });
-        if (!response.ok) throw new Error('¿¢¼¿ ÀúÀå ½ÇÆĞ: HTTP ' + response.status);
+        if (!response.ok) throw new Error('ì—‘ì…€ ì €ì¥ ì‹¤íŒ¨: HTTP ' + response.status);
         const blob = await response.blob();
         if (window.showSaveFilePicker) {
           const handle = await window.showSaveFilePicker({
@@ -583,9 +583,9 @@
           await writable.write(blob);
           await writable.close();
           sheetState.exportedPath = handle.name || 'purchase_confirmation_company_sheets.xlsx';
-          setStatus(`¿¢¼¿ ÀúÀå ¿Ï·á: ${sheetState.exportedPath}`);
+          setStatus(`ì—‘ì…€ ì €ì¥ ì™„ë£Œ: ${sheetState.exportedPath}`);
           writeEvent('company_excel_saved', { savedPath: sheetState.exportedPath, via: 'save_picker' });
-          append(`ÀúÀå ¿Ï·á: ${sheetState.exportedPath}`);
+          append(`ì €ì¥ ì™„ë£Œ: ${sheetState.exportedPath}`);
           return { ok: true, savedPath: sheetState.exportedPath };
         }
         const url = URL.createObjectURL(blob);
@@ -595,13 +595,13 @@
         a.click();
         setTimeout(() => URL.revokeObjectURL(url), 1000);
         sheetState.exportedPath = 'purchase_confirmation_company_sheets.xlsx';
-        setStatus(`¿¢¼¿ ´Ù¿î·Îµå ¿Ï·á: ${sheetState.exportedPath}`);
+        setStatus(`ì—‘ì…€ ë‹¤ìš´ë¡œë“œ ì™„ë£Œ: ${sheetState.exportedPath}`);
         writeEvent('company_excel_saved', { savedPath: sheetState.exportedPath, via: 'download' });
-        append(`´Ù¿î·Îµå ¿Ï·á: ${sheetState.exportedPath}`);
+        append(`ë‹¤ìš´ë¡œë“œ ì™„ë£Œ: ${sheetState.exportedPath}`);
         return { ok: true, savedPath: sheetState.exportedPath };
       } catch (error) {
         const rowsByCompany = sheetState.rowsByCompany || buildAllSheetRows(sheetState.documents);
-        const workbookHtml = `<!doctype html><html><head><meta charset="utf-8"><title>±¸¸ÅÈ®ÀÎ¼­ ½ÃÆ®</title></head><body>${SHEET_ORDER.map((company) => {
+        const workbookHtml = `<!doctype html><html><head><meta charset="utf-8"><title>êµ¬ë§¤í™•ì¸ì„œ ì‹œíŠ¸</title></head><body>${SHEET_ORDER.map((company) => {
           const rows = rowsByCompany[company] || [getHeadersForSheet(company)];
           return `<h2>${company}</h2><table border="1" cellspacing="0" cellpadding="4">${rows.map((row) => `<tr>${row.map((cell) => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}</table>`;
         }).join('')}</body></html>`;
@@ -613,9 +613,9 @@
         a.click();
         setTimeout(() => URL.revokeObjectURL(url), 1000);
         sheetState.exportedPath = suggestedName;
-        setStatus(`¿¢¼¿ ´Ù¿î·Îµå ¿Ï·á: ${suggestedName}`);
+        setStatus(`ì—‘ì…€ ë‹¤ìš´ë¡œë“œ ì™„ë£Œ: ${suggestedName}`);
         writeEvent('company_excel_saved', { savedPath: suggestedName, via: 'preview-fallback' });
-        append(`´Ù¿î·Îµå ¿Ï·á: ${suggestedName}`);
+        append(`ë‹¤ìš´ë¡œë“œ ì™„ë£Œ: ${suggestedName}`);
         return { ok: true, savedPath: suggestedName };
       }
     }
@@ -639,7 +639,7 @@
           const ws = new WebSocket(this.wsUrl);
           this.ws = ws;
           ws.onopen = () => resolve();
-          ws.onerror = () => reject(new Error('WebSocket ¿¬°á ½ÇÆĞ'));
+          ws.onerror = () => reject(new Error('WebSocket ì—°ê²° ì‹¤íŒ¨'));
           ws.onmessage = (message) => {
             const payload = JSON.parse(message.data);
             if (payload.id) {
@@ -694,7 +694,7 @@
       const pageUrl = buildPageUrl();
       window.open(pageUrl, '_blank', 'noopener,noreferrer');
       writeEvent('open_url_clicked', { pageUrl });
-      setStatus('URL ¿­±â');
+      setStatus('URL ì—´ê¸°');
     }
 
     async function resolveWsUrl() {
@@ -710,7 +710,7 @@
       if (target?.webSocketDebuggerUrl) return target.webSocketDebuggerUrl;
 
       const opened = await fetchJson(`/api/open?port=${encodeURIComponent(port)}&pageUrl=${encodeURIComponent(pageUrl)}`);
-      if (!opened?.webSocketDebuggerUrl) throw new Error('´ë»ó ÅÇÀ» Ã£Áö ¸øÇß½À´Ï´Ù.');
+      if (!opened?.webSocketDebuggerUrl) throw new Error('ëŒ€ìƒ íƒ­ì„ ì°¾ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.');
       return opened.webSocketDebuggerUrl;
     }
 
@@ -773,19 +773,19 @@
         const normalized = (value) => String(value || '').replace(/\\s+/g, '');
         const isVisible = (el) => !!el && el.getClientRects && el.getClientRects().length > 0;
         const anchors = Array.from(doc.querySelectorAll('a, area, span, li, td, div, font')).filter(isVisible);
-        const exactAnchors = anchors.filter((a) => normalized(a.textContent) === '±¸¸ÅÈ®ÀÎ¼­');
+        const exactAnchors = anchors.filter((a) => normalized(a.textContent) === 'êµ¬ë§¤í™•ì¸ì„œ');
         const target =
           exactAnchors[0]
-          || anchors.find((a) => normalized(a.textContent).includes('±¸¸ÅÈ®ÀÎ¼­') && !normalized(a.textContent).includes('±¸¸ÅÈ®ÀÎ½ÅÃ»¼­'))
+          || anchors.find((a) => normalized(a.textContent).includes('êµ¬ë§¤í™•ì¸ì„œ') && !normalized(a.textContent).includes('êµ¬ë§¤í™•ì¸ì‹ ì²­ì„œ'))
           || Array.from(doc.querySelectorAll('a[href], area[href]'))
             .find((a) => String(a.getAttribute('href') || a.href || '').includes('purlic'))
           || Array.from(doc.querySelectorAll('li, span, td'))
-            .find((el) => normalized(el.textContent) === '±¸¸ÅÈ®ÀÎ¼­' && isVisible(el));
+            .find((el) => normalized(el.textContent) === 'êµ¬ë§¤í™•ì¸ì„œ' && isVisible(el));
         const bodyFrame = window.frames['bodyFrame'];
         if (!target) {
           if (bodyFrame) {
             bodyFrame.location.href = '/purlic';
-            return { text: '±¸¸ÅÈ®ÀÎ¼­', href: '/purlic', fallback: true };
+            return { text: 'êµ¬ë§¤í™•ì¸ì„œ', href: '/purlic', fallback: true };
           }
           throw new Error('purchase menu anchor not found');
         }
@@ -847,13 +847,13 @@
           const match = text.match(pattern);
           return match ? clean(match[1]) : '';
         };
-        const purchaseNo = pick(/±¸¸ÅÈ®ÀÎ¼­¹øÈ£\\s*:\\s*([A-Z0-9]+)/);
-        const buyerMatch = text.match(/¨ç\\s*±¸¸ÅÀÚ\\s*\\(»óÈ£\\)\\s*(.*?)\\s*\\(ÁÖ¼Ò\\)\\s*(.*?)\\s*\\(¼º¸í\\)\\s*(.*?)\\s*\\(»ç¾÷ÀÚµî·Ï¹øÈ£\\)\\s*([0-9-]+)/);
-        const supplierMatch = text.match(/¨è\\s*°ø±ŞÀÚ\\s*\\(»óÈ£\\)\\s*(.*?)\\s*\\(ÁÖ¼Ò\\)\\s*(.*?)\\s*\\(¼º¸í\\)\\s*(.*?)\\s*\\(»ç¾÷ÀÚµî·Ï¹øÈ£\\)\\s*([0-9-]+)/);
+        const purchaseNo = pick(/êµ¬ë§¤í™•ì¸ì„œë²ˆí˜¸\\s*:\\s*([A-Z0-9]+)/);
+        const buyerMatch = text.match(/â‘ \\s*êµ¬ë§¤ì\\s*\\(ìƒí˜¸\\)\\s*(.*?)\\s*\\(ì£¼ì†Œ\\)\\s*(.*?)\\s*\\(ì„±ëª…\\)\\s*(.*?)\\s*\\(ì‚¬ì—…ìë“±ë¡ë²ˆí˜¸\\)\\s*([0-9-]+)/);
+        const supplierMatch = text.match(/â‘¡\\s*ê³µê¸‰ì\\s*\\(ìƒí˜¸\\)\\s*(.*?)\\s*\\(ì£¼ì†Œ\\)\\s*(.*?)\\s*\\(ì„±ëª…\\)\\s*(.*?)\\s*\\(ì‚¬ì—…ìë“±ë¡ë²ˆí˜¸\\)\\s*([0-9-]+)/);
         const detailTable = Array.from(doc.querySelectorAll('table')).find((table) =>
           Array.from(table.querySelectorAll('tr')).some((row) => {
             const header = clean(row.innerText);
-            return header.includes('HSºÎÈ£') && header.includes('Ç°¸í') && header.includes('´ÜÀ§') && header.includes('±İ¾×');
+            return header.includes('HSë¶€í˜¸') && header.includes('í’ˆëª…') && header.includes('ë‹¨ìœ„') && header.includes('ê¸ˆì•¡');
           })
         );
         const itemRows = [];
@@ -862,7 +862,7 @@
           let startIndex = -1;
           for (let i = 0; i < rows.length; i += 1) {
             const rowText = clean(rows[i].innerText);
-            if (rowText.includes('HSºÎÈ£') && rowText.includes('Ç°¸í') && rowText.includes('´ÜÀ§') && rowText.includes('±İ¾×')) {
+            if (rowText.includes('HSë¶€í˜¸') && rowText.includes('í’ˆëª…') && rowText.includes('ë‹¨ìœ„') && rowText.includes('ê¸ˆì•¡')) {
               startIndex = i + 1;
               break;
             }
@@ -871,7 +871,7 @@
             for (let i = startIndex; i < rows.length; i += 1) {
               const rowText = clean(rows[i].innerText);
               if (!rowText) continue;
-              if (rowText.startsWith('2.') || rowText.includes('¼¼±İ°è»ê¼­') || rowText.includes('Àû»ö°í¹«³¯ÀÎ') || rowText.includes('º» ¹®¼­´Â')) {
+              if (rowText.startsWith('2.') || rowText.includes('ì„¸ê¸ˆê³„ì‚°ì„œ') || rowText.includes('ì ìƒ‰ê³ ë¬´ë‚ ì¸') || rowText.includes('ë³¸ ë¬¸ì„œëŠ”')) {
                 break;
               }
               const cells = Array.from(rows[i].querySelectorAll('td, th')).map((td) => clean(td.innerText || td.textContent));
@@ -894,14 +894,14 @@
     async function waitFor(client, predicate, label, timeoutMs = 30000) {
       const deadline = Date.now() + timeoutMs;
       while (Date.now() < deadline) {
-        if (activeRun?.aborted) throw new Error('»ç¿ëÀÚ°¡ ÁßÁöÇß½À´Ï´Ù.');
+        if (activeRun?.aborted) throw new Error('ì‚¬ìš©ìê°€ ì¤‘ì§€í–ˆìŠµë‹ˆë‹¤.');
         try {
           const state = await client.eval(jsState());
           if (predicate(state)) return state;
         } catch {}
         await sleep(500);
       }
-      throw new Error(`´ë±â ½ÇÆĞ: ${label}`);
+      throw new Error(`ëŒ€ê¸° ì‹¤íŒ¨: ${label}`);
     }
 
     async function runAutomation() {
@@ -991,10 +991,10 @@
           }
           const exportData = await exportRes.json();
           writeEvent('excel_saved', exportData);
-          setStatus('½ÃÆ® ¹Ì¸®º¸±â ÁØºñ');
+          setStatus('ì‹œíŠ¸ ë¯¸ë¦¬ë³´ê¸° ì¤€ë¹„');
           await loadSheetPreview(extractedDocs);
           writeEvent('complete');
-          setStatus('¿Ï·á: ½ÃÆ® º¸±â °¡´É');
+          setStatus('ì™„ë£Œ: ì‹œíŠ¸ ë³´ê¸° ê°€ëŠ¥');
         } finally {
           client.close();
         }
@@ -1005,20 +1005,20 @@
     }
 
     async function runPreviewMode(userId) {
-      setStatus('¹Ì¸®º¸±â ¸ğµå ½ÇÇà');
+      setStatus('ë¯¸ë¦¬ë³´ê¸° ëª¨ë“œ ì‹¤í–‰');
       writeEvent('preview_start', { userId });
-      append('ºê¸®Áö ¿¬°áÀÌ ¾ø¾î »ùÇÃ µ¥ÀÌÅÍ·Î ¹Ì¸®º¸±â¸¦ ½ÇÇàÇÕ´Ï´Ù.');
+      append('ë¸Œë¦¬ì§€ ì—°ê²°ì´ ì—†ì–´ ìƒ˜í”Œ ë°ì´í„°ë¡œ ë¯¸ë¦¬ë³´ê¸°ë¥¼ ì‹¤í–‰í•©ë‹ˆë‹¤.');
       const extractedDocs = PREVIEW_DOCUMENTS.map((doc) => ({ ...doc }));
       writeEvent('docs_collected', { docs: extractedDocs.map((doc) => ({ text: doc.documentNumber, href: doc.pageUrl })) });
       extractedDocs.forEach((doc, index) => {
         writeEvent('doc_extracted', { index: index + 1, href: doc.pageUrl });
       });
-      setStatus('½ÃÆ® ¹Ì¸®º¸±â ÁØºñ');
+      setStatus('ì‹œíŠ¸ ë¯¸ë¦¬ë³´ê¸° ì¤€ë¹„');
       await loadSheetPreview(extractedDocs);
       sheetState.exportedPath = 'purchase_confirmation_output.xlsx';
       writeEvent('excel_saved', { savedPath: sheetState.exportedPath, mode: 'preview' });
       writeEvent('complete', { mode: 'preview' });
-      setStatus('¿Ï·á: ½ÃÆ® º¸±â °¡´É');
+      setStatus('ì™„ë£Œ: ì‹œíŠ¸ ë³´ê¸° ê°€ëŠ¥');
     }
 
     function saveLogs() {
@@ -1039,7 +1039,7 @@
       try {
         await runAutomation();
       } catch (error) {
-        append(`¿À·ù: ${error.message || error}`);
+        append(`ì˜¤ë¥˜: ${error.message || error}`);
         alert(error.message || String(error));
       } finally {
         activeRun = null;
@@ -1061,14 +1061,14 @@
         return;
       }
       renderSheetPreview();
-      setStatus(`½ÃÆ® º¸±â: ${sheetState.activeCompany}`);
+      setStatus(`ì‹œíŠ¸ ë³´ê¸°: ${sheetState.activeCompany}`);
     });
     els.exportBtn.addEventListener('click', async () => {
       try {
         if (!sheetState.rowsByCompany) {
-          throw new Error('¸ÕÀú ½ÇÇàÇØ¼­ µ¥ÀÌÅÍ¸¦ ¼öÁıÇØ ÁÖ¼¼¿ä.');
+          throw new Error('ë¨¼ì € ì‹¤í–‰í•´ì„œ ë°ì´í„°ë¥¼ ìˆ˜ì§‘í•´ ì£¼ì„¸ìš”.');
         }
-        setStatus('¿¢¼¿ ÀúÀå Áß');
+        setStatus('ì—‘ì…€ ì €ì¥ ì¤‘');
         await exportCompanySheets();
       } catch (error) {
         writeEvent('error', { message: String(error?.message || error) });
@@ -1076,7 +1076,7 @@
       }
     });
     els.saveBtn.addEventListener('click', saveLogs);
-    els.clearBtn.addEventListener('click', () => { els.log.textContent = ''; logRecords.length = 0; setStatus('·Î±× Áö¿ò'); });
+    els.clearBtn.addEventListener('click', () => { els.log.textContent = ''; logRecords.length = 0; setStatus('ë¡œê·¸ ì§€ì›€'); });
   </script>
 </body>
 </html>
