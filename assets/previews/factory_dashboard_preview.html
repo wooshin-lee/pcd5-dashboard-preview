@@ -874,7 +874,8 @@
     </div>
 
     <script>
-      const ERP_URL = "https://weblc.ec-bank.net/index.jsp";
+      // index.jsp는 로그인 진입점이라, 버튼은 로그인 후 바로 보이는 ERP 메인 화면을 연다.
+      const ERP_URL = "https://weblc.ec-bank.net/index_Main.jsp?menuGroup=001&menuUrl=/recentMonthAction.do";
 
       const shortageRows = [
         {
@@ -1254,10 +1255,10 @@
       function openErp() {
         const popup = window.open(ERP_URL, "_blank", "noopener,noreferrer");
         if (!popup) {
-          renderBanner(`팝업이 차단되었습니다. 직접 열기: ${ERP_URL}`);
+          renderBanner(`팝업이 차단되었습니다. 직접 열기: ERP 메인 화면`);
           return;
         }
-        renderBanner(`ERP를 새 탭으로 열었습니다: ${ERP_URL}`);
+        renderBanner("ERP 메인 화면을 새 탭으로 열었습니다.");
       }
 
       function exportShortageCsv() {
