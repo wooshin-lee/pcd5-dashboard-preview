@@ -25,6 +25,23 @@
         radial-gradient(circle at right 20%, rgba(145,232,187,.14), transparent 26%),
         linear-gradient(180deg,#07101b,#0b1322 44%,#07101b);
     }
+    .back-link{
+      position:fixed;
+      top:16px;
+      left:16px;
+      width:42px;
+      height:42px;
+      display:grid;
+      place-items:center;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      text-decoration:none;
+      font-size:20px;
+      font-weight:900;
+      z-index:20;
+    }
     .wrap{max-width:1480px;margin:0 auto;padding:24px}
     .hero{display:grid;grid-template-columns:minmax(420px,.9fr) minmax(0,1.4fr);gap:18px;margin-bottom:18px;align-items:start}
     .card{
@@ -129,6 +146,7 @@
   </style>
 </head>
 <body>
+  <a class="back-link" href="../../index.html" aria-label="대시보드로 돌아가기">←</a>
   <div class="wrap">
     <div class="hero">
       <div class="card panel">
