@@ -8,21 +8,14 @@
       :root {
         color-scheme: light;
         --bg: #eef3f8;
-        --surface: rgba(255, 255, 255, 0.92);
+        --surface: rgba(255, 255, 255, 0.95);
         --surface-strong: #ffffff;
-        --surface-soft: #f5f8fc;
         --line: #d7e0eb;
-        --line-strong: #c4d1e0;
         --ink: #12263a;
         --muted: #62758a;
         --accent: #1f6feb;
-        --accent-soft: #e8f1ff;
         --ok: #1f8a5b;
-        --ok-soft: #e8f4e6;
         --warn: #c47a00;
-        --warn-soft: #fff3d8;
-        --danger: #c73636;
-        --danger-soft: #fde8e1;
         --shadow: 0 18px 48px rgba(18, 38, 58, 0.12);
       }
 
@@ -39,8 +32,8 @@
           linear-gradient(180deg, #f8fbfe 0%, var(--bg) 100%);
       }
 
-      h1, h2, h3, p { margin: 0; }
-      button, input, select, textarea { font: inherit; }
+      h1, h2, h3, p, ul { margin: 0; }
+      button { font: inherit; }
 
       .shell {
         max-width: 1480px;
@@ -115,10 +108,6 @@
         border-radius: 18px;
         background: var(--surface);
         box-shadow: var(--shadow);
-        overflow: hidden;
-      }
-
-      .card {
         min-height: 320px;
         padding: 16px;
         cursor: pointer;
@@ -167,10 +156,9 @@
         white-space: nowrap;
       }
 
-      .pill.ok { background: var(--ok-soft); color: var(--ok); border-color: rgba(31, 138, 91, 0.18); }
-      .pill.warn { background: var(--warn-soft); color: var(--warn); border-color: rgba(196, 122, 0, 0.18); }
-      .pill.info { background: var(--accent-soft); color: var(--accent); border-color: rgba(31, 111, 235, 0.18); }
-      .pill.danger { background: var(--danger-soft); color: var(--danger); border-color: rgba(199, 54, 54, 0.18); }
+      .pill.ok { background: #e8f4e6; color: var(--ok); border-color: rgba(31, 138, 91, 0.18); }
+      .pill.warn { background: #fff3d8; color: var(--warn); border-color: rgba(196, 122, 0, 0.18); }
+      .pill.info { background: #e8f1ff; color: var(--accent); border-color: rgba(31, 111, 235, 0.18); }
 
       .panel-grid {
         display: grid;
@@ -223,43 +211,35 @@
       .row-desc { color: var(--muted); font-size: 13px; line-height: 1.35; }
       .row-value { font-size: 13px; font-weight: 800; color: var(--accent); }
 
-      .board {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-      }
-
-      .mini-card {
-        padding: 12px;
-        border-radius: 14px;
-        border: 1px solid #dce5ef;
-        background: #fff;
-      }
-
-      .mini-card h3 {
-        margin-bottom: 8px;
-        font-size: 14px;
-      }
-
-      .mini-card p,
-      .mini-card li {
-        color: var(--muted);
-        font-size: 13px;
-        line-height: 1.5;
-      }
-
-      .split {
-        display: grid;
-        grid-template-columns: 1.1fr 0.9fr;
-        gap: 10px;
-      }
-
       .stack { display: grid; gap: 10px; }
 
       .tag-row {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
+      }
+
+      .card-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 34px;
+        padding: 0 12px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--ink);
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 800;
+        white-space: nowrap;
       }
 
       .modal {
@@ -304,9 +284,9 @@
       }
 
       .back-btn {
-        width: 36px;
-        min-width: 36px;
-        height: 36px;
+        width: 32px;
+        min-width: 32px;
+        height: 32px;
         padding: 0;
       }
 
@@ -337,8 +317,10 @@
 
       @media (max-width: 1200px) {
         .grid,
-        .split,
-        .board { grid-template-columns: 1fr; }
+        .panel-grid { grid-template-columns: 1fr; }
+
+        .topbar { justify-content: stretch; }
+        .top-stats { justify-content: flex-start; }
       }
 
       @media (max-width: 780px) {
@@ -346,8 +328,7 @@
         .topbar { padding: 16px; }
         .title { font-size: 24px; }
         .card-title { font-size: 20px; }
-        .row,
-        .panel-grid { grid-template-columns: 1fr; }
+        .row { grid-template-columns: 1fr; }
         .modal-shell { width: calc(100vw - 18px); height: calc(100vh - 18px); }
       }
     </style>
@@ -357,392 +338,185 @@
       <section class="topbar">
         <div>
           <div class="eyebrow">MERGED MATERIALS</div>
-          <h1 class="title">머지된 실제 산출물 대시보드</h1>
-          <p class="lede">머지된 PR과 실제 생성 파일을 한눈에 보고, 카드 클릭 시 전체화면 작업 화면으로 이동합니다. 지금은 #6, #5, #8의 실제 맥락에 맞춰 다시 정리해 두었습니다.</p>
+          <h1 class="title" id="heroTitle">머지된 실제 산출물 대시보드</h1>
+          <p class="lede" id="heroSubtitle">머지된 PR과 실제 생성 파일을 한눈에 보고, 카드 클릭 시 전체화면 작업 화면으로 이동합니다.</p>
         </div>
         <div class="top-stats">
           <div class="stat">
             <div class="stat-label">머지 완료</div>
-            <div class="stat-value">3</div>
+            <div class="stat-value" id="mergedCount">3</div>
             <div class="stat-sub">실제 산출물 반영</div>
           </div>
           <div class="stat">
             <div class="stat-label">전체 보기</div>
             <div class="stat-value">2x2</div>
-            <div class="stat-sub">가로 세로 화면</div>
+            <div class="stat-sub">가로 2, 세로 2</div>
           </div>
           <div class="stat">
-            <div class="stat-label">대시보드</div>
+            <div class="stat-label">상태</div>
             <div class="stat-value">LIVE</div>
             <div class="stat-sub">GitHub Pages 배포</div>
           </div>
         </div>
       </section>
 
-      <section class="grid">
-        <article class="card" data-preview="purchase" tabindex="0" role="button" aria-label="PR 6 구매확인서 CDP 자동화">
-          <div class="card-head">
-            <div>
-              <div class="kicker">PR #6 · wooshin-lee · 구매확인서 데이터 구현</div>
-              <h2 class="card-title">구매확인서 CDP 자동화</h2>
-              <p class="card-sub">1. 구매확인서/purchase_confirmation_automation.html</p>
-            </div>
-            <span class="pill">HTML</span>
-          </div>
-          <div class="panel-grid">
-            <div class="field"><div class="field-label">구분</div><div class="field-value big">html-automation</div></div>
-            <div class="field"><div class="field-label">상태</div><div class="field-value big">머지 완료</div></div>
-            <div class="field"><div class="field-label">대표 파일</div><div class="field-value">purchase_confirmation_automation.html</div></div>
-            <div class="field"><div class="field-label">머지 일자</div><div class="field-value">2026년 6월 16일</div></div>
-          </div>
-          <div class="summary-box">
-            <h3>핵심 요약</h3>
-            <ul>
-              <li>구매확인서 자동 입력/조회 흐름</li>
-              <li>CDP를 통해 대상 브라우저 연결</li>
-              <li>저장, 로그, 상태 전환을 한 화면에서 확인</li>
-            </ul>
-            <div class="tag-row">
-              <span class="pill ok">머지 완료</span>
-              <span class="pill warn">2026년 6월 16일</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="card" data-preview="erpGui" tabindex="0" role="button" aria-label="PR 5 ERP 작업실적 CSV 추출 GUI">
-          <div class="card-head">
-            <div>
-              <div class="kicker">PR #5 · gabchajang-jpg · ERP 작업실적 CSV 추출 GUI</div>
-              <h2 class="card-title">ERP 작업실적 CSV 추출 GUI</h2>
-              <p class="card-sub">pcd5/gui.py</p>
-            </div>
-            <span class="pill">PY</span>
-          </div>
-          <div class="panel-grid">
-            <div class="field"><div class="field-label">구분</div><div class="field-value big">python-gui</div></div>
-            <div class="field"><div class="field-label">상태</div><div class="field-value big">머지 완료</div></div>
-            <div class="field"><div class="field-label">대표 파일</div><div class="field-value">pcd5/gui.py</div></div>
-            <div class="field"><div class="field-label">머지 일자</div><div class="field-value">2026년 6월 16일</div></div>
-          </div>
-          <div class="summary-box">
-            <h3>핵심 요약</h3>
-            <ul>
-              <li>CDP 연결, ERP URL 열기, 조회, 저장, Check 흐름</li>
-              <li>5개 사업단위 행으로 반복 작업 수행</li>
-              <li>로그 저장과 Excel 열기 동작 포함</li>
-            </ul>
-            <div class="tag-row">
-              <span class="pill ok">머지 완료</span>
-              <span class="pill warn">2026년 6월 16일</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="card" data-preview="shortage" tabindex="0" role="button" aria-label="PR 8 공장정보 대시보드 필터 상세조회 통합 검증">
-          <div class="card-head">
-            <div>
-              <div class="kicker">PR #8 · lcylcy364-netizen · 공장정보 대시보드 필터·상세조회·통합 검증</div>
-              <h2 class="card-title">공장정보 대시보드 필터·상세조회·통합 검증</h2>
-              <p class="card-sub">src/renderer/dashboard.ts</p>
-            </div>
-            <span class="pill">APP</span>
-          </div>
-          <div class="panel-grid">
-            <div class="field"><div class="field-label">구분</div><div class="field-value big">electron-dashboard</div></div>
-            <div class="field"><div class="field-label">상태</div><div class="field-value big">머지 완료</div></div>
-            <div class="field"><div class="field-label">대표 파일</div><div class="field-value">src/renderer/dashboard.ts</div></div>
-            <div class="field"><div class="field-label">머지 일자</div><div class="field-value">2026년 6월 16일</div></div>
-          </div>
-          <div class="summary-box">
-            <h3>핵심 요약</h3>
-            <ul>
-              <li>결품 모니터링과 메일 이력 화면 전환</li>
-              <li>필터, 상세 모달, 회신 입력, CSV 저장</li>
-              <li>실제 앱의 운영 흐름을 한 번에 확인</li>
-            </ul>
-            <div class="tag-row">
-              <span class="pill ok">머지 완료</span>
-              <span class="pill info">모달 전체화면 지원</span>
-            </div>
-          </div>
-        </article>
-
-      </section>
+      <section class="grid" id="cards"></section>
     </main>
 
     <div class="modal" id="modal" aria-hidden="true">
       <section class="modal-shell" role="dialog" aria-modal="true">
         <div class="modal-top">
           <div class="modal-left">
-            <button type="button" class="pill back-btn" id="modal-close" aria-label="대시보드로 돌아가기">←</button>
+            <button type="button" class="pill back-btn" id="modalClose" aria-label="대시보드로 돌아가기">←</button>
             <div>
-              <div class="modal-title" id="modal-title">미리보기</div>
-              <div class="modal-sub" id="modal-sub">실제 작업 화면</div>
+              <div class="modal-title" id="modalTitle">미리보기</div>
+              <div class="modal-sub" id="modalSub">실제 작업 화면</div>
             </div>
           </div>
-          <span class="pill" id="modal-kind">PREVIEW</span>
+          <div class="pill" id="modalKind">PREVIEW</div>
         </div>
         <div class="iframe-wrap">
-          <iframe id="preview-frame" title="preview"></iframe>
+          <iframe id="previewFrame" title="preview"></iframe>
         </div>
       </section>
     </div>
 
     <script>
-      const previews = {
-        purchase: {
-          title: "구매확인서 CDP 자동화",
-          sub: "PR #6 · purchase_confirmation_automation.html",
-          kind: "HTML",
-          previewPath: "assets/previews/purchase_confirmation_automation.html?v=f5f7b00",
-          html: `<!doctype html>
-<html lang="ko"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>구매확인서 CDP 자동화</title>
-<style>
-  :root{color-scheme:dark;--bg:#0b1220;--panel:#111a2e;--line:#24324a;--text:#ecf4ff;--muted:#9bb0cc;--accent:#76b8ff;--ok:#8af0b0;}
-  *{box-sizing:border-box} body{margin:0;min-height:100vh;font-family:Segoe UI,Noto Sans KR,sans-serif;background:radial-gradient(circle at top left,rgba(118,184,255,.12),transparent 28%),linear-gradient(180deg,#070d18,#0b1220);color:var(--text);}
-  .wrap{min-height:100vh;padding:20px;display:grid;gap:16px;grid-template-rows:auto 1fr;}
-  .hero,.panel{border:1px solid var(--line);border-radius:22px;background:rgba(15,22,38,.94);box-shadow:0 30px 70px rgba(0,0,0,.35)}
-  .hero{padding:24px;display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
-  h1{margin:0 0 10px;font-size:36px;line-height:1.08}
-  p{margin:0;color:var(--muted);line-height:1.55}
-  .badge{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid #35527d;background:rgba(45,70,110,.25);font-weight:800}
-  .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;min-height:0}
-  .panel{padding:18px;display:grid;gap:14px}
-  .form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-  .field{padding:12px;border:1px solid var(--line);border-radius:14px;background:#162033}
-  .label{font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:700}
-  .value{font-size:16px;font-weight:800}
-  .btns{display:flex;flex-wrap:wrap;gap:10px}
-  .btn{padding:12px 16px;border-radius:14px;border:1px solid var(--line);background:#20283b;color:var(--text);font-weight:800}
-  .btn.primary{background:linear-gradient(180deg,#90c7ff,#66aaff);color:#07121f}
-  .sheet{min-height:220px;border:1px dashed #3c4c66;border-radius:18px;display:grid;place-items:center;color:var(--muted)}
-  .log{margin-top:10px;border:1px solid var(--line);border-radius:14px;padding:12px;background:#0b1322;font-family:Consolas,monospace;font-size:12px;white-space:pre-wrap}
-  .stats{display:flex;gap:10px;flex-wrap:wrap}
-  .pill{padding:8px 12px;border-radius:999px;border:1px solid #365272;background:rgba(45,70,110,.18);font-weight:800}
-</style></head>
-<body><main class="wrap">
-  <section class="hero"><div><div style="color:#7bd0ff;font-weight:800;font-size:12px;letter-spacing:.08em">PR #6 · HTML AUTOMATION</div><h1>구매확인서 CDP 자동화</h1><p>구매확인서 입력/조회와 저장, 로그 흐름을 한 화면에 모은 자동화 화면입니다.</p></div><div class="badge">머지 완료</div></section>
-  <section class="grid">
-    <div class="panel">
-      <h2 style="margin:0">작업 입력</h2>
-      <div class="form">
-        <div class="field"><div class="label">CDP 포트</div><div class="value">9222</div></div>
-        <div class="field"><div class="label">시작 URL</div><div class="value">https://weblc.ec-bank.net</div></div>
-        <div class="field"><div class="label">아이디</div><div class="value">HMCR151</div></div>
-        <div class="field"><div class="label">비밀번호</div><div class="value">••••••••</div></div>
-      </div>
-      <div class="btns"><button class="btn primary">실행</button><button class="btn">중지</button><button class="btn">시트 보기</button><button class="btn">엑셀 다운로드</button><button class="btn">로그 저장</button></div>
-      <div class="stats"><span class="pill">조회 1260 rows</span><span class="pill">CSV UTF-8 BOM</span><span class="pill">GUI smoke test 통과</span></div>
-      <div class="log">{ "event": "app_start", "status": "ready" }</div>
-    </div>
-    <div class="panel"><h2 style="margin:0">시트 보기</h2><p>실제 데이터가 여기에 표시됩니다.</p><div class="sheet">아직 불러온 시트가 없습니다.</div></div>
-  </section>
-</main></body></html>`
-        },
-        erpGui: {
-          title: "ERP 작업실적 CSV 추출 GUI",
-          sub: "PR #5 · pcd5/gui.py",
-          kind: "PY",
-          previewPath: "assets/previews/erp_workflow_preview.html",
-          html: `<!doctype html>
-<html lang="ko"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>ERP 작업실적 CSV 추출 GUI</title>
-<style>
-  :root{color-scheme:dark;--bg:#07101b;--panel:#111a2c;--line:#25344b;--text:#eef5ff;--muted:#9fb1cb;--ok:#9be7b3;--blue:#82bfff;}
-  *{box-sizing:border-box} body{margin:0;min-height:100vh;font-family:Segoe UI,Noto Sans KR,sans-serif;background:linear-gradient(180deg,#050b14,#07101b);color:var(--text)}
-  .wrap{min-height:100vh;padding:18px;display:grid;gap:14px}
-  .hero,.panel{border:1px solid var(--line);border-radius:22px;background:rgba(16,23,37,.94);box-shadow:0 28px 72px rgba(0,0,0,.35)}
-  .hero{padding:22px;display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
-  h1{margin:8px 0 10px;font-size:36px;line-height:1.08}
-  p{margin:0;color:var(--muted);line-height:1.55}
-  .badge{padding:10px 14px;border-radius:999px;border:1px solid #2f4f7b;background:rgba(45,70,110,.22);font-weight:800}
-  .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:14px;min-height:0}
-  .panel{padding:18px;display:grid;gap:12px}
-  .controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-  .field{padding:12px;border:1px solid var(--line);border-radius:14px;background:#172235}
-  .label{font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:700}
-  .value{font-size:16px;font-weight:800}
-  .row{display:grid;grid-template-columns:90px 1fr auto auto auto auto;gap:8px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:#131d2f}
-  .status{color:var(--ok);font-weight:800}
-  .btns{display:flex;flex-wrap:wrap;gap:10px}
-  .btn{padding:12px 16px;border-radius:14px;border:1px solid var(--line);background:#202a3b;color:var(--text);font-weight:800}
-  .btn.primary{background:linear-gradient(180deg,#90c7ff,#66aaff);color:#08121f}
-  .btn.success{background:linear-gradient(180deg,#b8f7cf,#95e7b5);color:#081b12}
-  .log{padding:12px;border:1px solid var(--line);border-radius:14px;background:#0b1322;font-family:Consolas,monospace;font-size:12px;white-space:pre-wrap}
-  .list{display:grid;gap:8px}
-</style></head>
-<body><main class="wrap">
-  <section class="hero"><div><div style="color:#7bd0ff;font-weight:800;font-size:12px;letter-spacing:.08em">PR #5 · PYTHON GUI</div><h1>ERP 작업실적 CSV 추출 GUI</h1><p>CDP 연결 후 ERP URL을 열고, 사업단위별 조회·저장·Check를 반복하는 데스크톱 앱입니다.</p></div><div class="badge">머지 완료</div></section>
-  <section class="grid">
-    <div class="panel">
-      <h2 style="margin:0">작업 입력</h2>
-      <div class="controls">
-        <div class="field"><div class="label">CDP</div><div class="value">http://127.0.0.1:9225</div></div>
-        <div class="field"><div class="label">탭</div><div class="value">선택된 탭</div></div>
-        <div class="field"><div class="label">ERP URL</div><div class="value">http://58.72.235.17:8300/</div></div>
-        <div class="field"><div class="label">작업일</div><div class="value">2026-01-01 ~ 2026-01-31</div></div>
-      </div>
-      <div class="controls">
-        <div class="field"><div class="label">집계구분</div><div class="value">집계</div></div>
-        <div class="field"><div class="label">저장 폴더</div><div class="value">D:\\Desktop\\PCD-5\\output</div></div>
-      </div>
-      <div class="btns"><button class="btn primary">연결</button><button class="btn">조회</button><button class="btn success">저장</button><button class="btn">Check</button></div>
-      <div class="list">
-        <div class="row"><strong>사업단위</strong><div>당진공장</div><button class="btn">조회</button><button class="btn">저장</button><button class="btn">Check</button><span class="status">대기</span></div>
-        <div class="row"><strong>사업단위</strong><div>화성공장</div><button class="btn">조회</button><button class="btn">저장</button><button class="btn">Check</button><span class="status">조회 완료</span></div>
-        <div class="row"><strong>사업단위</strong><div>광주공장</div><button class="btn">조회</button><button class="btn">저장</button><button class="btn">Check</button><span class="status">저장 대기</span></div>
-      </div>
-      <div class="log">[info] connected to http://127.0.0.1:9225\n[info] opened ERP URL: http://58.72.235.17:8300/\n[info] job-1: 조회 중</div>
-    </div>
-    <div class="panel">
-      <h2 style="margin:0">시트 보기</h2>
-      <p>조회 결과가 나오면 여기에 목록이 표시됩니다.</p>
-      <div class="field"><div class="label">상태</div><div class="value">Connecting</div></div>
-      <div class="field"><div class="label">아이디</div><div class="value">HMCR151</div></div>
-      <div class="field"><div class="label">비밀번호</div><div class="value">••••••••</div></div>
-      <div style="margin-top:10px" class="log">ERP 조회 1260 rows\nCSV UTF-8 BOM\nGUI smoke test 통과</div>
-    </div>
-  </section>
-</main></body></html>`
-        },
-        shortage: {
-          title: "우신공업 ERP 결품 대응센터",
-          sub: "PR #8 · src/renderer/dashboard.ts",
-          kind: "APP",
-          previewPath: "assets/previews/factory_dashboard_preview.html",
-          html: `<!doctype html>
-<html lang="ko"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>우신공업 ERP 결품 대응센터</title>
-<style>
-  :root{color-scheme:light;--bg:#eef1ec;--surface:rgba(255,255,255,.94);--line:#d7ddd4;--ink:#132018;--muted:#5d6d61;--accent:#1d6b50;--accent-soft:#e6f2ed;--warn:#b97a11;--warn-soft:#fff3d8;--danger:#b0442f;--danger-soft:#fde8e1;--shadow:0 18px 40px rgba(15,31,20,.08)}
-  *{box-sizing:border-box} body{margin:0;min-height:100vh;font-family:Malgun Gothic,Apple SD Gothic Neo,Segoe UI,sans-serif;background:linear-gradient(180deg,#f3f6f2,#e8ede6);color:var(--ink)}
-  .wrap{padding:18px;display:grid;gap:14px}
-  .top,.panel,.card,.box{border:1px solid var(--line);border-radius:18px;background:var(--surface);box-shadow:var(--shadow)}
-  .top{padding:18px;display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
-  .eyebrow{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:.08em}
-  h1{margin:6px 0 10px;font-size:30px;line-height:1.1}
-  p{margin:0;color:var(--muted);line-height:1.55}
-  .stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
-  .stat{padding:12px;border:1px solid #e3e9e1;border-radius:14px;background:#fff}
-  .stat small{display:block;color:var(--muted);font-size:12px;font-weight:700;margin-bottom:8px}
-  .stat strong{font-size:24px}
-  .layout{display:grid;grid-template-columns:340px 1fr;gap:14px;min-height:0}
-  .sidebar,.main{display:grid;gap:12px}
-  .sidebar .panel,.main .panel{padding:14px}
-  .panel h2{margin:0 0 8px;font-size:18px}
-  .panel p{margin-bottom:8px}
-  .summary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
-  .summary .box{padding:12px}
-  .summary .box small{display:block;color:var(--muted);font-size:12px;font-weight:700;margin-bottom:6px}
-  .summary .box strong{font-size:22px}
-  .filters{display:grid;grid-template-columns:1.4fr .9fr .7fr;gap:10px}
-  .field{padding:12px;border:1px solid #dce5ef;border-radius:14px;background:#fff}
-  .field .label{color:var(--muted);font-size:12px;font-weight:700;margin-bottom:8px}
-  .field .value{font-weight:800}
-  .table{padding:0;overflow:auto}
-  table{width:100%;border-collapse:collapse;font-size:14px}
-  th,td{padding:12px 14px;border-bottom:1px solid #e8ece6;text-align:left;white-space:nowrap}
-  th{position:sticky;top:0;background:#f4f7f3;color:var(--muted);font-size:12px;font-weight:700}
-  tr.alert{background:rgba(253,232,225,.58)}
-  tr.changed{box-shadow:inset 4px 0 0 #c18a24}
-  .pill{display:inline-flex;align-items:center;justify-content:center;min-height:28px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:800}
-  .pill.ok{background:var(--accent-soft);color:var(--accent)}
-  .pill.warn{background:var(--warn-soft);color:var(--warn)}
-  .pill.danger{background:var(--danger-soft);color:var(--danger)}
-  .grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:12px}
-  .list{display:grid;gap:10px}
-  .item{padding:12px;border:1px solid #e5ebe3;border-radius:14px;background:#fff}
-  .item strong{display:block;margin-bottom:4px}
-  .item p{margin:0;color:var(--muted);font-size:13px}
-  .modal{display:grid;grid-template-columns:1fr .9fr;gap:12px}
-  .note{padding:12px;border:1px solid #e7ece5;border-radius:14px;background:#fff}
-  .progress{height:10px;border-radius:999px;background:#e8ece7;overflow:hidden;margin:10px 0}
-  .fill{height:100%;width:62%;background:linear-gradient(90deg,var(--accent),#4ca57d)}
-</style></head>
-<body><main class="wrap">
-  <section class="top"><div><div class="eyebrow">WOOSHIN SHORTAGE CONTROL</div><h1>우신공업 ERP 결품 대응센터</h1><p>일일구매소요정보를 빠르게 확인하고, 결품/회신/메일 이력을 한 화면에서 관리합니다.</p></div><div class="pill ok">머지 완료</div></section>
-  <section class="stats">
-    <div class="stat"><small>기준일</small><strong>-</strong><p>전일 재고와 당일 생산수량 비교</p></div>
-    <div class="stat"><small>마지막 조회</small><strong>-</strong><p>수동 새로고침</p></div>
-    <div class="stat"><small>결품 항목</small><strong>0</strong><p>최대 부족 0 EA</p></div>
-    <div class="stat"><small>회신 대기</small><strong>0</strong><p>즉시 확인 0건</p></div>
-    <div class="stat"><small>확보 예정 수량</small><strong>0 / 0</strong><p>확보율 0%</p></div>
-  </section>
-  <section class="layout">
-    <aside class="sidebar">
-      <div class="panel">
-        <h2>운영 상태</h2>
-        <div class="list"><div class="item"><strong>조회 상태</strong><p>대기</p></div><div class="item"><strong>자동 새로고침</strong><p>꺼짐</p></div><div class="item"><strong>메일 모드</strong><p>시뮬레이션</p></div><div class="item"><strong>주소 미등록</strong><p>0</p></div></div>
-      </div>
-      <div class="panel">
-        <h2>협력사 회신 현황</h2>
-        <div class="list"><div class="item"><strong>회신 대기</strong><p>0</p></div><div class="item"><strong>입고 완료</strong><p>0</p></div><div class="item"><strong>입고 불가</strong><p>0</p></div></div>
-      </div>
-    </aside>
-    <main class="main">
-      <div class="panel">
-        <h2>결품 검색 · 필터</h2>
-        <p>품번, 품명, 협력사명으로 즉시 찾고 결품/정상/변동만 좁혀 볼 수 있습니다.</p>
-        <div class="filters"><div class="field"><div class="label">검색</div><div class="value">품번, 품명, 협력사 검색</div></div><div class="field"><div class="label">상태</div><div class="value">전체</div></div><div class="field"><div class="label">변동</div><div class="value">변동 항목만 보기</div></div></div>
-      </div>
-      <div class="panel table">
-        <table>
-          <thead><tr><th>기준일</th><th>품번</th><th>품명</th><th>협력사</th><th>전일 재고</th><th>당일 수량</th><th>부족 수량</th><th>변동 상태</th><th>회신 상태</th></tr></thead>
-          <tbody><tr class="alert"><td>2026-06-16</td><td>A-100</td><td>베어링 하우징</td><td>동서정밀</td><td>0</td><td>120</td><td style="color:#b0442f;font-weight:800">120 EA</td><td>부족 증가</td><td><span class="pill warn">회신 완료</span></td></tr><tr><td>2026-06-16</td><td>B-330</td><td>고정 브라켓</td><td>신성산업</td><td>20</td><td>20</td><td style="color:#1f8a5b;font-weight:800">0 EA</td><td>정상 전환</td><td><span class="pill ok">입고 완료</span></td></tr><tr class="alert changed"><td>2026-06-16</td><td>C-220</td><td>클립 세트</td><td>우진테크</td><td>14</td><td>42</td><td style="color:#b0442f;font-weight:800">28 EA</td><td>부족 증가</td><td><span class="pill warn">부분 확보</span></td></tr></tbody>
-        </table>
-      </div>
-      <div class="grid2">
-        <div class="panel"><h2>선택 품목 요약</h2><p>선택한 결품의 판정 근거를 한 번에 읽을 수 있습니다.</p><div class="note"><strong>부족 수량</strong><p>max(당일 수량 - 전일 재고, 0)</p></div><div class="note" style="margin-top:10px"><strong>다음 조치</strong><p>메일 발송 여부 확인, 회신 일정 기록, 대체 자재 여부 점검</p></div></div>
-        <div class="panel"><h2>상태 표시</h2><div class="list"><div class="item"><strong>메일 상태</strong><p>실발송 / 시뮬레이션 / 중복 방지 / 주소 미등록</p></div><div class="item"><strong>회신 입력</strong><p>입고 예정 시각과 확보 예정 수량을 기록</p></div></div><div class="progress"><div class="fill"></div></div><p>확보 예정 60 / 총 부족 120 EA</p></div>
-      </div>
-    </main>
-  </section>
-</main></body></html>`
-        }
+      const els = {
+        heroTitle: document.getElementById("heroTitle"),
+        heroSubtitle: document.getElementById("heroSubtitle"),
+        mergedCount: document.getElementById("mergedCount"),
+        cards: document.getElementById("cards"),
+        modal: document.getElementById("modal"),
+        modalTitle: document.getElementById("modalTitle"),
+        modalSub: document.getElementById("modalSub"),
+        modalKind: document.getElementById("modalKind"),
+        previewFrame: document.getElementById("previewFrame"),
       };
 
-      const modal = document.getElementById("modal");
-      const modalTitle = document.getElementById("modal-title");
-      const modalSub = document.getElementById("modal-sub");
-      const modalKind = document.getElementById("modal-kind");
-      const previewFrame = document.getElementById("preview-frame");
-      let activePreviewToken = 0;
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;");
+      }
 
-      const previewRoutes = {
-        purchase: "assets/previews/purchase_confirmation_automation.html?v=f5f7b00",
-        erpGui: "assets/previews/erp_workflow_preview.html",
-        shortage: "assets/previews/factory_dashboard_preview.html",
-      };
+      async function loadJson(path) {
+        const response = await fetch(path, { cache: "no-store" });
+        if (!response.ok) throw new Error(`Failed to load ${path}: ${response.status}`);
+        return response.json();
+      }
 
-      function openPreview(key) {
-        const href = previewRoutes[key];
-        if (!href) return;
-        window.location.href = href;
+      function renderCard(item) {
+        const fields = [
+          ["구분", item.kind],
+          ["상태", item.status],
+          ["대표 파일", item.primaryFile],
+          ["머지 일자", new Date(item.mergedAt).toLocaleDateString("ko-KR", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })],
+        ]
+          .map(([label, value]) => `
+            <div class="field">
+              <div class="field-label">${escapeHtml(label)}</div>
+              <div class="field-value ${label === "상태" || label === "대표 파일" ? "big" : ""}">${escapeHtml(value)}</div>
+            </div>`)
+          .join("");
+
+        const summary = item.summary
+          .map((line) => `<li>${escapeHtml(line)}</li>`)
+          .join("");
+
+        const actions = (item.actions || [])
+          .map((action) => `<a class="action" href="${escapeHtml(action.href)}" target="_blank" rel="noreferrer" data-action-link="1">${escapeHtml(action.label)}</a>`)
+          .join("");
+
+        return `
+          <article class="card" data-title="${escapeHtml(item.artifactTitle)}" data-sub="${escapeHtml(item.primaryFile)}" data-kind="${escapeHtml(item.badge || item.kind)}" data-preview="${escapeHtml(item.previewPath)}" role="button" tabindex="0">
+            <div class="card-head">
+              <div>
+                <div class="kicker">PR #${escapeHtml(item.number)} · ${escapeHtml(item.author)} · ${escapeHtml(item.prTitle)}</div>
+                <h2 class="card-title">${escapeHtml(item.artifactTitle)}</h2>
+                <p class="card-sub">${escapeHtml(item.primaryFile)}</p>
+              </div>
+              <span class="pill">${escapeHtml(item.badge || item.kind)}</span>
+            </div>
+            <div class="panel-grid">${fields}</div>
+            <div class="stack">
+              <div class="card-sub"><strong>핵심 요약</strong></div>
+              <ul style="padding-left: 18px; color: var(--muted); line-height: 1.5;">${summary}</ul>
+              <div class="tag-row">
+                <span class="pill ok">${escapeHtml(item.status)}</span>
+                <span class="pill warn">${new Date(item.mergedAt).toLocaleDateString("ko-KR", {
+                  year: "numeric",
+                  month: "numeric",
+                  day: "numeric",
+                })}</span>
+              </div>
+              <div class="card-actions">${actions}</div>
+            </div>
+          </article>`;
+      }
+
+      function openPreview(card) {
+        els.modalTitle.textContent = card.title;
+        els.modalSub.textContent = card.sub;
+        els.modalKind.textContent = card.kind;
+        els.previewFrame.src = card.preview;
+        els.modal.classList.add("open");
+        els.modal.setAttribute("aria-hidden", "false");
       }
 
       function closePreview() {
-        modal.classList.remove("open");
-        previewFrame.removeAttribute("src");
-        previewFrame.removeAttribute("srcdoc");
+        els.modal.classList.remove("open");
+        els.modal.setAttribute("aria-hidden", "true");
+        els.previewFrame.src = "about:blank";
       }
 
-      document.querySelectorAll("[data-preview]").forEach((card) => {
-        card.addEventListener("click", () => openPreview(card.dataset.preview));
-        card.addEventListener("keydown", (event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            openPreview(card.dataset.preview);
-          }
-        });
-      });
+      async function init() {
+        const data = await loadJson("data/issues.json");
+        const materials = data.materials || [];
 
-      document.getElementById("modal-close").addEventListener("click", closePreview);
-      modal.addEventListener("click", (event) => {
-        if (event.target === modal) closePreview();
-      });
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") closePreview();
+        els.heroTitle.textContent = data.hero?.title || els.heroTitle.textContent;
+        els.heroSubtitle.textContent = data.hero?.subtitle || els.heroSubtitle.textContent;
+        els.mergedCount.textContent = String(data.hero?.mergedCount ?? materials.length);
+        els.cards.innerHTML = materials.map(renderCard).join("");
+
+        document.querySelectorAll(".card").forEach((cardEl) => {
+          const open = () =>
+            openPreview({
+              title: cardEl.dataset.title,
+              sub: cardEl.dataset.sub,
+              kind: cardEl.dataset.kind,
+              preview: cardEl.dataset.preview,
+            });
+
+          cardEl.addEventListener("click", open);
+          cardEl.querySelectorAll("[data-action-link]").forEach((link) => {
+            link.addEventListener("click", (event) => event.stopPropagation());
+          });
+          cardEl.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              open();
+            }
+          });
+        });
+
+        document.getElementById("modalClose").addEventListener("click", closePreview);
+        els.modal.addEventListener("click", (event) => {
+          if (event.target === els.modal) closePreview();
+        });
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") closePreview();
+        });
+      }
+
+      init().catch((error) => {
+        els.cards.innerHTML = `<div class="field"><div class="field-label">불러오기 실패</div><div class="field-value big">${escapeHtml(error.message)}</div></div>`;
       });
     </script>
   </body>
