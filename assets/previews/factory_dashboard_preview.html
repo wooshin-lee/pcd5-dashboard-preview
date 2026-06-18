@@ -3,469 +3,228 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>우신공업 ERP 결품 대응센터</title>
+    <title>ERP 당일 결품 판정 EXE 앱</title>
     <style>
       :root {
-        color-scheme: light;
-        --bg: #eef3f7;
-        --surface: rgba(255, 255, 255, 0.94);
-        --surface-strong: #ffffff;
-        --panel: #f8fbff;
-        --line: #d9e4ef;
-        --line-strong: #c8d6e6;
-        --text: #16263b;
-        --muted: #64748b;
-        --accent: #2563eb;
-        --accent-soft: #e8f1ff;
-        --success: #16915f;
-        --success-soft: #e7f6ee;
-        --warning: #ba7f00;
-        --warning-soft: #fff3d8;
-        --danger: #d14f4f;
+        font-family: "Malgun Gothic", "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+        color: #132018;
+        background: #eef1ec;
+        --bg: #eef1ec;
+        --surface: rgba(255, 255, 255, 0.92);
+        --line: #d7ddd4;
+        --line-strong: #c4cec1;
+        --ink: #132018;
+        --muted: #5d6d61;
+        --accent: #1d6b50;
+        --accent-soft: #e6f2ed;
+        --accent-strong: #124837;
+        --warn: #b97a11;
+        --warn-soft: #fff3d8;
+        --danger: #b0442f;
         --danger-soft: #fde8e1;
+        --ok: #3f7b44;
+        --ok-soft: #e8f4e6;
+        --info: #285f9f;
+        --info-soft: #e8f1fd;
         --shadow: 0 18px 40px rgba(15, 31, 20, 0.08);
       }
 
-      * { box-sizing: border-box; }
-      html, body {
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
         margin: 0;
-        min-height: 100%;
-        overflow-x: hidden;
-        overflow-y: auto;
-        font-family: "Segoe UI", "Noto Sans KR", system-ui, sans-serif;
-        color: var(--text);
-        background: linear-gradient(180deg, #f8fbff 0%, #eef3f7 100%);
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(255, 214, 153, 0.38), transparent 23rem),
+          radial-gradient(circle at top right, rgba(159, 215, 193, 0.28), transparent 22rem),
+          linear-gradient(180deg, #f3f6f2 0%, #e8ede6 100%);
       }
 
-      body { padding: 18px; }
-
-      h1, h2, h3, p { margin: 0; }
-      button, input, select, textarea { font: inherit; }
-
-      .back-link {
-        position: fixed;
-        top: 16px;
-        left: 16px;
-        width: 40px;
-        height: 40px;
-        display: grid;
-        place-items: center;
-        border-radius: 13px;
-        border: 1px solid rgba(37, 99, 235, 0.18);
-        background: rgba(255, 255, 255, 0.95);
-        color: var(--accent);
-        text-decoration: none;
-        font-size: 19px;
-        font-weight: 900;
-        z-index: 20;
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
       }
 
-      .app {
-        width: 100%;
-        min-height: calc(100vh - 36px);
-        display: grid;
-        grid-template-rows: auto auto auto auto 1fr auto;
-        gap: 14px;
-      }
-
-      .topbar,
-      .status-banner,
-      .section-card,
-      .panel,
-      .summary-card,
-      .stat,
-      .item,
-      .box {
-        border: 1px solid var(--line);
-        border-radius: 18px;
-        background: var(--surface);
-        box-shadow: var(--shadow);
+      .shell {
+        max-width: 1480px;
+        margin: 0 auto;
+        padding: 28px 18px 42px;
       }
 
       .topbar {
-        padding: 18px 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-      }
-
-      .topbar-head {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        gap: 14px;
+        gap: 18px;
+        padding: 22px 24px;
+        margin-bottom: 16px;
+        border: 1px solid rgba(29, 107, 80, 0.15);
+        border-radius: 22px;
+        background:
+          linear-gradient(135deg, rgba(29, 107, 80, 0.1), rgba(255, 255, 255, 0.9)),
+          var(--surface);
+        box-shadow: var(--shadow);
         flex-wrap: wrap;
       }
 
-      .topbar-body {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
+      .title-block {
+        display: grid;
+        gap: 6px;
+        min-width: min(100%, 420px);
       }
 
       .eyebrow {
         color: var(--accent);
         font-size: 12px;
-        font-weight: 800;
-        letter-spacing: 0.08em;
+        font-weight: 700;
       }
 
-      .title {
-        margin: 6px 0 8px;
-        font-size: clamp(28px, 2.6vw, 38px);
+      .title-block strong {
+        font-size: 28px;
         line-height: 1.1;
       }
 
-      .lede {
+      .title-block span {
         color: var(--muted);
-        line-height: 1.55;
-        max-width: 980px;
+        font-size: 14px;
+        line-height: 1.5;
       }
 
       .toolbar {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
-        justify-content: flex-start;
-        align-items: center;
-        padding-top: 2px;
+        justify-content: flex-end;
+        gap: 10px;
+        min-width: min(100%, 420px);
       }
 
       .btn {
-        border: 1px solid var(--line);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 42px;
         border-radius: 12px;
-        background: #fff;
-        color: var(--text);
-        font: inherit;
-        font-weight: 800;
-        padding: 10px 14px;
+        padding: 0 14px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.9);
+        color: var(--ink);
+        font-size: 14px;
+        font-weight: 700;
         cursor: pointer;
       }
 
       .btn.primary {
-        background: var(--accent);
+        background: linear-gradient(180deg, var(--accent), var(--accent-strong));
+        color: #ffffff;
         border-color: var(--accent);
-        color: #fff;
-      }
-
-      .btn.success {
-        background: var(--success);
-        border-color: var(--success);
-        color: #fff;
-      }
-
-      .btn:disabled {
-        opacity: 0.55;
-        cursor: not-allowed;
-      }
-
-      .stat-grid {
-        display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-        gap: 12px;
-      }
-
-      .stat {
-        padding: 14px;
-      }
-
-      .stat .label {
-        color: var(--muted);
-        font-size: 12px;
-      }
-
-      .stat .value {
-        margin-top: 6px;
-        font-size: 26px;
-        font-weight: 900;
-        line-height: 1.1;
-      }
-
-      .stat .desc {
-        margin-top: 2px;
-        color: var(--muted);
-        font-size: 12px;
       }
 
       .status-banner {
-        padding: 12px 16px;
+        margin-bottom: 16px;
+        padding: 13px 16px;
         border-radius: 14px;
+        border: 1px solid var(--line);
+        background: var(--accent-soft);
+        color: var(--accent-strong);
         font-size: 14px;
-        color: var(--muted);
+        font-weight: 700;
       }
 
       .view-tabs {
         display: flex;
+        flex-wrap: wrap;
         gap: 10px;
-      }
-
-      .view-tabs button {
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        background: #fff;
-        color: var(--text);
-        font: inherit;
-        font-weight: 800;
-        padding: 10px 14px;
-        cursor: pointer;
-      }
-
-      .view-tabs button.active {
-        background: var(--accent);
-        border-color: var(--accent);
-        color: #fff;
+        margin-bottom: 16px;
       }
 
       .layout {
-        min-height: 0;
         display: grid;
-        grid-template-columns: 320px 1fr;
-        gap: 14px;
+        grid-template-columns: 340px minmax(0, 1fr);
+        min-height: 760px;
+        border: 1px solid rgba(19, 32, 24, 0.08);
+        border-radius: 24px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.76);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(14px);
       }
 
-      .sidebar,
+      .sidebar {
+        padding: 18px;
+        border-right: 1px solid var(--line);
+        background:
+          linear-gradient(180deg, rgba(248, 250, 247, 0.96), rgba(241, 245, 239, 0.98));
+      }
+
       .main {
-        min-height: 0;
         display: grid;
-        gap: 12px;
-      }
-
-      .sidebar > .panel,
-      .main > .section-card,
-      .main > .panel {
-        padding: 16px;
+        gap: 16px;
+        padding: 18px;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(249, 251, 248, 0.94));
       }
 
       .section-title {
+        margin: 0 0 10px;
         color: var(--muted);
-        font-size: 12px;
-        font-weight: 800;
-        letter-spacing: 0.04em;
+        font-size: 13px;
+        font-weight: 700;
       }
 
       .status-card,
       .filter-card,
-      .summary-grid,
-      .settings-grid,
-      .mail-grid,
-      .detail-grid {
-        display: grid;
-        gap: 10px;
+      .item,
+      .summary-card,
+      .section-card,
+      .table-box,
+      .detail-box,
+      .mail-card {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.92);
       }
 
-      .status-card {
+      .status-card,
+      .filter-card {
         padding: 14px;
-        border: 1px solid #e3e9f1;
-        border-radius: 16px;
-        background: #fff;
+        margin-bottom: 14px;
+      }
+
+      .status-card.compact {
+        margin-bottom: 0;
       }
 
       .metric {
-        display: flex;
-        justify-content: space-between;
-        gap: 10px;
-        align-items: baseline;
-        padding: 8px 0;
-        border-bottom: 1px solid #edf1f6;
-      }
-
-      .metric:last-child { border-bottom: 0; padding-bottom: 0; }
-      .metric span { color: var(--muted); font-size: 13px; }
-      .metric strong { font-size: 14px; }
-
-      .summary-grid {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-        margin-bottom: 2px;
-      }
-
-      .summary-card {
-        padding: 14px;
-        background: #fff;
-      }
-
-      .summary-card small {
-        display: block;
-        color: var(--muted);
-        font-size: 12px;
-        font-weight: 700;
-        margin-bottom: 6px;
-      }
-
-      .summary-card strong {
-        font-size: 24px;
-      }
-
-      .summary-card p {
-        margin-top: 4px;
-        color: var(--muted);
-        font-size: 12px;
-      }
-
-      .summary-card.danger strong { color: var(--danger); }
-      .summary-card.warn strong { color: var(--warning); }
-
-      .compact-grid {
-        grid-template-columns: 1.2fr 0.8fr auto;
-        align-items: end;
-      }
-
-      .field {
-        padding: 12px;
-        border: 1px solid var(--line);
-        border-radius: 14px;
-        background: #fff;
-      }
-
-      .field span {
-        display: block;
-        color: var(--muted);
-        font-size: 12px;
-        margin-bottom: 8px;
-      }
-
-      .field input,
-      .field select {
-        width: 100%;
-        border: 1px solid var(--line-strong);
-        border-radius: 10px;
-        padding: 10px 12px;
-        background: #fff;
-        color: var(--text);
-        font: inherit;
-      }
-
-      .results-layout {
-        display: grid;
-        grid-template-columns: 1.15fr 0.85fr;
-        gap: 12px;
-        min-height: 0;
-      }
-
-      .panel {
-        min-height: 0;
-        padding: 14px;
-      }
-
-      .panel h2 {
-        font-size: 20px;
-        margin-bottom: 6px;
-      }
-
-      .panel p {
-        color: var(--muted);
-        font-size: 13px;
-        line-height: 1.5;
-      }
-
-      .filter-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-
-      .filter {
-        padding: 9px 12px;
-        border-radius: 999px;
-        border: 1px solid var(--line);
-        background: #fff;
-        font-size: 12px;
-        font-weight: 800;
-        cursor: pointer;
-      }
-
-      .filter.active {
-        background: rgba(37, 99, 235, 0.08);
-        border-color: rgba(37, 99, 235, 0.2);
-        color: var(--accent);
-      }
-
-      .list {
-        min-height: 0;
-        display: grid;
-        gap: 10px;
-        overflow: auto;
-        padding-right: 4px;
-      }
-
-      .item {
-        padding: 14px;
-        background: var(--panel);
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
-        gap: 10px;
-        align-items: center;
-        cursor: pointer;
+        gap: 8px;
+        padding: 10px 0;
+        border-top: 1px solid #e7ece5;
+        font-size: 14px;
       }
 
-      .item.active {
-        border-color: rgba(37, 99, 235, 0.32);
-        box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
+      .metric:first-of-type {
+        border-top: 0;
       }
 
-      .item h3 { margin: 0 0 6px; font-size: 16px; }
-      .item p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
-      .state { font-size: 12px; font-weight: 900; color: var(--success); }
-      .state.review { color: var(--warning); }
-      .state.wait { color: var(--danger); }
-
-      .detail { display: grid; gap: 12px; }
-
-      .box {
-        padding: 14px;
-        background: var(--panel);
-        border-radius: 16px;
-      }
-
-      .box h3 {
-        margin: 0 0 8px;
-        font-size: 15px;
-      }
-
-      .box ul {
-        margin: 0;
-        padding-left: 18px;
+      .metric span:first-child {
         color: var(--muted);
-        font-size: 13px;
-        line-height: 1.55;
       }
 
-      .composer {
+      .metric strong {
+        text-align: right;
+      }
+
+      .pill-row,
+      .inline-pills {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
-        margin-top: 10px;
       }
-
-      .composer button {
-        border: 1px solid var(--line);
-        background: #fff;
-        color: var(--text);
-        border-radius: 12px;
-        padding: 9px 12px;
-        font: inherit;
-        font-size: 12px;
-        font-weight: 800;
-        cursor: pointer;
-      }
-
-      .mail-log {
-        min-height: 170px;
-        padding: 14px;
-        background: #0f1725;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 16px;
-        color: #dfe9f7;
-        font: 12px/1.55 ui-monospace, SFMono-Regular, Consolas, monospace;
-        overflow: auto;
-        white-space: pre-wrap;
-      }
-
-      .footer {
-        color: var(--muted);
-        font-size: 12px;
-      }
-
-      .hidden { display: none !important; }
 
       .pill {
         display: inline-flex;
@@ -475,505 +234,718 @@
         padding: 0 10px;
         border-radius: 999px;
         font-size: 12px;
-        font-weight: 800;
+        font-weight: 700;
       }
 
-      .pill.ok { background: var(--success-soft); color: var(--success); }
-      .pill.warn { background: var(--warning-soft); color: var(--warning); }
-      .pill.danger { background: var(--danger-soft); color: var(--danger); }
-      .pill.info { background: var(--accent-soft); color: var(--accent); }
-      .pill.muted { background: #eef2f7; color: var(--muted); }
+      .pill.ok {
+        background: var(--ok-soft);
+        color: var(--ok);
+      }
 
-      .modal-backdrop {
-        position: fixed;
-        inset: 0;
-        background: rgba(16, 23, 37, 0.35);
-        backdrop-filter: blur(4px);
+      .pill.info {
+        background: var(--info-soft);
+        color: var(--info);
+      }
+
+      .pill.warn {
+        background: var(--warn-soft);
+        color: var(--warn);
+      }
+
+      .pill.danger {
+        background: var(--danger-soft);
+        color: var(--danger);
+      }
+
+      .pill.muted {
+        background: #edf1ec;
+        color: #627367;
+      }
+
+      .list {
         display: grid;
-        place-items: center;
-        padding: 18px;
-        z-index: 30;
+        gap: 10px;
       }
 
-      .modal-shell {
-        width: min(1220px, 100%);
-        max-height: calc(100vh - 36px);
-        overflow: auto;
-        background: #fff;
-        border-radius: 18px;
-        border: 1px solid var(--line);
-        box-shadow: 0 28px 70px rgba(16, 23, 37, 0.28);
-        padding: 16px;
+      .item {
+        padding: 12px;
+        text-align: left;
       }
 
-      .modal-header {
+      .item.selectable {
+        cursor: pointer;
+      }
+
+      .item.active {
+        border-color: rgba(29, 107, 80, 0.35);
+        background: rgba(230, 242, 237, 0.9);
+      }
+
+      .item-head,
+      .table-toolbar,
+      .card-header,
+      .subsection-head,
+      .reply-actions {
         display: flex;
         justify-content: space-between;
-        gap: 12px;
         align-items: flex-start;
+        gap: 10px;
+        flex-wrap: wrap;
       }
 
-      .modal-grid {
-        margin-top: 12px;
+      .item strong,
+      .card-header h3,
+      .table-toolbar h3,
+      .detail-pane h3,
+      .reply-editor h4 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .card-header h3,
+      .table-toolbar h3,
+      .detail-pane h3,
+      .reply-editor h4 {
+        margin-bottom: 6px;
+      }
+
+      .item p,
+      .card-header p,
+      .table-toolbar p,
+      .mini-copy,
+      .empty-panel p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .summary-grid {
         display: grid;
-        grid-template-columns: 1fr 0.9fr;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
         gap: 12px;
       }
 
-      .modal-column {
+      .summary-card {
+        min-height: 120px;
+        padding: 14px;
+      }
+
+      .summary-card small {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .summary-card strong {
+        display: block;
+        font-size: 28px;
+        line-height: 1;
+      }
+
+      .summary-card p {
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .summary-card.danger strong {
+        color: var(--danger);
+      }
+
+      .summary-card.warn strong {
+        color: var(--warn);
+      }
+
+      .section-card {
+        padding: 18px;
+      }
+
+      .settings-grid {
         display: grid;
+        grid-template-columns: minmax(240px, 1.6fr) minmax(180px, 0.8fr) minmax(180px, 0.8fr);
         gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .field {
+        display: grid;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .field span {
+        font-weight: 700;
+      }
+
+      .field input,
+      .field select,
+      .field textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 11px 12px;
+        background: rgba(255, 255, 255, 0.9);
+        color: var(--ink);
+      }
+
+      .field.checkbox {
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        gap: 10px;
+        padding-top: 25px;
+      }
+
+      .field.checkbox input {
+        width: 18px;
+        height: 18px;
+        margin: 0;
+      }
+
+      .field textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+
+      .textarea-field {
+        margin-top: 6px;
+      }
+
+      .hint {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .table-box {
+        overflow: hidden;
+      }
+
+      .table-toolbar {
+        padding: 16px 16px 0;
+      }
+
+      .table-wrap {
+        overflow: auto;
+        padding: 12px 0 0;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+
+      th,
+      td {
+        padding: 12px 14px;
+        border-bottom: 1px solid #e8ece6;
+        text-align: left;
+        white-space: nowrap;
+      }
+
+      th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: #f4f7f3;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      tr.alert {
+        background: rgba(253, 232, 225, 0.58);
+      }
+
+      tr.changed {
+        box-shadow: inset 4px 0 0 #c18a24;
+      }
+
+      tr.selected {
+        outline: 2px solid rgba(29, 107, 80, 0.55);
+        outline-offset: -2px;
+      }
+
+      tbody tr[data-row-index],
+      tbody tr[data-history-index] {
+        cursor: pointer;
+      }
+
+      .danger-text {
+        color: var(--danger);
+        font-weight: 700;
+      }
+
+      .ok-text {
+        color: var(--ok);
+        font-weight: 700;
+      }
+
+      .empty-row {
+        color: var(--muted);
+      }
+
+      .detail-box {
+        padding: 18px;
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(360px, 0.9fr);
+      }
+
+      .detail-pane {
+        padding: 18px;
+      }
+
+      .detail-pane.secondary {
+        border-left: 1px solid var(--line);
+        background: rgba(245, 247, 243, 0.76);
+      }
+
+      .subdued {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
       }
 
       .info-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .compact-info {
+        margin-top: 0;
       }
 
       .info-pair {
+        display: grid;
+        gap: 4px;
         padding: 12px;
-        border-radius: 14px;
-        border: 1px solid var(--line);
-        background: var(--panel);
+        border-radius: 12px;
+        border: 1px solid #e5ebe3;
+        background: rgba(255, 255, 255, 0.78);
       }
 
       .info-pair span {
-        display: block;
         color: var(--muted);
         font-size: 12px;
-        margin-bottom: 8px;
-      }
-
-      .info-pair strong { font-size: 14px; }
-
-      .progress-track {
-        height: 10px;
-        border-radius: 999px;
-        background: #e8edf2;
-        overflow: hidden;
-      }
-
-      .progress-fill {
-        height: 100%;
-        background: linear-gradient(90deg, var(--accent), #4ca57d);
-      }
-
-      .formula {
-        padding: 12px;
-        border-radius: 14px;
-        border: 1px solid var(--line);
-        background: #fff;
-        color: var(--text);
         font-weight: 700;
       }
 
-      .empty-panel {
-        padding: 24px;
-        border: 1px dashed var(--line-strong);
-        border-radius: 16px;
-        background: #fff;
-        color: var(--muted);
-        text-align: center;
+      .info-pair strong {
+        font-size: 14px;
+        word-break: break-word;
       }
 
-      .detail-box {
-        min-height: 0;
+      .formula,
+      .note-box,
+      .mail-preview,
+      .mail-card {
+        margin-top: 12px;
+      }
+
+      .formula {
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(29, 107, 80, 0.16);
+        background: rgba(230, 242, 237, 0.68);
+        font-weight: 700;
+        line-height: 1.55;
+      }
+
+      .note-box {
+        padding: 14px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.86);
+        border: 1px solid #e7ece5;
+      }
+
+      .note-box strong {
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      .mail-grid {
         display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
       }
 
+      .mail-card {
+        padding: 14px;
+      }
+
+      .mail-card.sent {
+        background: rgba(232, 244, 230, 0.85);
+      }
+
+      .mail-card.dry-run,
+      .mail-card.duplicate {
+        background: rgba(232, 241, 253, 0.78);
+      }
+
+      .mail-card.failed,
+      .mail-card.missing-email {
+        background: rgba(253, 232, 225, 0.82);
+      }
+
+      .mail-card.skipped {
+        background: rgba(255, 243, 216, 0.78);
+      }
+
+      .inline-status {
+        font-weight: 700;
+      }
+
+      .inline-status.ok {
+        color: var(--ok);
+      }
+
+      .inline-status.info {
+        color: var(--info);
+      }
+
+      .inline-status.warn {
+        color: var(--warn);
+      }
+
+      .inline-status.danger {
+        color: var(--danger);
+      }
+
+      .inline-status.muted {
+        color: var(--muted);
+      }
+
       .mail-preview {
-        margin: 0;
-        padding: 12px;
-        border-radius: 14px;
-        border: 1px solid var(--line);
-        background: #0f1725;
-        color: #dfe9f7;
-        font: 12px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid #e1e7df;
+        background: rgba(255, 255, 255, 0.84);
+        color: #435246;
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 12px;
+        line-height: 1.6;
         white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      .mail-preview.compact {
+        max-height: 220px;
         overflow: auto;
       }
 
-      .mail-preview.compact { max-height: 240px; }
+      .reply-editor {
+        margin-top: 18px;
+        padding-top: 16px;
+        border-top: 1px solid #dfe6dd;
+      }
 
-      @media (max-width: 1200px) {
-        .stat-grid,
-        .summary-grid,
-        .layout,
-        .results-layout,
-        .modal-grid,
-        .info-grid {
+      .reply-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .empty-panel {
+        padding: 26px;
+      }
+
+      .empty-panel strong {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 17px;
+      }
+
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 30;
+        display: none;
+        place-items: center;
+        padding: 24px;
+        background: rgba(10, 18, 13, 0.54);
+        backdrop-filter: blur(6px);
+      }
+
+      .modal-backdrop.open {
+        display: grid;
+      }
+
+      .modal-shell {
+        width: min(1240px, 100%);
+        max-height: calc(100vh - 48px);
+        overflow: auto;
+        border-radius: 22px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(248, 251, 247, 0.98);
+        box-shadow: 0 26px 60px rgba(8, 18, 12, 0.28);
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 20px 22px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .modal-header h2 {
+        margin: 6px 0;
+        font-size: 24px;
+        line-height: 1.15;
+      }
+
+      .modal-header p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .modal-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        padding: 14px 22px 0;
+      }
+
+      .modal-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(360px, 0.95fr);
+        gap: 16px;
+        padding: 18px 22px 22px;
+      }
+
+      .modal-column {
+        display: grid;
+        gap: 14px;
+      }
+
+      .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .action-checklist {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .action-chip {
+        display: inline-flex;
+        align-items: center;
+        min-height: 32px;
+        padding: 0 10px;
+        border-radius: 999px;
+        background: rgba(255, 243, 216, 0.9);
+        color: var(--warn);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      @media (max-width: 1320px) {
+        .summary-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .mail-grid,
+        .reply-grid {
           grid-template-columns: 1fr;
         }
       }
 
-      @media (max-width: 900px) {
-        body { padding: 12px; }
-        .topbar { padding: 16px; }
-        .title { font-size: 24px; }
-        .layout { grid-template-columns: 1fr; }
-        .compact-grid { grid-template-columns: 1fr; }
+      @media (max-width: 1120px) {
+        .layout,
+        .detail-grid,
+        .modal-grid,
+        .stat-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .detail-pane.secondary {
+          border-left: 0;
+          border-top: 1px solid var(--line);
+        }
+      }
+
+      @media (max-width: 820px) {
+        .shell {
+          padding: 18px 12px 28px;
+        }
+
+        .topbar,
+        .toolbar,
+        .view-tabs,
+        .item-head,
+        .table-toolbar,
+        .card-header,
+        .subsection-head,
+        .reply-actions {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .summary-grid,
+        .settings-grid,
+        .info-grid,
+        .reply-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .toolbar .btn,
+        .view-tabs .btn {
+          width: 100%;
+        }
       }
     </style>
   </head>
   <body>
-    <a class="back-link" href="../../index.html" aria-label="대시보드로 돌아가기">←</a>
-
-    <main class="app">
-      <section class="topbar">
-        <div class="topbar-head">
-          <div>
-            <div class="eyebrow">WOOSHIN SHORTAGE CONTROL</div>
-            <h1 class="title">우신공업 ERP 결품 대응센터</h1>
-            <p class="lede">
-              PR #8의 실제 기능을 브라우저용 독립 화면으로 옮긴 프리뷰입니다.
-              결품 모니터링과 메일 이력, 상단 툴바, CSV 저장, 자동 새로고침을 한 화면에서 확인할 수 있습니다.
-            </p>
-          </div>
-          <div class="badge">PR #8 · 머지 완료</div>
-        </div>
-        <div class="topbar-body">
-          <div class="toolbar" aria-label="상단 작업 버튼">
-            <button id="open-erp" class="btn" type="button">ERP 열기</button>
-            <button id="toggle-auto-refresh" class="btn" type="button">자동 새로고침 OFF</button>
-            <button id="refresh-now" class="btn primary" type="button">지금 새로고침</button>
-            <button id="export-shortage-csv" class="btn" type="button">결과 CSV 저장</button>
-            <button id="export-mail-history-csv" class="btn" type="button">메일 이력 CSV</button>
-          </div>
-        </div>
-      </section>
-
-      <section class="stat-grid" aria-label="상태 카드">
-        <div class="stat"><div class="label">오늘 결품</div><div class="value" id="stat-shortage">12</div><div class="desc">당일 기준 결품 건수</div></div>
-        <div class="stat"><div class="label">진행 중</div><div class="value" id="stat-progress">8</div><div class="desc">결품 대응 중인 항목</div></div>
-        <div class="stat"><div class="label">대기</div><div class="value" id="stat-waiting">5</div><div class="desc">확인 대기 항목</div></div>
-        <div class="stat"><div class="label">메일 이력</div><div class="value" id="stat-mail">24</div><div class="desc">저장된 발송 기록</div></div>
-        <div class="stat"><div class="label">주소 미등록</div><div class="value" id="stat-missing">2</div><div class="desc">메일 주소 미등록 협력사</div></div>
-      </section>
-
-      <div class="status-banner" id="banner">
-        ERP를 불러오고 결품 화면을 준비한 상태입니다. 버튼을 눌러 새로고침, CSV 저장, ERP 열기를 확인할 수 있습니다.
-      </div>
-
-      <section class="view-tabs" role="tablist" aria-label="화면 전환 탭">
-        <button id="tab-shortage" class="active" type="button" role="tab" aria-selected="true">결품 모니터링</button>
-        <button id="tab-history" type="button" role="tab" aria-selected="false">메일 이력</button>
-      </section>
-
-      <section id="view-shortage" class="layout">
-        <aside class="sidebar">
-          <div class="panel">
-            <h2>운영 상태</h2>
-            <div class="status-card">
-              <div class="metric"><span>조회 상태</span><strong>대기</strong></div>
-              <div class="metric"><span>자동 새로고침</span><strong id="auto-refresh-state">꺼짐</strong></div>
-              <div class="metric"><span>메일 모드</span><strong>시뮬레이션</strong></div>
-              <div class="metric"><span>주소 미등록</span><strong id="missing-count-side">2</strong></div>
-            </div>
-          </div>
-
-          <div class="panel">
-            <h2>메인 지표</h2>
-            <div class="status-card">
-              <div class="metric"><span>진행 중</span><strong id="sidebar-progress">8</strong></div>
-              <div class="metric"><span>완료</span><strong id="sidebar-complete">4</strong></div>
-              <div class="metric"><span>재확인 필요</span><strong id="sidebar-review">3</strong></div>
-            </div>
-          </div>
-        </aside>
-
-        <main class="main">
-          <section class="section-card">
-            <div class="summary-grid">
-              <div class="summary-card"><small>전체 항목</small><strong id="summary-total">0</strong><p>현재 조회된 모든 항목 수</p></div>
-              <div class="summary-card danger"><small>결품 항목</small><strong id="summary-shortage">0</strong><p>당일 생산 대비 결품</p></div>
-              <div class="summary-card"><small>협력사 그룹</small><strong id="summary-suppliers">0</strong><p>협력사별 메일 발송 단위</p></div>
-              <div class="summary-card"><small>변경 항목</small><strong id="summary-changed">0</strong><p>직전 조회 대비 변경</p></div>
-              <div class="summary-card warn"><small>주의 필요</small><strong id="summary-required">0</strong><p>주소, 회신, 추가 정보 필요</p></div>
-            </div>
-          </section>
-
-          <section class="section-card">
-            <div class="card-header">
-              <div>
-                <h3>결품 검색 · 필터</h3>
-                <p>품명, 품번, 협력사명으로 결품/정상/변경 항목만 골라 볼 수 있습니다.</p>
-              </div>
-            </div>
-            <div class="settings-grid compact-grid" style="margin-top:12px;">
-              <label class="field">
-                <span>검색</span>
-                <input id="shortage-search" type="text" placeholder="품번, 품명, 협력사 검색" />
-              </label>
-              <label class="field">
-                <span>상태</span>
-                <select id="shortage-status">
-                  <option value="all">전체</option>
-                  <option value="shortage">결품</option>
-                  <option value="ok">정상</option>
-                </select>
-              </label>
-              <label class="field">
-                <span>옵션</span>
-                <input id="shortage-change-only" type="checkbox" style="width:auto; transform: translateY(2px);" />
-                <span style="display:inline; margin-left: 8px;">변경된 항목만 보기</span>
-              </label>
-            </div>
-          </section>
-
-          <section class="results-layout">
-            <section class="panel">
-              <div>
-                <h2>당일 결품 목록</h2>
-                <p>항목을 클릭하면 상세 창이 열리고, ERP에서 확인하는 정보와 같은 형태로 메모를 남길 수 있습니다.</p>
-              </div>
-              <div class="filter-row" aria-label="상세 필터">
-                <button class="filter active" type="button" data-filter="all">전체</button>
-                <button class="filter" type="button" data-filter="shortage">결품</button>
-                <button class="filter" type="button" data-filter="mail">메일</button>
-                <button class="filter" type="button" data-filter="wait">대기</button>
-              </div>
-              <div class="list" id="shortage-list" aria-label="결품 목록"></div>
-            </section>
-
-            <section class="detail">
-              <div class="box">
-                <h3 id="detail-title">결품 + 상세조회</h3>
-                <ul id="detail-list"></ul>
-                <div class="composer">
-                  <button class="primary" type="button" id="compose-mail">메일 발송</button>
-                  <button type="button" id="mark-wait">회신 대기</button>
-                  <button type="button" id="mark-review">주의 항목 저장</button>
-                </div>
-              </div>
-
-              <div class="box">
-                <h3>메일 로그</h3>
-                <div class="mail-log" id="mail-log"></div>
-              </div>
-
-              <div class="box">
-                <h3>검증 체크</h3>
-                <ul>
-                  <li>상단 버튼은 실제로 동작하고 상태가 바뀝니다.</li>
-                  <li>상세조회는 목록 클릭으로 바뀌며 선택 상태를 유지합니다.</li>
-                  <li>CSV 저장은 현재 화면 데이터로 바로 내려받습니다.</li>
-                </ul>
-              </div>
-            </section>
-          </section>
-        </main>
-      </section>
-
-      <section id="view-history" class="layout hidden">
-        <aside class="sidebar">
-          <div class="panel">
-            <h2>메일 이력 요약</h2>
-            <div class="status-card">
-              <div class="metric"><span>누적 메일</span><strong id="history-total">24</strong></div>
-              <div class="metric"><span>협력사 수</span><strong id="history-suppliers">8</strong></div>
-              <div class="metric"><span>최종 발송</span><strong id="history-latest">2026-06-16 10:48</strong></div>
-            </div>
-          </div>
-          <div class="panel">
-            <h2>최근 메일</h2>
-            <div class="list" id="history-list"></div>
-          </div>
-        </aside>
-
-        <main class="main">
-          <section class="section-card">
-            <div class="card-header">
-              <div>
-                <h3>메일 이력 검색 · 필터</h3>
-                <p>필터를 바꾸면 목록과 상세 메일 로그가 같이 갱신됩니다.</p>
-              </div>
-            </div>
-            <div class="settings-grid compact-grid" style="margin-top:12px;">
-              <label class="field">
-                <span>검색</span>
-                <input id="history-search" type="text" placeholder="품번, 품명, 협력사 검색" />
-              </label>
-              <label class="field">
-                <span>상태</span>
-                <select id="history-status">
-                  <option value="all">전체</option>
-                  <option value="sent">발송 완료</option>
-                  <option value="pending">회신 대기</option>
-                </select>
-              </label>
-              <label class="field">
-                <span>옵션</span>
-                <input id="history-mail-only" type="checkbox" style="width:auto; transform: translateY(2px);" />
-                <span style="display:inline; margin-left: 8px;">메일 이력만 보기</span>
-              </label>
-            </div>
-          </section>
-
-          <section class="section-card">
-            <div class="card-header">
-              <div>
-                <h3>최근 메일 이력</h3>
-                <p>목록을 누르면 발송 기록과 상세 메일 본문을 다시 확인할 수 있습니다.</p>
-              </div>
-            </div>
-            <div class="mail-grid" id="history-detail"></div>
-          </section>
-        </main>
-      </section>
-
-      <div class="footer">
-        참고 파일: <code>src/renderer/dashboard.ts</code>, <code>src/renderer/main.ts</code>, <code>src/main/main.ts</code>
-      </div>
-    </main>
-
-    <div id="detail-modal" class="modal-backdrop hidden" aria-hidden="true">
-      <section class="modal-shell" role="dialog" aria-modal="true">
-        <div class="modal-header">
-          <div>
-            <div class="eyebrow">SHORTAGE DETAIL</div>
-            <h1 id="modal-title" style="margin:4px 0 6px; font-size:28px;">A-100 · 브라켓</h1>
-            <p id="modal-sub" class="lede" style="max-width:none;">시뮬레이션 상세 화면</p>
-          </div>
-          <button id="close-modal" class="btn" type="button">닫기</button>
-        </div>
-
-        <div class="modal-grid">
-          <div class="modal-column">
-            <div class="info-grid">
-              <div class="info-pair"><span>협력사</span><strong id="modal-supplier">우신공업</strong></div>
-              <div class="info-pair"><span>협력사 코드</span><strong id="modal-supplier-code">S-100</strong></div>
-              <div class="info-pair"><span>전일 재고</span><strong id="modal-stock">0</strong></div>
-              <div class="info-pair"><span>당일 수량</span><strong id="modal-needed">120</strong></div>
-            </div>
-            <div class="formula" id="modal-formula">결품 수량 = max(당일 수량 - 전일 재고, 0) = 120 EA</div>
-            <div class="box">
-              <h3>다음 조치</h3>
-              <ul id="modal-next"></ul>
-            </div>
-          </div>
-          <div class="modal-column">
-            <div class="info-grid">
-              <div class="info-pair"><span>메일 상태</span><strong><span class="pill warn" id="modal-mail-status">발송 대기</span></strong></div>
-              <div class="info-pair"><span>회신 상태</span><strong><span class="pill muted" id="modal-reply-status">대기</span></strong></div>
-              <div class="info-pair"><span>결품 수량</span><strong id="modal-shortage">120 EA</strong></div>
-              <div class="info-pair"><span>커버리지</span><strong id="modal-coverage">0%</strong></div>
-            </div>
-            <div class="progress-track"><div class="progress-fill" id="modal-progress" style="width:0%"></div></div>
-            <p class="lede" style="margin:0;">선택된 항목의 상태, 메일 로그, 추가 메모를 여기서 확인합니다.</p>
-            <div class="box">
-              <h3>메일 본문</h3>
-              <div class="mail-preview compact" id="modal-mail-body">[제목] 결품 대응 요청
-[본문] 결품 수량과 회신 상태를 확인해 주세요.
-[요청] 확인 회신 부탁드립니다.</div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
+    <div id="app"></div>
 
     <script>
-      // ERP 열기는 실제 사내 ERP 주소로 연다.
-      const ERP_URL = "http://58.72.235.17:8300/";
-
       const shortageRows = [
         {
-          id: 1,
-          itemCode: "A-100",
-          itemName: "브라켓",
-          supplierName: "우신공업",
-          supplierCode: "S-100",
-          carryStock: 0,
-          todayRequiredQty: 120,
-          shortageQty: 120,
+          supplierName: "(주)히코",
+          supplierCode: "HICO",
+          itemCode: "R600W0871-C2390",
+          itemName: "OUT CONE SUB_카파개선 1.6 WCC EU7",
+          carryStock: 290,
+          todayRequiredQty: 540,
+          shortageQty: 250,
           status: "shortage",
-          mailStatus: "pending",
+          changeStatus: "new-shortage",
           replyStatus: "pending",
-          note: "결품 발생, 우선 회신 요청",
-          mailBody: "[제목] 결품 대응 요청\n[본문] 브라켓 120EA 결품이 확인되었습니다.\n[요청] 당일 회신 부탁드립니다.",
-          updatedAt: "2026-06-16 10:05"
+          dateKey: "2026-06-18",
+          recipientEmail: "",
+          mailStatus: "missing-email"
         },
         {
-          id: 2,
-          itemCode: "B-330",
-          itemName: "캡",
-          supplierName: "정밀부품",
-          supplierCode: "S-330",
-          carryStock: 20,
-          todayRequiredQty: 20,
-          shortageQty: 0,
-          status: "ok",
-          mailStatus: "sent",
-          replyStatus: "completed",
-          note: "정상 입고 확인 완료",
-          mailBody: "[제목] 정상 확인\n[본문] 캡은 결품 없이 진행되었습니다.",
-          updatedAt: "2026-06-16 10:32"
-        },
-        {
-          id: 3,
-          itemCode: "C-220",
-          itemName: "리플렉터",
-          supplierName: "신광테크",
-          supplierCode: "S-220",
-          carryStock: 14,
-          todayRequiredQty: 42,
-          shortageQty: 28,
+          supplierName: "(주)제티아",
+          supplierCode: "ZETIA",
+          itemCode: "R600W0821-C2110J",
+          itemName: "SHELL_카파개선1.6 WCC",
+          carryStock: 847,
+          todayRequiredQty: 960,
+          shortageQty: 113,
           status: "shortage",
-          mailStatus: "sent",
-          replyStatus: "partial",
-          note: "회신 일부 접수",
-          mailBody: "[제목] 결품 대응 요청\n[본문] 리플렉터 28EA 결품이 확인되었습니다.\n[요청] 회신 후 추가 수량을 공유해 주세요.",
-          updatedAt: "2026-06-16 10:48"
+          changeStatus: "new-shortage",
+          replyStatus: "pending",
+          dateKey: "2026-06-18",
+          recipientEmail: "",
+          mailStatus: "missing-email"
+        },
+        {
+          supplierName: "기아(주)-광명",
+          supplierCode: "KIA-GM",
+          itemCode: "R60028533-08610",
+          itemName: "CATALYST",
+          carryStock: 65,
+          todayRequiredQty: 110,
+          shortageQty: 45,
+          status: "shortage",
+          changeStatus: "new-shortage",
+          replyStatus: "pending",
+          dateKey: "2026-06-18",
+          recipientEmail: "parts@kia-gm.example.com",
+          mailStatus: "dry-run"
+        },
+        {
+          supplierName: "기아(주)-광명",
+          supplierCode: "KIA-GM",
+          itemCode: "R60028533-08600",
+          itemName: "CATALYST",
+          carryStock: 428,
+          todayRequiredQty: 478,
+          shortageQty: 50,
+          status: "shortage",
+          changeStatus: "new-shortage",
+          replyStatus: "pending",
+          dateKey: "2026-06-18",
+          recipientEmail: "parts@kia-gm.example.com",
+          mailStatus: "dry-run"
         }
       ];
 
       const mailHistory = [
         {
-          id: 1,
-          supplierName: "우신공업",
-          recipientEmail: "supplier@wooshin.co.kr",
-          sentAt: "2026-06-16 10:48",
-          subject: "A-100 결품 대응 요청",
-          preview: "[10:48] 결품 메일 발송 완료\n[10:49] 회신 대기\n[10:50] 추가 확인 필요"
+          sentAt: "2026-06-18 09:12",
+          supplierName: "(주)히코",
+          supplierCode: "HICO",
+          recipientEmail: "",
+          subject: "[우신공업] 6/18 결품 입고 요청",
+          body: "메일 주소 확인 필요로 실제 발송 전 단계입니다.",
+          replyStatus: "pending",
+          mailStatus: "missing-email"
         },
         {
-          id: 2,
-          supplierName: "정밀부품",
-          recipientEmail: "ds@wooshin.co.kr",
-          sentAt: "2026-06-16 10:32",
-          subject: "B-330 정상 확인",
-          preview: "[10:32] 메일 발송 완료\n[10:35] 회신 완료\n[10:38] 확인 종료"
+          sentAt: "2026-06-18 09:13",
+          supplierName: "(주)제티아",
+          supplierCode: "ZETIA",
+          recipientEmail: "",
+          subject: "[우신공업] 6/18 결품 입고 요청",
+          body: "메일 주소 확인 필요로 실제 발송 전 단계입니다.",
+          replyStatus: "pending",
+          mailStatus: "missing-email"
         },
         {
-          id: 3,
-          supplierName: "신광테크",
-          recipientEmail: "hb@wooshin.co.kr",
-          sentAt: "2026-06-16 10:11",
-          subject: "C-220 결품 대응 요청",
-          preview: "[10:11] 발송 실패\n[10:12] 주소 미등록 확인\n[10:13] 재전송 대기"
+          sentAt: "2026-06-18 09:14",
+          supplierName: "기아(주)-광명",
+          supplierCode: "KIA-GM",
+          recipientEmail: "parts@kia-gm.example.com",
+          subject: "[우신공업] 6/18 결품 입고 요청",
+          body: "[우신공업] 6/18 결품 입고 요청\\n\\n기아(주)-광명 담당자님,\\n결품 품목 2건 확인 부탁드립니다.",
+          replyStatus: "pending",
+          mailStatus: "dry-run"
         }
       ];
 
-      const state = {
-        activeView: "shortage",
-        autoRefreshEnabled: false,
-        shortageFilter: "all",
-        historyFilter: "all",
-        selectedShortageId: 1,
-        selectedHistoryId: 1,
-        shortageSearch: "",
-        historySearch: "",
-        shortageChangeOnly: false,
-        historyMailOnly: false,
-        lastRefreshAt: new Date().toLocaleTimeString("ko-KR", { hour12: false })
+      const mailSettings = {
+        autoSend: true,
+        mode: "dry-run",
+        smtpHost: "",
+        smtpPort: 587,
+        secure: false,
+        username: "",
+        password: "",
+        fromName: "우신공업",
+        fromEmail: "",
+        subjectPrefix: "[우신공업]",
+        addressBookCsv: "supplierName,supplierCode,email,contactName,enabled\\n(주)히코,HICO,,,true\\n(주)제티아,ZETIA,,,true\\n기아(주)-광명,KIA-GM,parts@kia-gm.example.com,광명부품,true"
       };
 
-      const el = (id) => document.getElementById(id);
+      const ERP_URL = "http://58.72.235.17:8300/";
 
-      function formatNumber(value) {
-        return new Intl.NumberFormat("ko-KR").format(Number(value) || 0);
-      }
+      const state = {
+        activeView: "shortage",
+        searchText: "",
+        statusFilter: "all",
+        changeOnly: false,
+        historySearchText: "",
+        historyDate: "2026-06-18",
+        autoRefreshEnabled: false,
+        bannerMessage: "ERP 조회를 완료했습니다. 메일 처리 결과 3건을 확인해 주세요.",
+        selectedIndex: 0,
+        selectedHistoryIndex: 0,
+        modalOpen: false
+      };
 
       function escapeHtml(value) {
         return String(value)
@@ -983,388 +955,943 @@
           .replaceAll('"', "&quot;");
       }
 
+      function formatNumber(value) {
+        return new Intl.NumberFormat("ko-KR").format(value);
+      }
+
+      function formatPercent(value) {
+        return `${Math.round(value)}%`;
+      }
+
       function downloadCsv(filename, headers, rows) {
-        const csv = [headers.join(",")]
-          .concat(rows.map((row) => row.map((cell) => `"${String(cell).replaceAll('"', '""')}"`).join(",")))
+        const csv = [headers, ...rows]
+          .map((row) =>
+            row
+              .map((value) => `"${String(value ?? "").replaceAll('"', '""')}"`)
+              .join(",")
+          )
           .join("\r\n");
-        const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" });
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.download = filename;
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
         URL.revokeObjectURL(url);
       }
 
-      function filteredShortageRows() {
+      function replyStatusLabel(status) {
+        switch (status) {
+          case "completed": return "입고 완료";
+          case "scheduled": return "입고 예정";
+          case "partial": return "부분 확보";
+          case "unavailable": return "입고 불가";
+          default: return "미입력";
+        }
+      }
+
+      function replyPillClass(status) {
+        switch (status) {
+          case "completed": return "ok";
+          case "scheduled": return "info";
+          case "partial": return "warn";
+          case "unavailable": return "danger";
+          default: return "muted";
+        }
+      }
+
+      function mailStatusLabel(status) {
+        switch (status) {
+          case "missing-email": return "주소 미등록";
+          case "dry-run": return "시뮬레이션";
+          case "sent": return "실발송";
+          case "failed": return "발송 실패";
+          default: return "발송 전";
+        }
+      }
+
+      function mailStatusClass(status) {
+        switch (status) {
+          case "missing-email": return "danger";
+          case "dry-run": return "info";
+          case "sent": return "ok";
+          case "failed": return "danger";
+          default: return "muted";
+        }
+      }
+
+      function changeStatusLabel(status, row) {
+        switch (status) {
+          case "new-shortage": return "신규 결품";
+          case "shortage-up": return `부족 증가 (${row.previousShortageQty || 0} -> ${row.shortageQty})`;
+          case "shortage-down": return `부족 감소 (${row.previousShortageQty || 0} -> ${row.shortageQty})`;
+          case "resolved": return "정상 전환";
+          default: return "변동 없음";
+        }
+      }
+
+      function changeStatusClass(status) {
+        switch (status) {
+          case "new-shortage":
+          case "shortage-up":
+            return "danger";
+          case "shortage-down":
+            return "ok";
+          case "resolved":
+            return "info";
+          default:
+            return "muted";
+        }
+      }
+
+      function getFilteredRows() {
+        const search = state.searchText.trim().toLowerCase();
         return shortageRows.filter((row) => {
-          const search = state.shortageSearch.trim().toLowerCase();
-          const matchesSearch =
-            !search ||
-            [row.itemCode, row.itemName, row.supplierName, row.supplierCode]
-              .join(" ")
-              .toLowerCase()
-              .includes(search);
-          const matchesStatus = state.shortageFilter === "all" || row.status === state.shortageFilter;
-          const matchesChange = !state.shortageChangeOnly || row.status === "shortage" || row.shortageQty === 0;
-          return matchesSearch && matchesStatus && matchesChange;
+          if (state.statusFilter === "shortage" && row.status !== "shortage") {
+            return false;
+          }
+          if (state.statusFilter === "ok" && row.status !== "ok") {
+            return false;
+          }
+          if (state.changeOnly && row.changeStatus === "unchanged") {
+            return false;
+          }
+          if (!search) {
+            return true;
+          }
+          return [row.itemCode, row.itemName, row.supplierName, row.supplierCode]
+            .join(" ")
+            .toLowerCase()
+            .includes(search);
         });
       }
 
-      function filteredHistoryRows() {
+      function getFilteredHistoryRows() {
+        const search = state.historySearchText.trim().toLowerCase();
+        const date = state.historyDate.trim();
         return mailHistory.filter((row) => {
-          const search = state.historySearch.trim().toLowerCase();
-          const matchesSearch =
-            !search ||
-            [row.supplierName, row.recipientEmail, row.subject]
-              .join(" ")
-              .toLowerCase()
-              .includes(search);
-          const matchesStatus =
-            state.historyFilter === "all" ||
-            (state.historyFilter === "sent" && row.subject.includes("정상")) ||
-            (state.historyFilter === "pending" && row.subject.includes("결품"));
-          const matchesMailOnly = !state.historyMailOnly || row.recipientEmail.length > 0;
-          return matchesSearch && matchesStatus && matchesMailOnly;
+          if (date && !row.sentAt.startsWith(date)) {
+            return false;
+          }
+          if (!search) {
+            return true;
+          }
+          return [row.supplierName, row.supplierCode, row.recipientEmail, row.subject, row.body]
+            .join(" ")
+            .toLowerCase()
+            .includes(search);
         });
       }
 
-      function selectedShortage() {
-        return shortageRows.find((row) => row.id === state.selectedShortageId) || shortageRows[0];
-      }
-
-      function selectedHistory() {
-        return mailHistory.find((row) => row.id === state.selectedHistoryId) || mailHistory[0];
-      }
-
-      function renderShortageList() {
-        const rows = filteredShortageRows();
-        const list = el("shortage-list");
-        list.innerHTML = rows
-          .map((row) => {
-            const stateClass = row.status === "shortage" ? "wait" : "state";
-            return `
-              <div class="item ${row.id === state.selectedShortageId ? "active" : ""}" data-row="${row.id}">
-                <div>
-                  <h3>${escapeHtml(row.itemName)} / ${escapeHtml(row.itemCode)}</h3>
-                  <p>전일 재고 ${formatNumber(row.carryStock)}, 당일 수량 ${formatNumber(row.todayRequiredQty)}, 결품 ${formatNumber(row.shortageQty)} EA</p>
-                </div>
-                <div class="${stateClass}">${row.status === "shortage" ? "결품" : "정상"}</div>
-              </div>
-            `;
-          })
-          .join("");
-
+      function getSelectedRow() {
+        const rows = getFilteredRows();
         if (rows.length === 0) {
-          list.innerHTML = `<div class="empty-panel">표시할 항목이 없습니다.</div>`;
+          return null;
         }
-
-        list.querySelectorAll(".item").forEach((item) => {
-          item.addEventListener("click", () => {
-            state.selectedShortageId = Number(item.dataset.row);
-            state.activeView = "shortage";
-            render();
-            openModalForSelected();
-          });
-        });
+        state.selectedIndex = Math.min(Math.max(state.selectedIndex, 0), rows.length - 1);
+        return rows[state.selectedIndex];
       }
 
-      function renderHistoryList() {
-        const rows = filteredHistoryRows();
-        const list = el("history-list");
-        list.innerHTML = rows
-          .map((row) => {
-            const active = row.id === state.selectedHistoryId;
-            const statusClass = row.subject.includes("정상") ? "ok" : row.subject.includes("실패") ? "wait" : "review";
-            return `
-              <div class="item ${active ? "active" : ""}" data-history="${row.id}">
-                <div>
-                  <h3>${escapeHtml(row.supplierName)}</h3>
-                  <p>${escapeHtml(row.recipientEmail)} · ${escapeHtml(row.sentAt)}</p>
-                </div>
-                <div class="state ${statusClass}">${row.subject}</div>
-              </div>
-            `;
-          })
-          .join("");
-
+      function getSelectedHistory() {
+        const rows = getFilteredHistoryRows();
         if (rows.length === 0) {
-          list.innerHTML = `<div class="empty-panel">표시할 이력이 없습니다.</div>`;
+          return null;
         }
-
-        list.querySelectorAll(".item").forEach((item) => {
-          item.addEventListener("click", () => {
-            state.selectedHistoryId = Number(item.dataset.history);
-            state.activeView = "history";
-            render();
-          });
-        });
+        state.selectedHistoryIndex = Math.min(Math.max(state.selectedHistoryIndex, 0), rows.length - 1);
+        return rows[state.selectedHistoryIndex];
       }
 
-      function renderShortageDetail() {
-        const row = selectedShortage();
-        el("detail-title").textContent = `${row.itemName} · 상세조회`;
-        el("detail-list").innerHTML = [
-          `협력사: ${escapeHtml(row.supplierName)}`,
-          `협력사 코드: ${escapeHtml(row.supplierCode)}`,
-          `전일 재고: ${formatNumber(row.carryStock)}`,
-          `당일 수량: ${formatNumber(row.todayRequiredQty)}`,
-          `결품 수량: ${formatNumber(row.shortageQty)} EA`,
-          `상태: ${row.status === "shortage" ? "결품" : "정상"}`,
-          `업데이트: ${escapeHtml(row.updatedAt)}`
-        ].map((line) => `<li>${line}</li>`).join("");
-
-        el("mail-log").textContent = [
-          `[${row.updatedAt}] ${row.itemCode} / ${row.itemName}`,
-          `[상태] ${row.status === "shortage" ? "결품" : "정상"}`,
-          `[메일] ${row.mailStatus === "sent" ? "발송 완료" : "발송 대기"}`,
-          `[회신] ${row.replyStatus === "completed" ? "완료" : row.replyStatus === "partial" ? "일부 회신" : "대기"}`
-        ].join("\n");
+      function buildMailBody(row) {
+        return `[우신공업] 6/18 결품 입고 요청\n\n${row.supplierName} 담당자님,\n\n금일 생산 기준 아래 품목이 결품입니다.\n- 품번: ${row.itemCode}\n- 품명: ${row.itemName}\n- 전일재고: ${row.carryStock}\n- 당일수량: ${row.todayRequiredQty}\n- 결품수량: ${row.shortageQty}\n- 요청 입고 시각: 금일 오전 10:00\n\n가능 여부와 입고 예정 수량을 회신 부탁드립니다.`;
       }
 
-      function renderHistoryDetail() {
-        const row = selectedHistory();
-        const detail = el("history-detail");
-        detail.innerHTML = `
-          <div class="box">
-            <h3>선택 메일</h3>
-            <ul>
-              <li>협력사: ${escapeHtml(row.supplierName)}</li>
-              <li>받는사람: ${escapeHtml(row.recipientEmail)}</li>
-              <li>발송시각: ${escapeHtml(row.sentAt)}</li>
-              <li>제목: ${escapeHtml(row.subject)}</li>
-            </ul>
-          </div>
-          <div class="box">
-            <h3>메일 본문</h3>
-            <div class="mail-preview">${escapeHtml(row.preview)}</div>
+      function summarize() {
+        return {
+          totalCount: 96,
+          shortageCount: 4,
+          supplierGroupCount: 3,
+          changedCount: 4,
+          unresolvedCount: 3,
+          pendingCount: 3,
+          completedCount: 0,
+          unavailableCount: 0,
+          actionRequiredCount: 3,
+          maxShortage: 250,
+          promisedQty: 0,
+          totalShortageQty: 458
+        };
+      }
+
+      function buildTopbar() {
+        return `
+          <header class="topbar">
+            <div class="title-block">
+              <div class="eyebrow">WOOSHIN SHORTAGE CONTROL</div>
+              <strong>우신공업 ERP 결품 대응센터</strong>
+              <span>메뉴: 일일구매소요정보_wooshin · 판정 기준: 전일 재고(08:30) &lt; 당일 수량</span>
+            </div>
+            <div class="toolbar">
+              <button id="open-erp" type="button" class="btn">ERP 열기</button>
+              <button id="toggle-auto-refresh" type="button" class="btn">자동 새로고침 ${state.autoRefreshEnabled ? "ON" : "OFF"}</button>
+              <button id="refresh-now" type="button" class="btn primary">지금 새로고침</button>
+              <button id="export-shortage-csv" type="button" class="btn">결과 CSV 저장</button>
+              <button id="export-mail-history-csv" type="button" class="btn">메일 이력 CSV</button>
+            </div>
+          </header>
+        `;
+      }
+
+      function buildBanner() {
+        return `<div class="status-banner">${escapeHtml(state.bannerMessage)}</div>`;
+      }
+
+      function buildTabs() {
+        return `
+          <div class="view-tabs">
+            <button id="tab-shortage" type="button" class="btn ${state.activeView === "shortage" ? "primary" : ""}">결품 모니터링</button>
+            <button id="tab-history" type="button" class="btn ${state.activeView === "mail-history" ? "primary" : ""}">메일 이력</button>
           </div>
         `;
       }
 
-      function renderModal() {
-        const row = selectedShortage();
-        el("modal-title").textContent = `${row.itemCode} · ${row.itemName}`;
-        el("modal-sub").textContent = `${row.supplierName} · ${row.status === "shortage" ? "결품" : "정상"} · ${row.updatedAt}`;
-        el("modal-supplier").textContent = row.supplierName;
-        el("modal-supplier-code").textContent = row.supplierCode;
-        el("modal-stock").textContent = formatNumber(row.carryStock);
-        el("modal-needed").textContent = formatNumber(row.todayRequiredQty);
-        el("modal-shortage").textContent = `${formatNumber(row.shortageQty)} EA`;
-        const coverage = row.todayRequiredQty === 0 ? 0 : Math.min(Math.round(((row.todayRequiredQty - row.shortageQty) / row.todayRequiredQty) * 100), 100);
-        el("modal-coverage").textContent = `${coverage}%`;
-        el("modal-progress").style.width = `${coverage}%`;
-        el("modal-formula").textContent = `결품 수량 = max(${formatNumber(row.todayRequiredQty)} - ${formatNumber(row.carryStock)}, 0) = ${formatNumber(row.shortageQty)} EA`;
-        el("modal-mail-body").textContent = row.mailBody;
-        el("modal-mail-status").className = `pill ${row.mailStatus === "sent" ? "ok" : "warn"}`;
-        el("modal-mail-status").textContent = row.mailStatus === "sent" ? "발송 완료" : "발송 대기";
-        el("modal-reply-status").className = `pill ${row.replyStatus === "completed" ? "ok" : row.replyStatus === "partial" ? "warn" : "muted"}`;
-        el("modal-reply-status").textContent =
-          row.replyStatus === "completed" ? "완료" : row.replyStatus === "partial" ? "일부 회신" : "대기";
-        el("modal-next").innerHTML = [
-          "메일 발송 여부 확인",
-          "회신 상태와 수량 재확인",
-          "다음 조치 목록과 ERP 상태 동기화"
-        ].map((item) => `<li>${item}</li>`).join("");
+      function buildShortageSidebar() {
+        const summary = summarize();
+        const selected = getSelectedRow();
+
+        return `
+          <aside class="sidebar">
+            <div class="section-title">운영 상태</div>
+            <div class="status-card">
+              <div class="metric"><span>조회 상태</span><strong>정상</strong></div>
+              <div class="metric"><span>자동 새로고침</span><strong>꺼짐</strong></div>
+              <div class="metric"><span>메일 모드</span><strong>시뮬레이션</strong></div>
+              <div class="metric"><span>주소 미등록</span><strong>${summary.unresolvedCount}</strong></div>
+            </div>
+
+            <div class="section-title">협력사 회신 현황</div>
+            <div class="filter-card">
+              <div class="metric"><span>회신 대기</span><strong>${summary.pendingCount}</strong></div>
+              <div class="metric"><span>입고 완료</span><strong>${summary.completedCount}</strong></div>
+              <div class="metric"><span>입고 불가</span><strong>${summary.unavailableCount}</strong></div>
+            </div>
+
+            <div class="section-title">오늘 우선 조치</div>
+            <div class="list">
+              <div class="item active">
+                <div class="item-head">
+                  <strong>(주)히코</strong>
+                  <span class="pill danger">즉시</span>
+                </div>
+                <p>메일 주소 확인 필요</p>
+                <p>2026-06-18 10:00까지 · 남은 부족 250 EA</p>
+              </div>
+              <div class="item">
+                <div class="item-head">
+                  <strong>(주)제티아</strong>
+                  <span class="pill danger">즉시</span>
+                </div>
+                <p>메일 주소 확인 필요</p>
+                <p>2026-06-18 10:00까지 · 남은 부족 113 EA</p>
+              </div>
+              <div class="item">
+                <div class="item-head">
+                  <strong>기아(주)-광명</strong>
+                  <span class="pill warn">확인</span>
+                </div>
+                <p>협력사 회신 대기</p>
+                <p>2026-06-18 10:00까지 · 남은 부족 95 EA</p>
+              </div>
+            </div>
+
+            ${
+              selected
+                ? `
+                  <div class="section-title">현재 선택</div>
+                  <div class="status-card compact">
+                    <div class="metric"><span>품번</span><strong>${escapeHtml(selected.itemCode)}</strong></div>
+                    <div class="metric"><span>협력사</span><strong>${escapeHtml(selected.supplierName)}</strong></div>
+                    <div class="metric"><span>부족 수량</span><strong>${formatNumber(selected.shortageQty)} EA</strong></div>
+                  </div>
+                `
+                : ""
+            }
+          </aside>
+        `;
       }
 
-      function renderSummary() {
-        const rows = filteredShortageRows();
-        const shortageCount = rows.filter((row) => row.status === "shortage").length;
-        const changedCount = rows.filter((row) => row.status === "shortage" || row.shortageQty === 0).length;
-        const requiredCount = rows.filter((row) => row.status === "shortage" && row.replyStatus !== "completed").length;
-        const supplierCount = new Set(rows.map((row) => row.supplierCode)).size;
-
-        el("summary-total").textContent = formatNumber(rows.length);
-        el("summary-shortage").textContent = formatNumber(shortageCount);
-        el("summary-suppliers").textContent = formatNumber(supplierCount);
-        el("summary-changed").textContent = formatNumber(changedCount);
-        el("summary-required").textContent = formatNumber(requiredCount);
-        el("stat-shortage").textContent = formatNumber(shortageCount + 4);
-        el("stat-progress").textContent = formatNumber(rows.filter((row) => row.status === "shortage").length + 5);
-        el("stat-waiting").textContent = formatNumber(requiredCount + 2);
-        el("stat-mail").textContent = formatNumber(mailHistory.length + 21);
-        el("stat-missing").textContent = formatNumber(2);
-        el("sidebar-progress").textContent = formatNumber(rows.filter((row) => row.status === "shortage").length + 4);
-        el("sidebar-complete").textContent = formatNumber(rows.filter((row) => row.status === "ok").length + 2);
-        el("sidebar-review").textContent = formatNumber(requiredCount);
-        el("history-total").textContent = formatNumber(mailHistory.length + 21);
-        el("history-suppliers").textContent = formatNumber(new Set(mailHistory.map((row) => row.supplierName)).size);
-        el("history-latest").textContent = mailHistory[0]?.sentAt || "-";
-        el("missing-count-side").textContent = formatNumber(2);
+      function buildSummaryGrid() {
+        const summary = summarize();
+        return `
+          <div class="summary-grid">
+            <div class="summary-card">
+              <small>전체 항목</small>
+              <strong>${formatNumber(summary.totalCount)}</strong>
+              <p>현재 조회된 모든 품목 수</p>
+            </div>
+            <div class="summary-card danger">
+              <small>결품 항목</small>
+              <strong>${formatNumber(summary.shortageCount)}</strong>
+              <p>당일 생산 대비 부족</p>
+            </div>
+            <div class="summary-card">
+              <small>협력사 그룹</small>
+              <strong>${formatNumber(summary.supplierGroupCount)}</strong>
+              <p>협력사별 메일 발송 단위</p>
+            </div>
+            <div class="summary-card">
+              <small>변동 항목</small>
+              <strong>${formatNumber(summary.changedCount)}</strong>
+              <p>직전 조회 대비 변화</p>
+            </div>
+            <div class="summary-card warn">
+              <small>후속 확인</small>
+              <strong>${formatNumber(summary.actionRequiredCount)}</strong>
+              <p>주소, 회신, 추가 정보 필요</p>
+            </div>
+          </div>
+        `;
       }
 
-      function renderTabs() {
-        el("tab-shortage").classList.toggle("active", state.activeView === "shortage");
-        el("tab-history").classList.toggle("active", state.activeView === "history");
-        el("tab-shortage").setAttribute("aria-selected", state.activeView === "shortage" ? "true" : "false");
-        el("tab-history").setAttribute("aria-selected", state.activeView === "history" ? "true" : "false");
-        el("view-shortage").classList.toggle("hidden", state.activeView !== "shortage");
-        el("view-history").classList.toggle("hidden", state.activeView !== "history");
+      function buildFilterSection() {
+        return `
+          <section class="section-card">
+            <div class="card-header">
+              <div>
+                <h3>결품 검색 · 필터</h3>
+                <p>품번, 품명, 협력사명으로 즉시 찾고 결품/정상/변동만 좁혀 볼 수 있습니다.</p>
+              </div>
+            </div>
+            <div class="settings-grid">
+              <label class="field">
+                <span>검색</span>
+                <input id="search-input" type="text" value="${escapeHtml(state.searchText)}" placeholder="품번, 품명, 협력사 검색" />
+              </label>
+              <label class="field">
+                <span>상태</span>
+                <select id="status-filter">
+                  <option value="all" ${state.statusFilter === "all" ? "selected" : ""}>전체</option>
+                  <option value="shortage" ${state.statusFilter === "shortage" ? "selected" : ""}>결품만</option>
+                  <option value="ok" ${state.statusFilter === "ok" ? "selected" : ""}>정상만</option>
+                </select>
+              </label>
+              <label class="field checkbox">
+                <input id="change-only" type="checkbox" ${state.changeOnly ? "checked" : ""} />
+                <span>변동 항목만 보기</span>
+              </label>
+            </div>
+          </section>
+        `;
       }
 
-      function renderToolbarState() {
-        el("toggle-auto-refresh").textContent = state.autoRefreshEnabled ? "자동 새로고침 ON" : "자동 새로고침 OFF";
-        el("auto-refresh-state").textContent = state.autoRefreshEnabled ? "켜짐" : "꺼짐";
+      function buildResultsTable() {
+        const rows = getFilteredRows();
+        const selected = getSelectedRow();
+        return `
+          <section class="table-box">
+            <div class="table-toolbar">
+              <div>
+                <h3>당일 결품 판정 결과</h3>
+                <p>결품 품목을 클릭하면 상세 창이 열립니다. 전일 재고(08:30)와 당일 수량을 바로 비교합니다.</p>
+              </div>
+              <div class="inline-pills">
+                <span class="pill danger">결품 ${formatNumber(rows.filter((row) => row.status === "shortage").length)}건</span>
+                <span class="pill info">변동 ${formatNumber(rows.filter((row) => row.changeStatus !== "unchanged").length)}건</span>
+                <span class="pill muted">기준일 2026-06-18</span>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>변동</th>
+                    <th>판정</th>
+                    <th>회신</th>
+                    <th>협력사</th>
+                    <th>품번</th>
+                    <th>품명</th>
+                    <th>전일 재고</th>
+                    <th>당일 수량</th>
+                    <th>부족 수량</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${
+                    rows.length === 0
+                      ? `<tr><td colspan="9" class="empty-row">조회 결과가 없습니다.</td></tr>`
+                      : rows.map((row, index) => `
+                          <tr class="${row.status === "shortage" ? "alert" : ""} ${row.changeStatus !== "unchanged" ? "changed" : ""} ${selected && selected.itemCode === row.itemCode ? "selected" : ""}" data-row-index="${index}">
+                            <td><span class="pill ${changeStatusClass(row.changeStatus)}">${escapeHtml(changeStatusLabel(row.changeStatus, row))}</span></td>
+                            <td class="${row.status === "shortage" ? "danger-text" : "ok-text"}">${row.status === "shortage" ? "결품" : "정상"}</td>
+                            <td><span class="pill ${replyPillClass(row.replyStatus)}">${replyStatusLabel(row.replyStatus)}</span></td>
+                            <td>${escapeHtml(row.supplierName)}</td>
+                            <td>${escapeHtml(row.itemCode)}</td>
+                            <td>${escapeHtml(row.itemName)}</td>
+                            <td>${formatNumber(row.carryStock)}</td>
+                            <td>${formatNumber(row.todayRequiredQty)}</td>
+                            <td class="${row.shortageQty > 0 ? "danger-text" : ""}">${formatNumber(row.shortageQty)}</td>
+                          </tr>
+                        `).join("")
+                  }
+                </tbody>
+              </table>
+            </div>
+          </section>
+        `;
       }
 
-      function renderBanner(message) {
-        el("banner").textContent = message;
+      function buildQuickDetail() {
+        const row = getSelectedRow();
+        if (!row) {
+          return `<section class="detail-box"><div class="empty-panel"><strong>선택된 항목이 없습니다.</strong><p>결품 목록에서 품목을 선택해 주세요.</p></div></section>`;
+        }
+
+        return `
+          <section class="detail-box">
+            <div class="detail-grid">
+              <div class="detail-pane">
+                <div class="subsection-head">
+                  <div>
+                    <h3>선택 품목 요약</h3>
+                    <p class="mini-copy">결품 목록에서 행을 클릭하면 아래 정보가 바로 바뀝니다.</p>
+                  </div>
+                  <button id="open-modal" type="button" class="btn primary">상세 창 열기</button>
+                </div>
+                <div class="info-grid">
+                  <div class="info-pair"><span>협력사</span><strong>${escapeHtml(row.supplierName)}</strong></div>
+                  <div class="info-pair"><span>품번</span><strong>${escapeHtml(row.itemCode)}</strong></div>
+                  <div class="info-pair"><span>품명</span><strong>${escapeHtml(row.itemName)}</strong></div>
+                  <div class="info-pair"><span>회신 상태</span><strong>${replyStatusLabel(row.replyStatus)}</strong></div>
+                  <div class="info-pair"><span>전일 재고</span><strong>${formatNumber(row.carryStock)}</strong></div>
+                  <div class="info-pair"><span>당일 수량</span><strong>${formatNumber(row.todayRequiredQty)}</strong></div>
+                </div>
+                <div class="formula">부족 수량 = max(${formatNumber(row.todayRequiredQty)} - ${formatNumber(row.carryStock)}, 0) = ${formatNumber(row.shortageQty)} EA</div>
+              </div>
+              <div class="detail-pane secondary">
+                <h3>메일 자동화 결과</h3>
+                <div class="inline-pills">
+                  <span class="pill ${mailStatusClass(row.mailStatus)}">${mailStatusLabel(row.mailStatus)}</span>
+                  <span class="pill ${replyPillClass(row.replyStatus)}">${replyStatusLabel(row.replyStatus)}</span>
+                </div>
+                <div class="mail-preview">${escapeHtml(buildMailBody(row))}</div>
+              </div>
+            </div>
+          </section>
+        `;
+      }
+
+      function buildMailStatusSection() {
+        const rows = shortageRows;
+        return `
+          <section class="section-card">
+            <div class="card-header">
+              <div>
+                <h3>협력사 메일 처리 결과</h3>
+                <p>자동 발송, 시뮬레이션, 주소 미등록 상태를 실제 앱처럼 함께 보여줍니다.</p>
+              </div>
+            </div>
+            <div class="mail-grid">
+              ${rows.map((row) => `
+                <article class="mail-card ${row.mailStatus}">
+                  <div class="item-head">
+                    <strong>${escapeHtml(row.supplierName)}</strong>
+                    <span class="pill ${mailStatusClass(row.mailStatus)}">${mailStatusLabel(row.mailStatus)}</span>
+                  </div>
+                  <p>${escapeHtml(row.recipientEmail || "메일 주소 미등록")}</p>
+                  <p>회신 상태: <span class="inline-status ${replyPillClass(row.replyStatus)}">${replyStatusLabel(row.replyStatus)}</span></p>
+                  <pre class="mail-preview compact">${escapeHtml(buildMailBody(row))}</pre>
+                </article>
+              `).join("")}
+            </div>
+          </section>
+        `;
+      }
+
+      function buildSettingsSection() {
+        return `
+          <section class="section-card">
+            <div class="card-header">
+              <div>
+                <h3>자동 메일 설정</h3>
+                <p>실제 EXE의 하단 설정 영역을 축약해 넣었습니다. 형식과 배치는 동일한 톤으로 맞췄습니다.</p>
+              </div>
+              <button type="button" class="btn primary">메일 설정 저장</button>
+            </div>
+            <div class="settings-grid">
+              <label class="field checkbox">
+                <input type="checkbox" ${mailSettings.autoSend ? "checked" : ""} />
+                <span>조건 충족 시 자동 처리</span>
+              </label>
+              <label class="field">
+                <span>발송 모드</span>
+                <select>
+                  <option ${mailSettings.mode === "dry-run" ? "selected" : ""}>시뮬레이션</option>
+                  <option ${mailSettings.mode === "live" ? "selected" : ""}>실발송</option>
+                </select>
+              </label>
+              <label class="field checkbox">
+                <input type="checkbox" ${mailSettings.secure ? "checked" : ""} />
+                <span>SSL/TLS 사용</span>
+              </label>
+            </div>
+            <label class="field textarea-field">
+              <span>협력사 주소록 CSV</span>
+              <textarea>${escapeHtml(mailSettings.addressBookCsv)}</textarea>
+            </label>
+            <p class="hint">형식: supplierName,supplierCode,email,contactName,enabled</p>
+          </section>
+        `;
+      }
+
+      function buildHistoryView() {
+        const rows = getFilteredHistoryRows();
+        const selected = getSelectedHistory();
+        return `
+          <section class="layout">
+            <aside class="sidebar">
+              <div class="section-title">메일 이력 요약</div>
+              <div class="status-card">
+                <div class="metric"><span>누적 메일</span><strong>3</strong></div>
+                <div class="metric"><span>협력사 수</span><strong>3</strong></div>
+                <div class="metric"><span>최근 발송</span><strong>2026-06-18 09:14</strong></div>
+              </div>
+
+              <div class="section-title">최근 메일</div>
+              <div class="list">
+                ${rows.map((entry, index) => `
+                  <button class="item selectable ${index === state.selectedHistoryIndex ? "active" : ""}" data-history-index="${index}" type="button">
+                    <strong>${escapeHtml(entry.supplierName)}</strong>
+                    <p>${escapeHtml(entry.recipientEmail || "미등록")}</p>
+                    <p>${escapeHtml(entry.sentAt)}</p>
+                  </button>
+                `).join("")}
+              </div>
+            </aside>
+
+            <main class="main">
+              <div class="summary-grid">
+                <div class="summary-card">
+                  <small>누적 메일</small>
+                  <strong>3</strong>
+                  <p>결품 협력사 메일 기록</p>
+                </div>
+                <div class="summary-card warn">
+                  <small>주소 미등록</small>
+                  <strong>2</strong>
+                  <p>실발송 전 보완 필요</p>
+                </div>
+                <div class="summary-card">
+                  <small>시뮬레이션</small>
+                  <strong>1</strong>
+                  <p>본문 미리보기 생성</p>
+                </div>
+                <div class="summary-card">
+                  <small>회신 대기</small>
+                  <strong>3</strong>
+                  <p>협력사 회신 입력 필요</p>
+                </div>
+                <div class="summary-card">
+                  <small>기준일</small>
+                  <strong>2026-06-18</strong>
+                  <p>당일 결품 기준</p>
+                </div>
+              </div>
+
+              <section class="section-card">
+                <div class="card-header">
+                  <div>
+                    <h3>메일 이력 검색</h3>
+                    <p>실제 앱처럼 메일 제목과 본문, 협력사 기준으로 다시 확인할 수 있습니다.</p>
+                  </div>
+                </div>
+                <div class="settings-grid">
+                  <label class="field">
+                    <span>검색</span>
+                    <input id="history-search-input" type="text" value="${escapeHtml(state.historySearchText)}" placeholder="협력사, 메일, 제목, 본문 검색" />
+                  </label>
+                  <label class="field">
+                    <span>날짜</span>
+                    <input id="history-date-input" type="text" value="${escapeHtml(state.historyDate)}" />
+                  </label>
+                  <div></div>
+                </div>
+              </section>
+
+              <section class="table-box">
+                <div class="table-toolbar">
+                  <div>
+                    <h3>메일 이력</h3>
+                    <p>발송된 제목과 본문을 다시 확인하고 협력사 회신 상태를 이어서 관리합니다.</p>
+                  </div>
+                </div>
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>발송 시각</th>
+                        <th>협력사</th>
+                        <th>수신 주소</th>
+                        <th>제목</th>
+                        <th>회신 상태</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${rows.map((entry, index) => `
+                        <tr class="${index === state.selectedHistoryIndex ? "selected" : ""}" data-history-index="${index}">
+                          <td>${escapeHtml(entry.sentAt)}</td>
+                          <td>${escapeHtml(entry.supplierName)}</td>
+                          <td>${escapeHtml(entry.recipientEmail || "미등록")}</td>
+                          <td>${escapeHtml(entry.subject)}</td>
+                          <td><span class="pill ${replyPillClass(entry.replyStatus)}">${replyStatusLabel(entry.replyStatus)}</span></td>
+                        </tr>
+                      `).join("")}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+
+              <section class="detail-box">
+                <div class="detail-grid">
+                  <div class="detail-pane">
+                    <div class="subsection-head">
+                      <h3>메일 이력 상세</h3>
+                      <span class="subdued">${selected ? escapeHtml(selected.sentAt) : "-"}</span>
+                    </div>
+                    ${
+                      !selected
+                        ? `<div class="empty-panel"><strong>저장된 메일 이력이 없습니다.</strong><p>발송 이력이 쌓이면 여기에서 제목과 본문을 다시 확인할 수 있습니다.</p></div>`
+                        : `
+                          <div class="info-grid">
+                            <div class="info-pair"><span>협력사</span><strong>${escapeHtml(selected.supplierName)}</strong></div>
+                            <div class="info-pair"><span>협력사 코드</span><strong>${escapeHtml(selected.supplierCode)}</strong></div>
+                            <div class="info-pair"><span>수신 주소</span><strong>${escapeHtml(selected.recipientEmail || "미등록")}</strong></div>
+                            <div class="info-pair"><span>회신 상태</span><strong>${replyStatusLabel(selected.replyStatus)}</strong></div>
+                          </div>
+                          <div class="formula"><strong>메일 제목</strong><br />${escapeHtml(selected.subject)}</div>
+                          <pre class="mail-preview">${escapeHtml(selected.body)}</pre>
+                        `
+                    }
+                  </div>
+                  <div class="detail-pane secondary">
+                    <div class="reply-editor">
+                      <h4>협력사 회신 입력</h4>
+                      <div class="reply-grid">
+                        <label class="field">
+                          <span>회신 상태</span>
+                          <select>
+                            <option selected>미입력</option>
+                            <option>입고 예정</option>
+                            <option>부분 확보</option>
+                            <option>입고 완료</option>
+                            <option>입고 불가</option>
+                          </select>
+                        </label>
+                        <label class="field">
+                          <span>입고 예정 시각</span>
+                          <input type="text" value="2026-06-18 10:00" />
+                        </label>
+                        <label class="field">
+                          <span>확보 예정 수량</span>
+                          <input type="number" value="0" />
+                        </label>
+                      </div>
+                      <label class="field textarea-field">
+                        <span>메모</span>
+                        <textarea placeholder="전화 확인 내용, 지연 사유, 운송 상태 등을 기록"></textarea>
+                      </label>
+                      <div class="reply-actions">
+                        <div class="inline-pills">
+                          <span class="pill info">요청 마감 2026-06-18 10:00</span>
+                          <span class="pill muted">현재 부족 458 EA</span>
+                        </div>
+                        <button type="button" class="btn primary">회신 내용 저장</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </main>
+          </section>
+        `;
+      }
+
+      function buildModal() {
+        const row = getSelectedRow();
+        if (!row) {
+          return "";
+        }
+        return `
+          <div id="modal-backdrop" class="modal-backdrop ${state.modalOpen ? "open" : ""}">
+            <section class="modal-shell" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+              <div class="modal-header">
+                <div>
+                  <div class="eyebrow">SHORTAGE DETAIL</div>
+                  <h2 id="modal-title">${escapeHtml(row.itemCode)} · ${escapeHtml(row.itemName)}</h2>
+                  <p>${escapeHtml(row.supplierName)} · ${escapeHtml(row.dateKey)} · 결품</p>
+                </div>
+                <button id="close-modal" type="button" class="btn">닫기</button>
+              </div>
+              <div class="modal-toolbar">
+                <span class="pill danger">결품</span>
+                <span class="pill ${mailStatusClass(row.mailStatus)}">${mailStatusLabel(row.mailStatus)}</span>
+                <span class="pill ${replyPillClass(row.replyStatus)}">${replyStatusLabel(row.replyStatus)}</span>
+              </div>
+              <div class="modal-grid">
+                <div class="modal-column">
+                  <div class="stat-grid">
+                    <div class="info-pair"><span>협력사</span><strong>${escapeHtml(row.supplierName)}</strong></div>
+                    <div class="info-pair"><span>협력사 코드</span><strong>${escapeHtml(row.supplierCode)}</strong></div>
+                    <div class="info-pair"><span>전일 재고</span><strong>${formatNumber(row.carryStock)}</strong></div>
+                    <div class="info-pair"><span>당일 수량</span><strong>${formatNumber(row.todayRequiredQty)}</strong></div>
+                    <div class="info-pair"><span>부족 수량</span><strong>${formatNumber(row.shortageQty)} EA</strong></div>
+                    <div class="info-pair"><span>요청 시각</span><strong>금일 10:00</strong></div>
+                  </div>
+                  <div class="formula">부족 수량 = max(${formatNumber(row.todayRequiredQty)} - ${formatNumber(row.carryStock)}, 0) = ${formatNumber(row.shortageQty)} EA</div>
+                  <div class="note-box">
+                    <strong>다음 조치 체크</strong>
+                    <div class="action-checklist">
+                      <span class="action-chip">협력사 회신 확인</span>
+                      <span class="action-chip">10:00 이전 입고 가능 여부 재확인</span>
+                      <span class="action-chip">회신 내용을 이력에 저장</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-column">
+                  <div class="info-grid compact-info">
+                    <div class="info-pair"><span>수신 주소</span><strong>${escapeHtml(row.recipientEmail || "미등록")}</strong></div>
+                    <div class="info-pair"><span>메일 상태</span><strong>${mailStatusLabel(row.mailStatus)}</strong></div>
+                    <div class="info-pair"><span>회신 상태</span><strong>${replyStatusLabel(row.replyStatus)}</strong></div>
+                    <div class="info-pair"><span>남은 부족</span><strong>${formatNumber(row.shortageQty)} EA</strong></div>
+                  </div>
+                  <pre class="mail-preview">${escapeHtml(buildMailBody(row))}</pre>
+                </div>
+              </div>
+            </section>
+          </div>
+        `;
       }
 
       function render() {
-        renderTabs();
-        renderToolbarState();
-        renderSummary();
-        renderShortageList();
-        renderHistoryList();
-        renderShortageDetail();
-        renderHistoryDetail();
+        const app = document.getElementById("app");
+        app.innerHTML = `
+          <main class="shell">
+            ${buildTopbar()}
+            ${buildBanner()}
+            ${buildTabs()}
+            ${state.activeView === "shortage"
+              ? `
+                <section class="layout">
+                  ${buildShortageSidebar()}
+                  <main class="main">
+                    ${buildSummaryGrid()}
+                    ${buildFilterSection()}
+                    ${buildResultsTable()}
+                    ${buildQuickDetail()}
+                    ${buildMailStatusSection()}
+                    ${buildSettingsSection()}
+                  </main>
+                </section>
+              `
+              : buildHistoryView()
+            }
+            ${state.activeView === "shortage" ? buildModal() : ""}
+          </main>
+        `;
+
+        bindEvents();
       }
 
-      function setActiveView(view) {
-        state.activeView = view;
-        render();
-      }
+      function bindEvents() {
+        const openErp = document.getElementById("open-erp");
+        const toggleAutoRefresh = document.getElementById("toggle-auto-refresh");
+        const refreshNow = document.getElementById("refresh-now");
+        const exportShortageCsv = document.getElementById("export-shortage-csv");
+        const exportMailHistoryCsv = document.getElementById("export-mail-history-csv");
+        const tabShortage = document.getElementById("tab-shortage");
+        const tabHistory = document.getElementById("tab-history");
+        const searchInput = document.getElementById("search-input");
+        const statusFilter = document.getElementById("status-filter");
+        const changeOnly = document.getElementById("change-only");
+        const historySearchInput = document.getElementById("history-search-input");
+        const historyDateInput = document.getElementById("history-date-input");
+        const openModal = document.getElementById("open-modal");
+        const closeModal = document.getElementById("close-modal");
+        const modalBackdrop = document.getElementById("modal-backdrop");
 
-      function openModalForSelected() {
-        renderModal();
-        el("detail-modal").classList.remove("hidden");
-        el("detail-modal").setAttribute("aria-hidden", "false");
-      }
-
-      function closeModal() {
-        el("detail-modal").classList.add("hidden");
-        el("detail-modal").setAttribute("aria-hidden", "true");
-      }
-
-      function refreshNow() {
-        state.lastRefreshAt = new Date().toLocaleTimeString("ko-KR", { hour12: false });
-        renderBanner(`지금 새로고침을 실행했습니다. 마지막 갱신: ${state.lastRefreshAt}`);
-        render();
-      }
-
-      function toggleAutoRefresh() {
-        state.autoRefreshEnabled = !state.autoRefreshEnabled;
-        renderBanner(state.autoRefreshEnabled ? "자동 새로고침을 켰습니다." : "자동 새로고침을 껐습니다.");
-        render();
-      }
-
-      function openErp() {
-        const popup = window.open(ERP_URL, "_blank", "noopener,noreferrer");
-        if (!popup) {
-          renderBanner(`팝업이 차단되었습니다. 직접 열기: ERP 메인 화면`);
-          return;
+        if (openErp) {
+          openErp.addEventListener("click", () => {
+            const popup = window.open(ERP_URL, "_blank", "noopener,noreferrer");
+            state.bannerMessage = popup
+              ? "ERP 메인 화면을 새 탭으로 열었습니다."
+              : "팝업이 차단되었습니다. ERP 주소를 직접 열어 주세요.";
+            render();
+          });
         }
-        renderBanner("ERP 메인 화면을 새 탭으로 열었습니다.");
-      }
 
-      function exportShortageCsv() {
-        const rows = filteredShortageRows();
-        downloadCsv(
-          "factory_shortage_results.csv",
-          ["itemCode", "itemName", "supplierName", "supplierCode", "carryStock", "todayRequiredQty", "shortageQty", "status", "mailStatus", "replyStatus"],
-          rows.map((row) => [
-            row.itemCode,
-            row.itemName,
-            row.supplierName,
-            row.supplierCode,
-            row.carryStock,
-            row.todayRequiredQty,
-            row.shortageQty,
-            row.status,
-            row.mailStatus,
-            row.replyStatus
-          ])
-        );
-        renderBanner(`결과 CSV를 저장했습니다: factory_shortage_results.csv`);
-      }
+        if (toggleAutoRefresh) {
+          toggleAutoRefresh.addEventListener("click", () => {
+            state.autoRefreshEnabled = !state.autoRefreshEnabled;
+            state.bannerMessage = state.autoRefreshEnabled
+              ? "자동 새로고침을 켰습니다."
+              : "자동 새로고침을 껐습니다.";
+            render();
+          });
+        }
 
-      function exportHistoryCsv() {
-        const rows = filteredHistoryRows();
-        downloadCsv(
-          "factory_mail_history.csv",
-          ["supplierName", "recipientEmail", "sentAt", "subject"],
-          rows.map((row) => [row.supplierName, row.recipientEmail, row.sentAt, row.subject])
-        );
-        renderBanner(`메일 이력 CSV를 저장했습니다: factory_mail_history.csv`);
-      }
+        if (refreshNow) {
+          refreshNow.addEventListener("click", () => {
+            const refreshedAt = new Date().toLocaleTimeString("ko-KR", { hour12: false });
+            state.bannerMessage = `지금 새로고침을 실행했습니다. 마지막 갱신: ${refreshedAt}`;
+            render();
+          });
+        }
 
-      document.getElementById("tab-shortage").addEventListener("click", () => setActiveView("shortage"));
-      document.getElementById("tab-history").addEventListener("click", () => setActiveView("history"));
-      document.getElementById("open-erp").addEventListener("click", openErp);
-      document.getElementById("toggle-auto-refresh").addEventListener("click", toggleAutoRefresh);
-      document.getElementById("refresh-now").addEventListener("click", refreshNow);
-      document.getElementById("export-shortage-csv").addEventListener("click", exportShortageCsv);
-      document.getElementById("export-mail-history-csv").addEventListener("click", exportHistoryCsv);
+        if (exportShortageCsv) {
+          exportShortageCsv.addEventListener("click", () => {
+            const rows = getFilteredRows();
+            downloadCsv(
+              "factory_shortage_results.csv",
+              ["supplierName", "supplierCode", "itemCode", "itemName", "carryStock", "todayRequiredQty", "shortageQty", "mailStatus", "replyStatus"],
+              rows.map((row) => [
+                row.supplierName,
+                row.supplierCode,
+                row.itemCode,
+                row.itemName,
+                row.carryStock,
+                row.todayRequiredQty,
+                row.shortageQty,
+                row.mailStatus,
+                row.replyStatus,
+              ])
+            );
+            state.bannerMessage = "결과 CSV를 저장했습니다: factory_shortage_results.csv";
+            render();
+          });
+        }
 
-      document.getElementById("shortage-search").addEventListener("input", (event) => {
-        state.shortageSearch = event.target.value;
-        render();
-      });
-      document.getElementById("shortage-status").addEventListener("change", (event) => {
-        state.shortageFilter = event.target.value;
-        render();
-      });
-      document.getElementById("shortage-change-only").addEventListener("change", (event) => {
-        state.shortageChangeOnly = event.target.checked;
-        render();
-      });
+        if (exportMailHistoryCsv) {
+          exportMailHistoryCsv.addEventListener("click", () => {
+            const rows = getFilteredHistoryRows();
+            downloadCsv(
+              "factory_mail_history.csv",
+              ["supplierName", "supplierCode", "recipientEmail", "sentAt", "subject", "replyStatus", "mailStatus"],
+              rows.map((row) => [
+                row.supplierName,
+                row.supplierCode,
+                row.recipientEmail,
+                row.sentAt,
+                row.subject,
+                row.replyStatus,
+                row.mailStatus,
+              ])
+            );
+            state.bannerMessage = "메일 이력 CSV를 저장했습니다: factory_mail_history.csv";
+            render();
+          });
+        }
 
-      document.getElementById("history-search").addEventListener("input", (event) => {
-        state.historySearch = event.target.value;
-        render();
-      });
-      document.getElementById("history-status").addEventListener("change", (event) => {
-        state.historyFilter = event.target.value;
-        render();
-      });
-      document.getElementById("history-mail-only").addEventListener("change", (event) => {
-        state.historyMailOnly = event.target.checked;
-        render();
-      });
+        if (tabShortage) {
+          tabShortage.addEventListener("click", () => {
+            state.activeView = "shortage";
+            render();
+          });
+        }
 
-      document.querySelectorAll(".filter").forEach((button) => {
-        button.addEventListener("click", () => {
-          document.querySelectorAll(".filter").forEach((el) => el.classList.remove("active"));
-          button.classList.add("active");
-          const filter = button.dataset.filter;
-          state.shortageFilter = filter === "mail" || filter === "wait" ? "all" : filter;
-          state.historyFilter = filter === "mail" ? "sent" : "all";
-          state.activeView = filter === "mail" ? "history" : "shortage";
-          renderBanner(`필터 "${button.textContent}"가 적용되었습니다.`);
-          render();
+        if (tabHistory) {
+          tabHistory.addEventListener("click", () => {
+            state.activeView = "mail-history";
+            state.modalOpen = false;
+            render();
+          });
+        }
+
+        if (searchInput) {
+          searchInput.addEventListener("input", (event) => {
+            state.searchText = event.target.value;
+            state.selectedIndex = 0;
+            render();
+          });
+        }
+
+        if (statusFilter) {
+          statusFilter.addEventListener("change", (event) => {
+            state.statusFilter = event.target.value;
+            state.selectedIndex = 0;
+            render();
+          });
+        }
+
+        if (changeOnly) {
+          changeOnly.addEventListener("change", (event) => {
+            state.changeOnly = event.target.checked;
+            state.selectedIndex = 0;
+            render();
+          });
+        }
+
+        if (historySearchInput) {
+          historySearchInput.addEventListener("input", (event) => {
+            state.historySearchText = event.target.value;
+            state.selectedHistoryIndex = 0;
+            render();
+          });
+        }
+
+        if (historyDateInput) {
+          historyDateInput.addEventListener("input", (event) => {
+            state.historyDate = event.target.value;
+            state.selectedHistoryIndex = 0;
+            render();
+          });
+        }
+
+        document.querySelectorAll("[data-row-index]").forEach((row) => {
+          row.addEventListener("click", () => {
+            state.selectedIndex = Number(row.dataset.rowIndex);
+            render();
+          });
         });
-      });
 
-      document.getElementById("compose-mail").addEventListener("click", () => {
-        const row = selectedShortage();
-        renderBanner(`메일 발송 준비 완료: ${row.supplierName} / ${row.itemName}`);
-      });
-      document.getElementById("mark-wait").addEventListener("click", () => {
-        renderBanner("회신 대기 상태로 표시했습니다.");
-      });
-      document.getElementById("mark-review").addEventListener("click", () => {
-        renderBanner("주의 항목으로 저장했습니다.");
-      });
+        document.querySelectorAll("[data-history-index]").forEach((row) => {
+          row.addEventListener("click", () => {
+            state.selectedHistoryIndex = Number(row.dataset.historyIndex);
+            render();
+          });
+        });
 
-      document.getElementById("close-modal").addEventListener("click", closeModal);
-      document.getElementById("detail-modal").addEventListener("click", (event) => {
-        if (event.target === document.getElementById("detail-modal")) {
-          closeModal();
+        if (openModal) {
+          openModal.addEventListener("click", () => {
+            state.modalOpen = true;
+            render();
+          });
         }
-      });
+
+        if (closeModal) {
+          closeModal.addEventListener("click", () => {
+            state.modalOpen = false;
+            render();
+          });
+        }
+
+        if (modalBackdrop) {
+          modalBackdrop.addEventListener("click", (event) => {
+            if (event.target === modalBackdrop) {
+              state.modalOpen = false;
+              render();
+            }
+          });
+        }
+      }
 
       document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-          closeModal();
+        if (event.key === "Escape" && state.modalOpen) {
+          state.modalOpen = false;
+          render();
         }
       });
 
       render();
-      openModalForSelected();
     </script>
   </body>
 </html>
