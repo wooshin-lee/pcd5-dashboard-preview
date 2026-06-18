@@ -3,7 +3,7 @@
     "kicker": "MERGED MATERIALS",
     "title": "머지된 실제 산출물 대시보드",
     "subtitle": "머지된 PR과 실제 생성 파일을 한눈에 보고, 카드 클릭 시 전체화면 작업 화면으로 이동합니다.",
-    "mergedCount": 3
+    "mergedCount": 4
   },
   "materials": [
     {
@@ -111,6 +111,42 @@
         {
           "label": "원본 PR 보기",
           "href": "https://github.com/doduhyeong-cpu/PCD-5/pull/8"
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "author": "doduhyeong-cpu",
+      "prTitle": "???? ?? ????",
+      "artifactTitle": "???? ?? ????",
+      "kind": "desktop-app",
+      "kindLabel": "Desktop App",
+      "badge": "DESK",
+      "status": "?? ??",
+      "mergedAt": "2026-06-18T15:44:48+09:00",
+      "prUrl": "https://github.com/doduhyeong-cpu/PCD-5/pull/9",
+      "primaryFile": "desktop/app.py",
+      "previewPath": "assets/previews/desktop_bom_query_preview.html",
+      "files": [
+        "desktop/app.py",
+        "desktop/desktop_app/ui/main_window.py",
+        "desktop/desktop_app/browser/bom_query_client.py",
+        "src/query/playwright-bom-query.js",
+        "docs/assets/previews/desktop_bom_query_preview.html"
+      ],
+      "summary": [
+        "PySide6 ???? ??? BOM ??? CDP ?? ??? ??",
+        "ERP ??, ??, CSV ??, ?? ?? ?? ??? ? ??? ??",
+        "??? ?? ??? ??? ?? ??? ????? ?? ??"
+      ],
+      "actions": [
+        {
+          "label": "?? HTML ??",
+          "href": "assets/previews/desktop_bom_query_preview.html"
+        },
+        {
+          "label": "?? PR ??",
+          "href": "https://github.com/doduhyeong-cpu/PCD-5/pull/9"
         }
       ]
     }

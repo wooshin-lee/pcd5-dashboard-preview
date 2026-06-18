@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>구매단가 조회 데스크탑</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #eef4ef;
+        --surface: #ffffff;
+        --line: #d9e2d8;
+        --ink: #1b2a20;
+        --muted: #607165;
+        --green: #1f6f4a;
+        --green-2: #2f855a;
+        --shadow: 0 14px 36px rgba(25, 51, 35, 0.12);
+      }
+
+      * { box-sizing: border-box; }
+      html, body { margin: 0; min-height: 100%; }
+      body {
+        font-family: "Segoe UI", "Noto Sans KR", system-ui, sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(31, 111, 74, 0.12), transparent 30%),
+          linear-gradient(180deg, #f8fbf8 0%, var(--bg) 100%);
+      }
+
+      h1, h2, h3, p, ul { margin: 0; }
+      button, input, textarea { font: inherit; }
+
+      .page {
+        padding: 12px;
+      }
+
+      .shell {
+        min-height: calc(100vh - 24px);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.88);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        display: grid;
+        grid-template-rows: auto auto 1fr auto;
+      }
+
+      .hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 18px;
+        padding: 18px 22px 14px;
+        border-bottom: 1px solid var(--line);
+        background: linear-gradient(180deg, #ffffff, #f7faf7);
+      }
+
+      .eyebrow {
+        color: var(--green);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+      }
+
+      .title {
+        margin-top: 4px;
+        font-size: 32px;
+        line-height: 1.1;
+        font-weight: 900;
+      }
+
+      .lede {
+        margin-top: 10px;
+        max-width: 74ch;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+
+      .btn {
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--ink);
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset;
+      }
+
+      .btn.primary {
+        background: var(--green);
+        color: #fff;
+        border-color: var(--green);
+      }
+
+      .btn.ghost {
+        background: #f7fbf8;
+      }
+
+      .summary-row {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 10px;
+        padding: 12px 12px 0;
+      }
+
+      .stat {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: var(--surface);
+        padding: 14px 16px;
+      }
+
+      .stat-label {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .stat-value {
+        margin-top: 6px;
+        font-size: 24px;
+        font-weight: 900;
+      }
+
+      .stat-sub {
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .body {
+        padding: 12px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+        gap: 12px;
+        min-height: 0;
+      }
+
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: var(--surface);
+        padding: 16px;
+        min-height: 0;
+        box-shadow: 0 6px 18px rgba(25, 51, 35, 0.06);
+      }
+
+      .panel h2 {
+        font-size: 18px;
+        margin-bottom: 6px;
+      }
+
+      .panel p.sub {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .field {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 10px 12px;
+        background: #fcfffd;
+      }
+
+      .field label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 6px;
+      }
+
+      .field input {
+        width: 100%;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: var(--ink);
+        font-weight: 800;
+        font-size: 15px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        min-height: 30px;
+        padding: 0 12px;
+        border: 1px solid #bdd3c0;
+        border-radius: 999px;
+        background: #eff8f1;
+        color: var(--green);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .result-box {
+        margin-top: 12px;
+        border: 1px dashed #b7c8b8;
+        border-radius: 16px;
+        background: #fbfefb;
+        min-height: 148px;
+        padding: 14px;
+      }
+
+      .sheet-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .tab {
+        border: 1px solid var(--line);
+        background: #f8fbf8;
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .sheet-table {
+        margin-top: 12px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+
+      thead th {
+        background: #f2f6f1;
+        text-align: left;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      tbody td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #edf2ee;
+      }
+
+      tbody tr:last-child td { border-bottom: 0; }
+
+      .log {
+        margin-top: 12px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: #0d1510;
+        color: #d5f0d9;
+        min-height: 110px;
+        padding: 12px;
+        font-size: 12px;
+        line-height: 1.5;
+        overflow: auto;
+      }
+
+      .footer {
+        padding: 0 12px 12px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      @media (max-width: 1180px) {
+        .summary-row,
+        .body,
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero {
+          flex-direction: column;
+        }
+
+        .hero-actions {
+          justify-content: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <section class="shell">
+        <header class="hero">
+          <div>
+            <div class="eyebrow">WOOSHIN SHORTAGE CONTROL</div>
+            <h1 class="title">구매단가 조회 데스크탑</h1>
+            <p class="lede">PySide6 데스크탑 셸에서 BOM 조회, Chrome CDP 연결, 로그 저장, 엑셀 저장 진입점을 한 화면에 모았습니다. 이 미리보기는 PR #9의 작업 흐름을 대시보드용으로 요약한 독립 화면입니다.</p>
+          </div>
+          <div class="hero-actions">
+            <button class="btn">ERP 열기</button>
+            <button class="btn ghost">자동 새로고침 OFF</button>
+            <button class="btn primary">지금 새로고침</button>
+            <button class="btn">결과 CSV 저장</button>
+            <button class="btn">메일 이력 CSV</button>
+          </div>
+        </header>
+
+        <section class="summary-row">
+          <div class="stat" style="background:#236447;color:#fff;border-color:#236447">
+            <div class="stat-label" style="color:#d6f0de">기준일</div>
+            <div class="stat-value">-</div>
+            <div class="stat-sub" style="color:#d6f0de">전일 재고와 당일 생산수량 비교</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">마지막 조회</div>
+            <div class="stat-value">-</div>
+            <div class="stat-sub">수동 새로고침</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">결품 항목</div>
+            <div class="stat-value">0</div>
+            <div class="stat-sub">최대 부족 0 EA</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">회신 대기</div>
+            <div class="stat-value">0</div>
+            <div class="stat-sub">즉시 확인 0건</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">확보 예정 수량</div>
+            <div class="stat-value">0 / 0</div>
+            <div class="stat-sub">확보율 0%</div>
+          </div>
+        </section>
+
+        <section class="body">
+          <article class="panel">
+            <h2>운영 상태</h2>
+            <p class="sub">브라우저와 데스크탑 입력값을 독립적으로 유지하는 실행 영역입니다.</p>
+
+            <div class="form-grid">
+              <div class="field">
+                <label>CDP 포트</label>
+                <input value="9222" />
+              </div>
+              <div class="field">
+                <label>시작 URL</label>
+                <input value="http://58.72.235.17:8300/" />
+              </div>
+              <div class="field">
+                <label>Target ID</label>
+                <input value="Chromium page target 선택" />
+              </div>
+              <div class="field">
+                <label>WebSocket URL</label>
+                <input value="ws://127.0.0.1:9222/devtools/page/..." />
+              </div>
+              <div class="field">
+                <label>아이디</label>
+                <input value="HMCR151" />
+              </div>
+              <div class="field">
+                <label>비밀번호</label>
+                <input value="••••••••" />
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn primary" data-log="실행 요청: CDP 연결 후 조회 시작">실행</button>
+              <button class="btn" data-log="중지 요청: 현재 작업 정리">중지</button>
+              <button class="btn ghost" data-log="시트 보기 요청: 결과 패널 갱신">시트 보기</button>
+              <button class="btn" data-log="엑셀 다운로드 준비">엑셀 다운로드</button>
+              <button class="btn" data-log="로그 저장 요청">로그 저장</button>
+              <button class="btn" data-log="로그 삭제 요청">로그 지우기</button>
+            </div>
+
+            <div class="chips">
+              <span class="chip">ERP 조회 1260 rows</span>
+              <span class="chip">CSV UTF-8 BOM</span>
+              <span class="chip">GUI smoke test 통과</span>
+            </div>
+
+            <div class="log" id="log">
+{"event":"ui_start","status":"ready"}
+{"event":"start","userId":"HMCR151"}
+            </div>
+          </article>
+
+          <article class="panel">
+            <h2>시트 보기</h2>
+            <p class="sub">실제 구현에서는 시트 미리보기와 결과 저장이 이 영역에서 연결됩니다.</p>
+
+            <div class="result-box" id="resultBox">
+              아직 불러온 시트가 없습니다.
+              <br /><br />
+              오른쪽 미리보기에 선택한 결과가 나타나고, 저장 버튼으로 CSV를 생성합니다.
+            </div>
+
+            <div class="sheet-tabs">
+              <span class="tab">종합 (4)</span>
+              <span class="tab">현대 (2)</span>
+              <span class="tab">기아 (3)</span>
+              <span class="tab">글로비스 (2)</span>
+            </div>
+
+            <div class="sheet-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>순번</th>
+                    <th>품번</th>
+                    <th>품명</th>
+                    <th>단위</th>
+                    <th>수량</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>1</td><td>BRKT-01</td><td>브라켓</td><td>EA</td><td>100</td></tr>
+                  <tr><td>2</td><td>CAP-22</td><td>캡</td><td>EA</td><td>80</td></tr>
+                  <tr><td>3</td><td>PNL-03</td><td>패널</td><td>EA</td><td>20</td></tr>
+                  <tr><td>4</td><td>SFT-10</td><td>샤프트</td><td>EA</td><td>50</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <div class="footer">원본 파일: desktop/app.py · desktop/desktop_app/ui/main_window.py · desktop/desktop_app/ui/style.py</div>
+      </section>
+    </div>
+
+    <script>
+      const log = document.getElementById("log");
+      const resultBox = document.getElementById("resultBox");
+
+      document.querySelectorAll("[data-log]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const message = button.getAttribute("data-log");
+          const time = new Date().toLocaleTimeString("ko-KR", { hour12: false });
+          log.textContent += `\n[${time}] ${message}`;
+          resultBox.innerHTML = `선택 동작: <strong>${button.textContent}</strong><br /><br />실제 앱에서는 여기서 결과 테이블과 저장 상태가 갱신됩니다.`;
+          log.scrollTop = log.scrollHeight;
+        });
+      });
+    </script>
+  </body>
+</html>
