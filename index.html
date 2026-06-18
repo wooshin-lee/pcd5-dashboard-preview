@@ -110,8 +110,7 @@
         gap: 14px;
       }
 
-      .card,
-      .summary {
+      .card {
         border: 1px solid var(--line);
         border-radius: 18px;
         background: var(--surface);
@@ -125,12 +124,7 @@
         cursor: pointer;
       }
 
-      .summary {
-        padding: 16px;
-      }
-
-      .card-head,
-      .summary-head {
+      .card-head {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
@@ -268,37 +262,6 @@
         gap: 8px;
       }
 
-      .summary-wrap {
-        display: grid;
-        grid-template-columns: 1.05fr 0.95fr;
-        gap: 14px;
-        margin-top: 14px;
-      }
-
-      .summary-box {
-        padding: 14px;
-        border-radius: 16px;
-        border: 1px solid var(--line);
-        background: rgba(255,255,255,0.92);
-      }
-
-      .summary-box h3 { font-size: 16px; margin-bottom: 8px; }
-      .summary-box p, .summary-box li { color: var(--muted); font-size: 13px; line-height: 1.5; }
-      .summary-box ul { margin: 0; padding-left: 18px; }
-
-      .summary-box .pill { margin-top: 8px; }
-
-      .footer-note {
-        margin-top: 14px;
-        padding: 14px 16px;
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        background: rgba(255,255,255,0.86);
-        color: var(--muted);
-        font-size: 13px;
-        line-height: 1.5;
-      }
-
       .modal {
         position: fixed;
         inset: 0;
@@ -374,7 +337,6 @@
 
       @media (max-width: 1200px) {
         .grid,
-        .summary-wrap,
         .split,
         .board { grid-template-columns: 1fr; }
       }
@@ -505,41 +467,6 @@
           </div>
         </article>
 
-        <section class="summary" aria-label="전체 머지 개요">
-          <div class="summary-head">
-            <div>
-              <div class="kicker">전체 머지 개요</div>
-              <h2 class="card-title">3개 머지 산출물 전체 반영</h2>
-              <p class="card-sub">이 카드에서는 각 머지 결과를 묶어서 보여주고, 실제 파일 화면은 카드 클릭으로 엽니다.</p>
-            </div>
-            <span class="pill">3건</span>
-          </div>
-          <div class="summary-wrap">
-            <div class="summary-box">
-              <h3>머지된 목록</h3>
-              <ul>
-                <li>PR #6 · 구매확인서 CDP 자동화</li>
-                <li>PR #5 · ERP 작업실적 CSV 추출 GUI</li>
-                <li>PR #8 · 공장정보 대시보드 필터·상세조회·통합 검증</li>
-              </ul>
-            </div>
-            <div class="summary-box">
-              <h3>상태 표시</h3>
-              <div class="tag-row">
-                <span class="pill ok">모두 머지 완료</span>
-                <span class="pill warn">실제 파일 반영</span>
-                <span class="pill info">모달 전체화면 지원</span>
-              </div>
-              <div style="height: 12px"></div>
-              <h3>요약</h3>
-              <p>클릭 시 각 PR에 대응하는 실제 작업 화면이 전체화면으로 열리고, 좌상단 ← 버튼으로 대시보드로 돌아옵니다.</p>
-            </div>
-          </div>
-          <div class="footer-note">
-            현재 페이지는 GitHub Pages 진입점입니다. 카드와 모달은 실제 산출물의 맥락에 맞춰 연결되어 있고,
-            오른쪽 스크롤은 항상 보이도록 설정했습니다.
-          </div>
-        </section>
       </section>
     </main>
 
